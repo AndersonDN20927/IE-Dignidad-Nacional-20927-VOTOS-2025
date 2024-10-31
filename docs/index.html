@@ -3,66 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares 2024</title>
+  <title>Dignidad Nacional - Elecciones Escolares</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f5;
+      background-color: #e8f9e5;
       color: #333;
     }
     .container {
       width: 90%;
-      max-width: 800px;
+      max-width: 1000px;
       margin: 0 auto;
     }
-    h1, h2 {
+    h1, h2, h3 {
       text-align: center;
-      color: #4CAF50;
+      color: #50C878;
     }
-    .candidate {
-      border: 1px solid #ddd;
-      padding: 15px;
-      margin: 15px 0;
-      background-color: #fff;
+    .section {
+      border: 2px solid #50C878;
+      padding: 20px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-    }
-    .candidate img {
-      width: 70px;
-      height: 70px;
-      margin-right: 15px;
-      border-radius: 50%;
-    }
-    .candidate-info {
-      flex: 1;
+      margin: 15px 0;
+      background-color: #f0fff0;
     }
     .vote-button {
-      background-color: #4CAF50;
+      background-color: #50C878;
       color: white;
       padding: 10px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
     }
     .vote-button:hover {
       background-color: #45a049;
-    }
-    .proposals {
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      margin: 15px 0;
-    }
-    .results {
-      background-color: #e7f3e7;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-top: 20px;
-      display: none; /* Oculto por defecto */
     }
     .progress-bar {
       height: 20px;
@@ -73,7 +49,7 @@
     }
     .progress {
       height: 100%;
-      background-color: #4CAF50;
+      background-color: #50C878;
       width: 0;
       border-radius: 5px;
       text-align: center;
@@ -86,102 +62,193 @@
       color: #666;
       margin-top: 20px;
     }
+    .restricted-access {
+      display: none;
+      margin-top: 20px;
+    }
+    .candidate {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .candidate img {
+      width: 70px;
+      height: 70px;
+      margin-right: 15px;
+      border-radius: 50%;
+    }
+    .candidate-info {
+      flex: 1;
+    }
   </style>
   <script>
     function mostrarResultados() {
       const password = prompt("Ingrese la contraseña para ver los resultados:");
       if (password === "voto2025") {
-        document.getElementById("results").style.display = "block";
+        document.getElementById("restricted-access").style.display = "block";
       } else {
         alert("Contraseña incorrecta.");
       }
+    }
+
+    function votar(nombre) {
+      alert("¡Gracias por tu voto para " + nombre + "!");
+      // Aquí va el código para registrar el voto en el backend
     }
   </script>
 </head>
 <body>
   <div class="container">
-    <h1>Elecciones Escolares 2024</h1>
-    <p>¡Vota por el candidato que consideres mejor para mejorar el colegio!</p>
+    <h1>Elecciones Escolares 2024 - Dignidad Nacional</h1>
+    <p style="text-align: center;">Creado por Anderson Acuña</p>
 
-    <!-- Candidatos -->
-    <div class="candidate">
-      <img src="https://via.placeholder.com/70?text=👓" alt="Candidato 1">
-      <div class="candidate-info">
-        <h2>Candidato 1: Juan "Mejoras visibles"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Instalación de nuevas áreas de estudio.</li>
-          <li>Creación de un club de lectura.</li>
-          <li>Mejoras en la cafetería escolar.</li>
-          <li>Implementación de más bebederos de agua.</li>
-          <li>Instalación de Wi-Fi gratuito en el campus.</li>
-          <li>Organización de actividades extracurriculares.</li>
-        </ul>
-        <a href="https://enlace-a-la-votacion.com" class="vote-button" target="_blank">Votar</a>
+    <!-- Sección de Importancia de Votar -->
+    <div class="section">
+      <h2>¿Por qué es importante votar?</h2>
+      <p>Las elecciones escolares son una gran oportunidad para que los estudiantes tomen decisiones sobre el futuro de su colegio. Al votar, apoyas a los líderes que representan tus intereses y las mejoras que quieres ver en tu entorno escolar. ¡Tu voto importa y puede hacer la diferencia!</p>
+    </div>
+
+    <!-- Sección de Participantes -->
+    <div class="section">
+      <h2>Conoce a los Candidatos</h2>
+      <p>Elige al candidato que mejor represente tus intereses. A continuación, encontrarás sus propuestas y objetivos.</p>
+
+      <!-- Candidato 1 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=🌟" alt="Candidato 1">
+        <div class="candidate-info">
+          <h3>Candidato 1: Juan "Futuro Brillante"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Renovación de las áreas deportivas.</li>
+            <li>Creación de un espacio de lectura al aire libre.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Juan')">Votar por Juan</button>
+        </div>
+      </div>
+
+      <!-- Candidato 2 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=🌱" alt="Candidato 2">
+        <div class="candidate-info">
+          <h3>Candidato 2: Ana "Cambio Positivo"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Programa de reciclaje en el campus.</li>
+            <li>Actividades extracurriculares de arte y cultura.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Ana')">Votar por Ana</button>
+        </div>
+      </div>
+
+      <!-- Candidato 3 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=📘" alt="Candidato 3">
+        <div class="candidate-info">
+          <h3>Candidato 3: Pedro "Eficiencia y Renovación"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Optimización de recursos energéticos.</li>
+            <li>Reducción del uso de plástico en el comedor.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Pedro')">Votar por Pedro</button>
+        </div>
+      </div>
+
+      <!-- Candidato 4 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=🚀" alt="Candidato 4">
+        <div class="candidate-info">
+          <h3>Candidato 4: Lucia "Innovación para Todos"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Implementación de un laboratorio de tecnología.</li>
+            <li>Wi-Fi en áreas comunes.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Lucia')">Votar por Lucia</button>
+        </div>
+      </div>
+
+      <!-- Candidato 5 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=🌍" alt="Candidato 5">
+        <div class="candidate-info">
+          <h3>Candidato 5: Diego "Conciencia Verde"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Reforestación de áreas verdes del colegio.</li>
+            <li>Concursos de reciclaje.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Diego')">Votar por Diego</button>
+        </div>
+      </div>
+
+      <!-- Candidato 6 -->
+      <div class="candidate">
+        <img src="https://via.placeholder.com/70?text=🏆" alt="Candidato 6">
+        <div class="candidate-info">
+          <h3>Candidato 6: Sofía "Excelencia Académica"</h3>
+          <p>Propuestas:</p>
+          <ul>
+            <li>Programa de tutorías entre estudiantes.</li>
+            <li>Organización de ferias de ciencia.</li>
+          </ul>
+          <button class="vote-button" onclick="votar('Sofía')">Votar por Sofía</button>
+        </div>
       </div>
     </div>
 
-    <div class="candidate">
-      <img src="https://via.placeholder.com/70?text=✂️" alt="Candidato 2">
-      <div class="candidate-info">
-        <h2>Candidato 2: Ana "Cambio y acción"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Mejoras en el gimnasio escolar.</li>
-          <li>Organización de talleres de arte.</li>
-          <li>Renovación de laboratorios.</li>
-          <li>Fomento de prácticas ecológicas.</li>
-          <li>Reducción de desperdicio en el comedor.</li>
-          <li>Implementación de un programa de reciclaje.</li>
-        </ul>
-        <a href="https://enlace-a-la-votacion.com" class="vote-button" target="_blank">Votar</a>
-      </div>
+    <!-- Sección de Instrucciones para Votar -->
+    <div class="section">
+      <h2>¿Cómo votar?</h2>
+      <p>Para votar, selecciona el botón de votación debajo del candidato de tu preferencia. Tu voto es importante, ¡asegúrate de hacerlo contar!</p>
     </div>
 
-    <div class="candidate">
-      <img src="https://via.placeholder.com/70?text=🔧" alt="Candidato 3">
-      <div class="candidate-info">
-        <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Reducción del uso de papel.</li>
-          <li>Creación de un sistema de reciclaje.</li>
-          <li>Organización de ferias científicas.</li>
-          <li>Instalación de paneles solares.</li>
-          <li>Fomento de transporte compartido.</li>
-          <li>Renovación de mobiliario escolar.</li>
-        </ul>
-        <a href="https://enlace-a-la-votacion.com" class="vote-button" target="_blank">Votar</a>
-      </div>
-    </div>
-
-    <!-- Resultados protegidos por contraseña -->
+    <!-- Sección Restringida de Resultados -->
     <button onclick="mostrarResultados()" class="vote-button" style="margin: 20px auto; display: block;">Ver Resultados</button>
-    <div id="results" class="results">
+    <div id="restricted-access" class="restricted-access">
       <h2>Resultados de las Elecciones</h2>
       <div>
-        <p>Juan "Mejoras visibles":</p>
+        <p>Juan "Futuro Brillante":</p>
         <div class="progress-bar">
-          <div class="progress" style="width: 40%;">40%</div>
+          <div class="progress" style="width: 20%;">20%</div>
         </div>
       </div>
       <div>
-        <p>Ana "Cambio y acción":</p>
+        <p>Ana "Cambio Positivo":</p>
         <div class="progress-bar">
-          <div class="progress" style="width: 35%;">35%</div>
+          <div class="progress" style="width: 18%;">18%</div>
         </div>
       </div>
       <div>
-        <p>Pedro "Eficiencia y renovación":</p>
+        <p>Pedro "Eficiencia y Renovación":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 15%;">15%</div>
+        </div>
+      </div>
+      <div>
+        <p>Lucia "Innovación para Todos":</p>
         <div class="progress-bar">
           <div class="progress" style="width: 25%;">25%</div>
         </div>
       </div>
+      <div>
+        <p>Diego "Conciencia Verde":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 12%;">12%</div>
+        </div>
+      </div>
+      <div>
+        <p>Sofía "Excelencia Académica":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 10%;">10%</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Créditos -->
+    <!-- Footer con agradecimientos -->
     <div class="footer">
-      <p>Página creada por las compañías Platanito Tentación, Manzanita Tentación, Acuña Corporación, en conjunto con la compañía TP (Top Globales).</p>
+      <p>Agradecimientos especiales a Google, OpenAI, Azure y Amazon por sus servicios tecnológicos.</p>
     </div>
   </div>
 </body>
