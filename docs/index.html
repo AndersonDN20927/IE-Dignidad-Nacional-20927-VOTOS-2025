@@ -3,159 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares 2024</title>
+  <title>Elecciones Estudiantiles</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f4f4f9;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
+      width: 80%;
       max-width: 800px;
-      margin: 50px auto;
+      margin: 20px;
+      padding: 20px;
       background-color: white;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      padding: 20px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
     }
-    h1, h2, h3 {
-      text-align: center;
-      color: #4CAF50;
-    }
-    .propuestas-candidato, .resultados {
+    .section {
       margin-bottom: 20px;
     }
-    .propuestas-candidato p {
-      font-size: 18px;
+    .candidate-info {
+      margin-bottom: 10px;
+    }
+    .vote-count, .progress-bar {
       margin: 5px 0;
     }
-    .barra-votos {
-      width: 100%;
-      background-color: #e0e0e0;
-      border-radius: 10px;
-      margin: 10px 0;
-    }
-    .barra {
-      height: 24px;
-      background-color: #4CAF50;
+    .footer {
       text-align: center;
-      color: white;
-      border-radius: 10px;
-    }
-    .nombre-candidato {
-      font-weight: bold;
-      font-size: 20px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .creditos {
-      text-align: center;
+      font-size: 0.9em;
       margin-top: 20px;
-      color: grey;
+      color: #777;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      pointer-events: none;
+    }
+    .results {
+      padding: 10px;
+      background-color: #e8f5e9;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .results .section {
+      padding: 10px;
+      border: 1px solid #dce775;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .results .progress-bar {
+      height: 20px;
+      background-color: #c8e6c9;
+      border-radius: 10px;
+      position: relative;
+    }
+    .results .progress {
+      background-color: #66bb6a;
+      height: 100%;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      line-height: 20px;
+    }
+    .admin-button {
+      cursor: pointer;
+      color: white;
+      background-color: #ff5722;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      width: 100px;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Elecciones Escolares 2024</h1>
-  <h2>Resultados:</h2>
+  <h1>Elecciones Estudiantiles 2024</h1>
 
-  <div class="resultados">
-    <div class="resultado-candidato">
-      <span class="nombre-candidato">Candidato 1</span>
-      <div class="barra-votos">
-        <div class="barra" style="width: 57.14%;">57.14%</div>
-      </div>
-      <p>Votos: 4</p>
-    </div>
-    <div class="resultado-candidato">
-      <span class="nombre-candidato">Candidato 2</span>
-      <div class="barra-votos">
-        <div class="barra" style="width: 14.29%;">14.29%</div>
-      </div>
-      <p>Votos: 1</p>
-    </div>
-    <div class="resultado-candidato">
-      <span class="nombre-candidato">Candidato 3</span>
-      <div class="barra-votos">
-        <div class="barra" style="width: 28.57%;">28.57%</div>
-      </div>
-      <p>Votos: 2</p>
+  <div class="section candidate" id="candidato1">
+    <div class="candidate-info">
+      <h2>Candidato 1: Juan "Innovación tecnológica"</h2>
+      <p>Propuestas: Crear un laboratorio de tecnología avanzado, realizar talleres sobre robótica y programación, fomentar el uso de herramientas digitales en todas las asignaturas, crear un sistema de ayuda en línea 24/7 para estudiantes.</p>
+      <button class="vote-button" onclick="votar(0)">Votar</button>
+      <div class="vote-count">Votos: 0</div>
     </div>
   </div>
 
-  <h2>Propuestas de los Candidatos:</h2>
-  <div class="propuestas-candidato">
-    <h3>Candidato 1</h3>
-    <p>Propuesta: Mejorar la calidad de los alimentos en la cafetería.</p>
-    <p>Propuesta: Implementar nuevas actividades extracurriculares.</p>
-
-    <h3>Candidato 2</h3>
-    <p>Propuesta: Renovar las instalaciones deportivas.</p>
-    <p>Propuesta: Crear un programa de apoyo estudiantil.</p>
-
-    <h3>Candidato 3</h3>
-    <p>Propuesta: Aumentar la participación de los estudiantes en las decisiones escolares.</p>
-    <p>Propuesta: Organizar más eventos culturales.</p>
+  <div class="section candidate" id="candidato2">
+    <div class="candidate-info">
+      <h2>Candidato 2: María "Escuela pacífica"</h2>
+      <p>Propuestas: Talleres de mediación escolar, formación de una brigada ecológica estudiantil, acuerdos para convivencia saludable, proyectos de ayuda mutua, eventos para fomentar la inclusión, actividades que apoyen a estudiantes en situaciones difíciles.</p>
+      <button class="vote-button" onclick="votar(1)">Votar</button>
+      <div class="vote-count">Votos: 0</div>
+    </div>
   </div>
 
-  <button id="votar">He leído todo</button>
+  <div class="section candidate" id="candidato3">
+    <div class="candidate-info">
+      <h2>Candidato 3: Pedro "Transformación digital"</h2>
+      <p>Propuestas: Introducir una plataforma para gestionar actividades escolares, reducir el uso de papel en la escuela, establecer un canal de comunicación directo con los alumnos, organizar seminarios sobre el uso de redes sociales de manera segura, y apoyar a alumnos en la creación de contenidos digitales educativos.</p>
+      <button class="vote-button" onclick="votar(2)">Votar</button>
+      <div class="vote-count">Votos: 0</div>
+    </div>
+  </div>
 
-  <div class="creditos">
-    <p>Créditos: Desarrollado por [TG (TOP GLOBALES)]</p>
+  <!-- Resultados -->
+  <div id="results" class="results">
+    <h2>Resultados:</h2>
+    <div id="resultado-candidato1" class="section">
+      <h3>Juan "Innovación tecnológica"</h3>
+      <div class="progress-bar">
+        <div class="progress" style="width: 0;">0%</div>
+      </div>
+      <div class="vote-count">Votos: 0</div>
+    </div>
+    <div id="resultado-candidato2" class="section">
+      <h3>María "Escuela pacífica"</h3>
+      <div class="progress-bar">
+        <div class="progress" style="width: 0;">0%</div>
+      </div>
+      <div class="vote-count">Votos: 0</div>
+    </div>
+    <div id="resultado-candidato3" class="section">
+      <h3>Pedro "Transformación digital"</h3>
+      <div class="progress-bar">
+        <div class="progress" style="width: 0;">0%</div>
+      </div>
+      <div class="vote-count">Votos: 0</div>
+    </div>
+  </div>
+
+  <!-- Botón de administración -->
+  <div class="admin-button" onclick="mostrarResultados()">Admin</div>
+
+  <div class="footer">
+    <p>Créditos: Desarrollado por [TG (Top Globales]</p>
   </div>
 </div>
 
 <script>
-  document.addEventListener("click", function (e) {
-    // Array de emojis divertidos para mostrar al hacer click
-    const emojis = ["🎉", "🎊", "🎈", "🥳", "🍾", "🎁"];
-    
-    // Elegir un emoji aleatorio del array
-    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-    
-    // Crear un elemento de span para contener el emoji
-    const emojiElement = document.createElement("span");
-    emojiElement.innerHTML = emoji;
-    emojiElement.style.position = "absolute";
-    emojiElement.style.left = (e.pageX + 10) + "px"; // Ajuste la posición fuera de la zona de clic
-    emojiElement.style.top = (e.pageY + 10) + "px";  // Ajuste la posición fuera de la zona de clic
-    emojiElement.style.fontSize = "24px"; // Tamaño del emoji
+  let votos = [0, 0, 0]; // Votos de los candidatos
 
-    // Evitar que los emojis aparezcan dentro de los cuadros de votaciones
-    const votingBoxes = document.querySelectorAll('.resultado-candidato');
-    let insideBox = false;
-    
-    votingBoxes.forEach(box => {
-      const rect = box.getBoundingClientRect();
-      if (e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom) {
-        insideBox = true;
-      }
+  // Función para votar por un candidato
+  function votar(candidato) {
+    votos[candidato]++;
+    document.querySelectorAll('.vote-count')[candidato].textContent = "Votos: " + votos[candidato];
+    actualizarResultados();
+  }
+
+  // Función para mostrar los resultados
+  function mostrarResultados() {
+    document.getElementById("results").style.display = "block";
+  }
+
+  // Función para actualizar los resultados en la sección de resultados
+  function actualizarResultados() {
+    let totalVotos = votos.reduce((a, b) => a + b, 0);
+    votos.forEach((voto, i) => {
+      let porcentaje = (voto / totalVotos) * 100 || 0;
+      document.querySelectorAll('.progress')[i].style.width = porcentaje + "%";
+      document.querySelectorAll('.progress')[i].textContent = porcentaje.toFixed(2) + "%";
+      document.querySelectorAll('.vote-count')[i + 3].textContent = "Votos: " + voto;
     });
+  }
 
-    if (!insideBox) {
-      // Solo agregar el emoji si el clic está fuera de los recuadros
-      document.body.appendChild(emojiElement);
+document.addEventListener("click", function (e) {
+  // Array de emojis divertidos para mostrar al hacer click
+  const emojis = ["🎉", "🎊", "🎈", "🥳", "🍾", "🎁"];
+  
+  // Elegir un emoji aleatorio del array
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  
+  // Crear un elemento de span para contener el emoji
+  const emojiElement = document.createElement("span");
+  emojiElement.innerHTML = emoji;
+  emojiElement.style.position = "absolute";
+  emojiElement.style.left = (e.pageX + 10) + "px"; // Ajuste la posición fuera de la zona de clic
+  emojiElement.style.top = (e.pageY + 10) + "px";  // Ajuste la posición fuera de la zona de clic
+  emojiElement.style.fontSize = "24px"; // Tamaño del emoji
 
-      // Eliminar el emoji después de 2 segundos
-      setTimeout(() => {
-        emojiElement.remove();
-      }, 2000);
+  // Evitar que los emojis aparezcan dentro de los cuadros de votaciones
+  const votingBoxes = document.querySelectorAll('.voting-box');
+  let insideBox = false;
+  
+  votingBoxes.forEach(box => {
+    const rect = box.getBoundingClientRect();
+    if (e.clientX >= rect.left && e.clientX <= rect.right &&
+        e.clientY >= rect.top && e.clientY <= rect.bottom) {
+      insideBox = true;
     }
   });
+
+  if (!insideBox) {
+    // Solo agregar el emoji si el clic está fuera de los recuadros
+    document.body.appendChild(emojiElement);
+
+    // Eliminar el emoji después de 2 segundos
+    setTimeout(() => {
+      emojiElement.remove();
+    }, 2000);
+  }
+});
 </script>
 
 </body>
