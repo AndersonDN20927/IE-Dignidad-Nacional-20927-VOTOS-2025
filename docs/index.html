@@ -26,10 +26,6 @@
       border-radius: 8px;
       background-color: #fff;
     }
-    .section h2 {
-      font-size: 1.6em;
-      font-weight: bold;
-    }
     .candidate {
       border: 1px solid #ddd;
       padding: 15px;
@@ -37,6 +33,7 @@
       background-color: #fff;
       border-radius: 8px;
       text-align: center;
+      position: relative;
     }
     .candidate img {
       width: 70px;
@@ -103,6 +100,11 @@
       font-size: 40px;
       pointer-events: none;
       z-index: 1000;
+      animation: fadeOut 1.5s forwards;
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
   </style>
   <script>
@@ -178,8 +180,11 @@
       emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.body.appendChild(emojiDiv);
 
-      emojiDiv.style.left = `${event.pageX}px`;
-      emojiDiv.style.top = `${event.pageY}px`;
+      // Colocación controlada del emoji cerca del cursor, pero fuera de los recuadros
+      const offsetX = 50;
+      const offsetY = -50;
+      emojiDiv.style.left = `${event.pageX + offsetX}px`;
+      emojiDiv.style.top = `${event.pageY + offsetY}px`;
 
       setTimeout(() => {
         emojiDiv.remove();
