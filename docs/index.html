@@ -19,17 +19,12 @@
       text-align: center;
       color: #4CAF50;
     }
-    .tabs {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
+    .section {
+      border: 2px solid #4CAF50;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      background-color: #fff;
     }
     .candidate {
       border: 1px solid #ddd;
@@ -37,12 +32,19 @@
       margin: 15px 0;
       background-color: #fff;
       border-radius: 8px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
     }
     .candidate img {
       width: 70px;
       height: 70px;
+      margin-right: 15px;
       border-radius: 50%;
+    }
+    .candidate-info {
+      flex: 1;
+      text-align: center;
     }
     .vote-button {
       background-color: #4CAF50;
@@ -51,6 +53,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      text-decoration: none;
       margin-top: 10px;
     }
     .vote-button:hover {
@@ -75,6 +78,7 @@
       height: 100%;
       background-color: #4CAF50;
       width: 0;
+      border-radius: 5px;
       text-align: center;
       color: white;
       font-size: 14px;
@@ -89,29 +93,33 @@
       color: #666;
       margin-top: 20px;
     }
-    .emoji {
-      font-size: 2em;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .emoji.visible {
-      opacity: 1;
+    .admin-button {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background-color: #333;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
     }
   </style>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const tabs = document.querySelectorAll(".tab");
-      const contents = document.querySelectorAll(".tab-content");
+    let haLeidoTodo = false;
 
-      tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => {
-          contents.forEach(content => content.classList.remove("active"));
-          contents[index].classList.add("active");
-        });
-      });
-    });
+    function mostrarBotonContinuar() {
+      document.getElementById('botonContinuar').style.display = 'block';
+    }
+
+    function continuarPagina() {
+      haLeidoTodo = true;
+      document.getElementById('contenidoPrincipal').style.display = 'block';
+      document.getElementById('seccionLectura').style.display = 'none';
+    }
 
     const candidatoIds = ['candidato1', 'candidato2', 'candidato3'];
+
     function getVotos() {
       const votos = localStorage.getItem('votos');
       return votos ? JSON.parse(votos) : [0, 0, 0];
@@ -131,31 +139,28 @@
     }
 
     function votar(candidato) {
-      const dni = prompt("Ingrese su DNI (8 dígitos) para votar:");
-      const dniList = getDNIList();
-
-      if (!/^\d{8}$/.test(dni)) {
-        alert("El DNI debe contener exactamente 8 dígitos.");
+      if (!haLeidoTodo) {
+        alert("Debes leer toda la información antes de votar.");
         return;
       }
-
+      const dni = prompt("Ingrese su DNI de 8 dígitos para votar:");
+      if (!dni || dni.length !== 8 || isNaN(dni)) {
+        alert("El DNI debe tener exactamente 8 dígitos.");
+        return;
+      }
+      const dniList = getDNIList();
       if (dniList.includes(dni)) {
         alert("Ya has votado con este DNI.");
         return;
       }
 
-      if (dni) {
-        const votos = getVotos();
-        votos[candidato]++;
-        setVotos(votos);
-        dniList.push(dni);
-        setDNIList(dniList);
-        alert("¡Gracias por votar!");
-        document.querySelector(`.emoji[data-candidato="${candidato}"]`).classList.add("visible");
-        setTimeout(() => {
-          document.querySelector(`.emoji[data-candidato="${candidato}"]`).classList.remove("visible");
-        }, 2000);
-      }
+      const votos = getVotos();
+      votos[candidato]++;
+      setVotos(votos);
+      dniList.push(dni);
+      setDNIList(dniList);
+      document.querySelector(`.emoji[data-candidato="${candidato}"]`).style.display = "block";
+      alert("¡Gracias por votar!");
     }
 
     function mostrarResultados() {
@@ -189,69 +194,72 @@
 <body>
   <div class="container">
     <h1>Elecciones Escolares 2024</h1>
-    <p>¡Vota por el candidato que consideres mejor para mejorar el colegio!</p>
-
-    <!-- Pestañas -->
-    <div class="tabs">
-      <div class="tab">¿Por qué es importante votar?</div>
-      <div class="tab">¿Cómo votar responsablemente?</div>
-      <div class="tab">Candidatos</div>
+    <div id="seccionLectura" class="section">
+      <h2>Lee la información antes de continuar</h2>
+      <p>La importancia de votar radica en elegir al candidato con las mejores propuestas, evaluando cada una y pensando en el bienestar del colegio.</p>
+      <p>¿Cómo votar responsablemente? Reflexiona sobre las necesidades actuales de los estudiantes, revisa las propuestas de cada candidato y elige con criterio.</p>
+      <button onclick="mostrarBotonContinuar()">He leído todo</button>
+      <button id="botonContinuar" onclick="continuarPagina()" style="display: none;">Continuar</button>
     </div>
 
-    <!-- Contenidos de las pestañas -->
-    <div class="tab-content">
-      <h2>¿Por qué es importante votar?</h2>
-      <p>El voto escolar es una manera de aprender sobre la democracia y la responsabilidad cívica...</p>
-    </div>
-    <div class="tab-content">
-      <h2>¿Cómo votar responsablemente?</h2>
-      <p>Para votar responsablemente, considera las propuestas de cada candidato y elige de acuerdo a su visión y compromiso...</p>
-    </div>
-    <div class="tab-content active">
+    <div id="contenidoPrincipal" style="display: none;">
       <!-- Candidatos -->
-      <div class="candidate" id="resultado-candidato1">
+      <div class="section" id="resultado-candidato1">
         <img src="ruta/a/tu/imagen1.jpg" alt="Candidato 1">
-        <h2>Candidato 1: Juan "Mejoras visibles"</h2>
-        <p>Propuestas: Mejorar la biblioteca, organizar más eventos deportivos, implementar clases de música y arte.</p>
-        <button class="vote-button" onclick="votar(0)">Votar</button>
-        <div class="emoji" data-candidato="0">😊</div>
-        <div class="vote-count">Votos: 0</div>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
+        <div class="candidate-info">
+          <h2>Candidato 1: Juan "Mejoras visibles"</h2>
+          <p>Propuestas: Construcción de una biblioteca digital, organización de talleres de arte, renovación de los laboratorios de ciencias, actividades recreativas y educativas al aire libre, mejorar la seguridad escolar.</p>
+          <button class="vote-button" onclick="votar(0)">Votar</button>
+          <div class="emoji" data-candidato="0" style="display: none;">😊</div>
+          <div class="vote-count">Votos: 0</div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 0;">0%</div>
+          </div>
         </div>
       </div>
 
-      <div class="candidate" id="resultado-candidato2">
+      <div class="section" id="resultado-candidato2">
         <img src="ruta/a/tu/imagen2.jpg" alt="Candidato 2">
-        <h2>Candidato 2: Ana "Cambio y acción"</h2>
-        <p>Propuestas: Renovar los baños, fomentar la ecología, organizar tutorías, mejorar el acceso a la tecnología.</p>
-        <button class="vote-button" onclick="votar(1)">Votar</button>
-        <div class="emoji" data-candidato="1">😊</div>
-        <div class="vote-count">Votos: 0</div>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
+        <div class="candidate-info">
+          <h2>Candidato 2: Ana "Cambio y acción"</h2>
+          <p>Propuestas: Modernización de las instalaciones deportivas, incorporación de programas de reciclaje, desarrollo de un programa de tutorías, instalación de más fuentes de agua potable, cursos extracurriculares para reforzar habilidades digitales.</p>
+          <button class="vote-button" onclick="votar(1)">Votar</button>
+          <div class="emoji" data-candidato="1" style="display: none;">😊</div>
+          <div class="vote-count">Votos: 0</div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 0;">0%</div>
+          </div>
         </div>
       </div>
 
-      <div class="candidate" id="resultado-candidato3">
+      <div class="section" id="resultado-candidato3">
         <img src="ruta/a/tu/imagen3.jpg" alt="Candidato 3">
-        <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
-        <p>Propuestas: Crear más zonas de estudio, implementar actividades de bienestar emocional, mejorar la seguridad escolar.</p>
-        <button class="vote-button" onclick="votar(2)">Votar</button>
-        <div class="emoji" data-candidato="2">😊</div>
-        <div class="vote-count">Votos: 0</div>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
+        <div class="candidate-info">
+          <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
+          <p>Propuestas: Implementación de áreas de estudio tranquilas, formación en bienestar emocional y físico, reforzar las clases de tutoría con dinámicas grupales y talleres de resolución de conflictos.</p>
+          <button class="vote-button" onclick="votar(2)">Votar</button>
+          <div class="emoji" data-candidato="2" style="display: none;">😊</div>
+          <div class="vote-count">Votos: 0</div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 0;">0%</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <button onclick="mostrarResultados()" class="vote-button" style="margin: 20px auto; display: block;">Ver Resultados</button>
+    <button class="admin-button" onclick="mostrarResultados()">Ver resultados</button>
     <div id="results" class="results">
-      <h2>Resultados de las Elecciones</h2>
+      <h2>Resultados de las votaciones</h2>
+      <div id="resultado-candidato1"></div>
+      <div id="resultado-candidato2"></div>
+      <div id="resultado-candidato3"></div>
     </div>
+  </div>
 
-    <div class="footer">
+  <footer class="footer">Página diseñada por TG (Top Globales)</footer>
+</body>
+</html>
+
       <p>Página creada por las compañías Platanito Tentación, Manzanita Tentación, Acuña Corporación, en conjunto con la compañía TP (Top Globales).</p>
     </div>
   </div>
