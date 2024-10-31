@@ -76,30 +76,6 @@
     .vote-button:hover {
       background-color: #45a049;
     }
-    .results {
-      background-color: #e7f3e7;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-top: 20px;
-      display: none;
-    }
-    .progress-bar {
-      height: 20px;
-      background-color: #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 5px;
-    }
-    .progress {
-      height: 100%;
-      background-color: #4CAF50;
-      width: 0;
-      border-radius: 5px;
-      text-align: center;
-      color: white;
-      font-size: 14px;
-    }
     .vote-count {
       font-size: 1.2em;
       margin-top: 5px;
@@ -125,11 +101,12 @@
       position: absolute;
       font-size: 40px;
       pointer-events: none;
+      z-index: 1000;
     }
   </style>
   <script>
     let haLeidoTodo = false;
-    let emojis = ["😊", "🎉", "💡", "😎", "🐱", "🚀", "🌟", "🔥"];  // Emojis aleatorios
+    let emojis = ["😊", "🎉", "💡", "😎", "🐱", "🚀", "🌟", "🔥"];
 
     function mostrarBotonContinuar() {
       document.getElementById('botonContinuar').style.display = 'block';
@@ -170,7 +147,6 @@
 
     function actualizarResultados() {
       const votos = getVotos();
-      const totalVotos = votos.reduce((a, b) => a + b, 0);
       const resultados = [
         document.getElementById("resultado-candidato1"),
         document.getElementById("resultado-candidato2"),
@@ -178,9 +154,6 @@
       ];
 
       resultados.forEach((resultado, index) => {
-        const porcentaje = totalVotos === 0 ? 0 : (votos[index] / totalVotos * 100).toFixed(2);
-        resultado.querySelector('.progress').style.width = porcentaje + '%';
-        resultado.querySelector('.progress').textContent = porcentaje + '%';
         resultado.querySelector('.vote-count').textContent = `Votos: ${votos[index]}`;
       });
     }
@@ -193,20 +166,15 @@
       localStorage.setItem('votos', JSON.stringify(votos));
     }
 
-    // Mostrar un emoji aleatorio donde sea que se haga clic
     document.addEventListener('click', function(event) {
       const emojiDiv = document.createElement('div');
       emojiDiv.classList.add('emoji-surprise');
       emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.body.appendChild(emojiDiv);
 
-      const x = event.pageX;
-      const y = event.pageY;
+      emojiDiv.style.left = `${event.pageX}px`;
+      emojiDiv.style.top = `${event.pageY}px`;
 
-      emojiDiv.style.left = `${x}px`;
-      emojiDiv.style.top = `${y}px`;
-
-      // Desaparecer el emoji después de 1.5 segundos
       setTimeout(() => {
         emojiDiv.remove();
       }, 1500);
@@ -225,7 +193,6 @@
     </div>
 
     <div id="contenidoPrincipal" style="display: none;">
-      <!-- Candidatos -->
       <div class="section candidate" id="candidato1">
         <img src="ruta/a/tu/imagen1.jpg" alt="Candidato 1">
         <div class="candidate-info">
@@ -234,9 +201,6 @@
           <button class="vote-button" onclick="votar(0)">Votar</button>
           <div class="emoji" data-candidato="0" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
-          <div class="progress-bar">
-            <div class="progress" style="width: 0;">0%</div>
-          </div>
         </div>
       </div>
 
@@ -248,9 +212,6 @@
           <button class="vote-button" onclick="votar(1)">Votar</button>
           <div class="emoji" data-candidato="1" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
-          <div class="progress-bar">
-            <div class="progress" style="width: 0;">0%</div>
-          </div>
         </div>
       </div>
 
@@ -262,41 +223,27 @@
           <button class="vote-button" onclick="votar(2)">Votar</button>
           <div class="emoji" data-candidato="2" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
-          <div class="progress-bar">
-            <div class="progress" style="width: 0;">0%</div>
-          </div>
         </div>
       </div>
 
-      <!-- Resultados -->
       <div id="results" class="results">
         <h2>Resultados:</h2>
         <div id="resultado-candidato1" class="section">
-          <div class="progress-bar">
-            <div class="progress">0%</div>
-          </div>
           <div class="vote-count">Votos: 0</div>
         </div>
         <div id="resultado-candidato2" class="section">
-          <div class="progress-bar">
-            <div class="progress">0%</div>
-          </div>
           <div class="vote-count">Votos: 0</div>
         </div>
         <div id="resultado-candidato3" class="section">
-          <div class="progress-bar">
-            <div class="progress">0%</div>
-          </div>
           <div class="vote-count">Votos: 0</div>
         </div>
       </div>
 
-      <!-- Botón de administración -->
       <div class="admin-button" onclick="mostrarResultados()">Admin</div>
     </div>
 
     <div class="footer">
-      <p>Créditos: Desarrollado por [Tu Nombre]</p>
+      <p>Créditos: Desarrollado por Platanito Tentación, Manzanita Tentación y los TG (Top Globales)</p>
     </div>
   </div>
 </body>
