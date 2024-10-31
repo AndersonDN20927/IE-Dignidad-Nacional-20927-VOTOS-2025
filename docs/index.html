@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-<he<!DOCTYPE html>
-<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +27,7 @@
       border-radius: 8px;
       display: flex;
       align-items: center;
+      flex-direction: column;
     }
     .candidate img {
       width: 70px;
@@ -38,6 +37,7 @@
     }
     .candidate-info {
       flex: 1;
+      text-align: center;
     }
     .vote-button {
       background-color: #4CAF50;
@@ -47,16 +47,10 @@
       border-radius: 5px;
       cursor: pointer;
       text-decoration: none;
+      margin-top: 10px;
     }
     .vote-button:hover {
       background-color: #45a049;
-    }
-    .proposals {
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      margin: 15px 0;
     }
     .results {
       background-color: #e7f3e7;
@@ -82,6 +76,10 @@
       color: white;
       font-size: 14px;
     }
+    .vote-count {
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
     .footer {
       text-align: center;
       font-size: 0.9em;
@@ -90,11 +88,43 @@
     }
   </style>
   <script>
-    let votos = [0, 0, 0]; // Array para contar los votos de cada candidato
+    const candidatoIds = ['candidato1', 'candidato2', 'candidato3'];
+
+    function getVotos() {
+      const votos = localStorage.getItem('votos');
+      return votos ? JSON.parse(votos) : [0, 0, 0]; // [votosCandidato1, votosCandidato2, votosCandidato3]
+    }
+
+    function setVotos(votos) {
+      localStorage.setItem('votos', JSON.stringify(votos));
+    }
+
+    function getDNIList() {
+      const dniList = localStorage.getItem('dniList');
+      return dniList ? JSON.parse(dniList) : [];
+    }
+
+    function setDNIList(dniList) {
+      localStorage.setItem('dniList', JSON.stringify(dniList));
+    }
 
     function votar(candidato) {
-      votos[candidato]++;
-      alert("¡Gracias por votar!");
+      const dni = prompt("Ingrese su DNI para votar:");
+      const dniList = getDNIList();
+
+      if (dniList.includes(dni)) {
+        alert("Ya has votado con este DNI.");
+        return;
+      }
+
+      if (dni) {
+        const votos = getVotos();
+        votos[candidato]++;
+        setVotos(votos);
+        dniList.push(dni);
+        setDNIList(dniList);
+        alert("¡Gracias por votar!");
+      }
     }
 
     function mostrarResultados() {
@@ -108,17 +138,19 @@
     }
 
     function actualizarResultados() {
+      const votos = getVotos();
       const totalVotos = votos.reduce((a, b) => a + b, 0);
       const resultados = [
         document.getElementById("resultado-candidato1"),
         document.getElementById("resultado-candidato2"),
         document.getElementById("resultado-candidato3")
       ];
-      
+
       resultados.forEach((resultado, index) => {
         const porcentaje = totalVotos === 0 ? 0 : (votos[index] / totalVotos * 100).toFixed(2);
         resultado.querySelector('.progress').style.width = porcentaje + '%';
         resultado.querySelector('.progress').textContent = porcentaje + '%';
+        resultado.querySelector('.vote-count').textContent = `Votos: ${votos[index]}`;
       });
     }
   </script>
@@ -129,82 +161,47 @@
     <p>¡Vota por el candidato que consideres mejor para mejorar el colegio!</p>
 
     <!-- Candidatos -->
-    <div class="candidate">
+    <div class="candidate" id="resultado-candidato1">
       <img src="https://via.placeholder.com/70?text=👓" alt="Candidato 1">
       <div class="candidate-info">
         <h2>Candidato 1: Juan "Mejoras visibles"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Instalación de nuevas áreas de estudio.</li>
-          <li>Creación de un club de lectura.</li>
-          <li>Mejoras en la cafetería escolar.</li>
-          <li>Implementación de más bebederos de agua.</li>
-          <li>Instalación de Wi-Fi gratuito en el campus.</li>
-          <li>Organización de actividades extracurriculares.</li>
-        </ul>
         <button class="vote-button" onclick="votar(0)">Votar</button>
+        <div class="vote-count">Votos: 0</div>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0;">0%</div>
+        </div>
       </div>
     </div>
 
-    <div class="candidate">
+    <div class="candidate" id="resultado-candidato2">
       <img src="https://via.placeholder.com/70?text=✂️" alt="Candidato 2">
       <div class="candidate-info">
         <h2>Candidato 2: Ana "Cambio y acción"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Mejoras en el gimnasio escolar.</li>
-          <li>Organización de talleres de arte.</li>
-          <li>Renovación de laboratorios.</li>
-          <li>Fomento de prácticas ecológicas.</li>
-          <li>Reducción de desperdicio en el comedor.</li>
-          <li>Implementación de un programa de reciclaje.</li>
-        </ul>
         <button class="vote-button" onclick="votar(1)">Votar</button>
+        <div class="vote-count">Votos: 0</div>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0;">0%</div>
+        </div>
       </div>
     </div>
 
-    <div class="candidate">
+    <div class="candidate" id="resultado-candidato3">
       <img src="https://via.placeholder.com/70?text=🔧" alt="Candidato 3">
       <div class="candidate-info">
         <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
-        <p>Propuestas:</p>
-        <ul class="proposals">
-          <li>Reducción del uso de papel.</li>
-          <li>Creación de un sistema de reciclaje.</li>
-          <li>Organización de ferias científicas.</li>
-          <li>Instalación de paneles solares.</li>
-          <li>Fomento de transporte compartido.</li>
-          <li>Renovación de mobiliario escolar.</li>
-        </ul>
         <button class="vote-button" onclick="votar(2)">Votar</button>
+        <div class="vote-count">Votos: 0</div>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0;">0%</div>
+        </div>
       </div>
     </div>
 
-    <!-- Resultados protegidos por contraseña -->
     <button onclick="mostrarResultados()" class="vote-button" style="margin: 20px auto; display: block;">Ver Resultados</button>
     <div id="results" class="results">
       <h2>Resultados de las Elecciones</h2>
-      <div id="resultado-candidato1">
-        <p>Juan "Mejoras visibles":</p>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
-        </div>
-      </div>
-      <div id="resultado-candidato2">
-        <p>Ana "Cambio y acción":</p>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
-        </div>
-      </div>
-      <div id="resultado-candidato3">
-        <p>Pedro "Eficiencia y renovación":</p>
-        <div class="progress-bar">
-          <div class="progress" style="width: 0;">0%</div>
-        </div>
-      </div>
     </div>
 
-    <!-- Créditos -->
     <div class="footer">
       <p>Página creada por las compañías Platanito Tentación, Manzanita Tentación, Acuña Corporación, en conjunto con la compañía TP (Top Globales).</p>
     </div>
