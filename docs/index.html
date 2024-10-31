@@ -173,9 +173,9 @@
     }
 
     document.addEventListener('click', function(event) {
-      // Evitar que se muestren emojis dentro de los recuadros de los candidatos
+      // Evitar que se muestren emojis dentro de los recuadros de los candidatos y en la sección de lectura
       const clickedElement = document.elementFromPoint(event.clientX, event.clientY);
-      if (clickedElement.closest('.candidate')) {
+      if (clickedElement.closest('.candidate') || clickedElement.closest('#seccionLectura')) {
         return;
       }
 
@@ -184,11 +184,9 @@
       emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.body.appendChild(emojiDiv);
 
-      // Colocación controlada del emoji cerca del cursor, pero fuera de los recuadros
-      const offsetX = 50;
-      const offsetY = -50;
-      emojiDiv.style.left = `${event.pageX + offsetX}px`;
-      emojiDiv.style.top = `${event.pageY + offsetY}px`;
+      // Colocación exacta del emoji donde el mouse clickea
+      emojiDiv.style.left = `${event.pageX}px`;
+      emojiDiv.style.top = `${event.pageY}px`;
 
       setTimeout(() => {
         emojiDiv.remove();
