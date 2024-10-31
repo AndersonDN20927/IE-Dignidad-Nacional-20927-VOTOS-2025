@@ -173,7 +173,11 @@
     }
 
     document.addEventListener('click', function(event) {
-      if (event.target.classList.contains('vote-button')) return;
+      // Evitar que se muestren emojis dentro de los recuadros de los candidatos
+      const clickedElement = document.elementFromPoint(event.clientX, event.clientY);
+      if (clickedElement.closest('.candidate')) {
+        return;
+      }
 
       const emojiDiv = document.createElement('div');
       emojiDiv.classList.add('emoji-surprise');
