@@ -121,16 +121,15 @@
       cursor: pointer;
       font-size: 0.8em;
     }
-    .surprise {
+    .emoji-surprise {
       position: absolute;
-      width: 100px;
-      height: auto;
-      display: none;
+      font-size: 40px;
+      pointer-events: none;
     }
   </style>
   <script>
     let haLeidoTodo = false;
-    let imagenActual = null;
+    let emojis = ["😊", "🎉", "💡", "😎", "🐱", "🚀", "🌟", "🔥"];  // Emojis aleatorios
 
     function mostrarBotonContinuar() {
       document.getElementById('botonContinuar').style.display = 'block';
@@ -186,20 +185,31 @@
       });
     }
 
-    // Mostrar una imagen sorpresa donde sea que hagas clic
+    function getVotos() {
+      return JSON.parse(localStorage.getItem('votos') || '[0, 0, 0]');
+    }
+
+    function setVotos(votos) {
+      localStorage.setItem('votos', JSON.stringify(votos));
+    }
+
+    // Mostrar un emoji aleatorio donde sea que se haga clic
     document.addEventListener('click', function(event) {
-      const surprise = document.getElementById('surprise');
+      const emojiDiv = document.createElement('div');
+      emojiDiv.classList.add('emoji-surprise');
+      emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      document.body.appendChild(emojiDiv);
+
       const x = event.pageX;
       const y = event.pageY;
 
-      if (imagenActual) {
-        imagenActual.style.display = 'none';
-      }
+      emojiDiv.style.left = `${x}px`;
+      emojiDiv.style.top = `${y}px`;
 
-      surprise.style.left = `${x}px`;
-      surprise.style.top = `${y}px`;
-      surprise.style.display = 'block';
-      imagenActual = surprise;
+      // Desaparecer el emoji después de 1.5 segundos
+      setTimeout(() => {
+        emojiDiv.remove();
+      }, 1500);
     });
   </script>
 </head>
@@ -221,7 +231,6 @@
         <div class="candidate-info">
           <h2>Candidato 1: Juan "Mejoras visibles"</h2>
           <p>Propuestas: Construcción de una biblioteca digital, organización de talleres de arte, renovación de los laboratorios de ciencias, actividades recreativas y educativas al aire libre, mejorar la seguridad escolar.</p>
-          <p><strong>Más información:</strong> Juan propone un cambio integral para asegurar que las infraestructuras del colegio sean accesibles para todos, incluyendo la creación de espacios adaptados para estudiantes con discapacidades.</p>
           <button class="vote-button" onclick="votar(0)">Votar</button>
           <div class="emoji" data-candidato="0" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
@@ -234,9 +243,8 @@
       <div class="section candidate" id="candidato2">
         <img src="ruta/a/tu/imagen2.jpg" alt="Candidato 2">
         <div class="candidate-info">
-          <h2>Candidato 2: María "Convivencia pacífica"</h2>
+          <h2>Candidato 2: María "Escuela pacífica"</h2>
           <p>Propuestas: Talleres de mediación escolar, formación de una brigada ecológica estudiantil, acuerdos para convivencia saludable, desarrollo de proyectos solidarios.</p>
-          <p><strong>Más información:</strong> María también impulsa la implementación de un programa de salud mental, apoyando a los estudiantes con problemas emocionales y ofreciendo capacitaciones sobre el manejo del estrés.</p>
           <button class="vote-button" onclick="votar(1)">Votar</button>
           <div class="emoji" data-candidato="1" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
@@ -251,7 +259,6 @@
         <div class="candidate-info">
           <h2>Candidato 3: Pedro "Transformación digital"</h2>
           <p>Propuestas: Introducción de una plataforma para gestionar actividades escolares, reducción del uso de papel, creación de un canal de comunicación directo con los alumnos.</p>
-          <p><strong>Más información:</strong> Pedro está comprometido con una transformación digital completa, donde los estudiantes podrán acceder a todo el material educativo desde sus dispositivos móviles, reduciendo así la huella ecológica.</p>
           <button class="vote-button" onclick="votar(2)">Votar</button>
           <div class="emoji" data-candidato="2" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
@@ -264,18 +271,30 @@
       <!-- Resultados -->
       <div id="results" class="results">
         <h2>Resultados:</h2>
-        <div id="resultado-candidato1"></div>
-        <div id="resultado-candidato2"></div>
-        <div id="resultado-candidato3"></div>
+        <div id="resultado-candidato1" class="section">
+          <div class="progress-bar">
+            <div class="progress">0%</div>
+          </div>
+          <div class="vote-count">Votos: 0</div>
+        </div>
+        <div id="resultado-candidato2" class="section">
+          <div class="progress-bar">
+            <div class="progress">0%</div>
+          </div>
+          <div class="vote-count">Votos: 0</div>
+        </div>
+        <div id="resultado-candidato3" class="section">
+          <div class="progress-bar">
+            <div class="progress">0%</div>
+          </div>
+          <div class="vote-count">Votos: 0</div>
+        </div>
       </div>
 
       <!-- Botón de administración -->
       <div class="admin-button" onclick="mostrarResultados()">Admin</div>
-
-      <!-- Sorpresa -->
-      <img id="surprise" src="ruta/a/sorpresa.jpg" alt="Sorpresa" class="surprise">
     </div>
-    
+
     <div class="footer">
       <p>Créditos: Desarrollado por [Tu Nombre]</p>
     </div>
