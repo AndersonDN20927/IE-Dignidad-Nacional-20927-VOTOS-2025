@@ -19,13 +19,34 @@
       text-align: center;
       color: #4CAF50;
     }
+    /* Ajuste del tamaño del recuadro de información */
     .section {
       border: 2px solid #4CAF50;
-      padding: 15px;
+      padding: 30px; /* Aumentamos el padding */
       margin: 15px 0;
       border-radius: 8px;
       background-color: #fff;
+      font-size: 1.1em; /* Aumentamos el tamaño del texto */
     }
+    /* Texto "La importancia" y "¿Cómo votar responsablemente?" más grandes */
+    .section h2 {
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+    /* Botón "He leído todo" más llamativo */
+    .section button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .section button:hover {
+      background-color: #45a049;
+    }
+    /* Estilos para la parte de candidatos */
     .candidate {
       border: 1px solid #ddd;
       padding: 15px;
@@ -104,6 +125,19 @@
       cursor: pointer;
       font-size: 0.8em;
     }
+
+    /* Estilos para las imágenes de referencia al hacer clic fuera */
+    .surprise {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      display: none;
+      font-size: 50px;
+    }
+    .surprise img {
+      width: 100px;
+      height: auto;
+    }
   </style>
   <script>
     let haLeidoTodo = false;
@@ -118,26 +152,6 @@
       document.getElementById('seccionLectura').style.display = 'none';
     }
 
-    const candidatoIds = ['candidato1', 'candidato2', 'candidato3'];
-
-    function getVotos() {
-      const votos = localStorage.getItem('votos');
-      return votos ? JSON.parse(votos) : [0, 0, 0];
-    }
-
-    function setVotos(votos) {
-      localStorage.setItem('votos', JSON.stringify(votos));
-    }
-
-    function getDNIList() {
-      const dniList = localStorage.getItem('dniList');
-      return dniList ? JSON.parse(dniList) : [];
-    }
-
-    function setDNIList(dniList) {
-      localStorage.setItem('dniList', JSON.stringify(dniList));
-    }
-
     function votar(candidato) {
       if (!haLeidoTodo) {
         alert("Debes leer toda la información antes de votar.");
@@ -148,17 +162,9 @@
         alert("El DNI debe tener exactamente 8 dígitos.");
         return;
       }
-      const dniList = getDNIList();
-      if (dniList.includes(dni)) {
-        alert("Ya has votado con este DNI.");
-        return;
-      }
-
       const votos = getVotos();
       votos[candidato]++;
       setVotos(votos);
-      dniList.push(dni);
-      setDNIList(dniList);
       document.querySelector(`.emoji[data-candidato="${candidato}"]`).style.display = "block";
       alert("¡Gracias por votar!");
     }
@@ -189,6 +195,16 @@
         resultado.querySelector('.vote-count').textContent = `Votos: ${votos[index]}`;
       });
     }
+
+    // Mostrar una sorpresa (Among Us, Cheems y una nutria) al hacer clic fuera del cuadro
+    document.addEventListener('click', function(event) {
+      const section = document.querySelector('.section');
+      const isClickInside = section.contains(event.target);
+      if (!isClickInside) {
+        const surprise = document.querySelector('.surprise');
+        surprise.style.display = 'block';
+      }
+    });
   </script>
 </head>
 <body>
@@ -221,8 +237,8 @@
       <div class="section" id="resultado-candidato2">
         <img src="ruta/a/tu/imagen2.jpg" alt="Candidato 2">
         <div class="candidate-info">
-          <h2>Candidato 2: Ana "Cambio y acción"</h2>
-          <p>Propuestas: Modernización de las instalaciones deportivas, incorporación de programas de reciclaje, desarrollo de un programa de tutorías, instalación de más fuentes de agua potable, cursos extracurriculares para reforzar habilidades digitales.</p>
+          <h2>Candidato 2: María "Convivencia pacífica"</h2>
+          <p>Propuestas: Talleres de mediación escolar, formación de una brigada ecológica estudiantil, acuerdos para convivencia saludable, desarrollo de proyectos solidarios.</p>
           <button class="vote-button" onclick="votar(1)">Votar</button>
           <div class="emoji" data-candidato="1" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
@@ -235,8 +251,8 @@
       <div class="section" id="resultado-candidato3">
         <img src="ruta/a/tu/imagen3.jpg" alt="Candidato 3">
         <div class="candidate-info">
-          <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
-          <p>Propuestas: Implementación de áreas de estudio tranquilas, formación en bienestar emocional y físico, reforzar las clases de tutoría con dinámicas grupales y talleres de resolución de conflictos.</p>
+          <h2>Candidato 3: Pedro "Transformación digital"</h2>
+          <p>Propuestas: Introducción de una plataforma para gestionar actividades escolares, reducción del uso de papel, creación de un canal de comunicación directo con los alumnos.</p>
           <button class="vote-button" onclick="votar(2)">Votar</button>
           <div class="emoji" data-candidato="2" style="display: none;">😊</div>
           <div class="vote-count">Votos: 0</div>
@@ -245,23 +261,26 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <button class="admin-button" onclick="mostrarResultados()">Ver resultados</button>
-    <div id="results" class="results">
-      <h2>Resultados de las votaciones</h2>
-      <div id="resultado-candidato1"></div>
-      <div id="resultado-candidato2"></div>
-      <div id="resultado-candidato3"></div>
+      <!-- Resultados -->
+      <div id="results" class="results">
+        <h2>Resultados:</h2>
+        <div id="resultado-candidato1"></div>
+        <div id="resultado-candidato2"></div>
+        <div id="resultado-candidato3"></div>
+      </div>
+
+      <!-- Botón de administración -->
+      <div class="admin-button" onclick="mostrarResultados()">Admin</div>
+    </div>
+    
+    <!-- Sorpresas -->
+    <div class="surprise">
+      <img src="among-us.jpg" alt="Among Us">
+      <img src="cheems.jpg" alt="Cheems">
+      <img src="nutria.jpg" alt="Nutria">
     </div>
   </div>
-
-  <footer class="footer">Página diseñada por TG (Top Globales)</footer>
 </body>
 </html>
 
-      <p>Página creada por las compañías Platanito Tentación, Manzanita Tentación, Acuña Corporación, en conjunto con la compañía TP (Top Globales).</p>
-    </div>
-  </div>
-</body>
-</html>
