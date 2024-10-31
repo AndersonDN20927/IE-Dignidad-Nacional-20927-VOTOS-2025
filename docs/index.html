@@ -1,159 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Voto Cuenta</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f8ff; color: #333; }
-        header { background-color: #ff4500; color: white; padding: 1.5em; text-align: center; }
-        header h1 { margin: 0; font-size: 2.5em; }
-        nav { display: flex; justify-content: center; background-color: #333; }
-        nav a { color: white; padding: 1em; text-decoration: none; font-weight: bold; }
-        nav a:hover { background-color: #ff4500; }
-        .container { padding: 2em; }
-        .section { margin-bottom: 2em; }
-        .candidate { border: 2px solid #ddd; padding: 1em; border-radius: 8px; margin-top: 1em; background-color: #fff; display: flex; align-items: center; }
-        .candidate img { width: 100px; height: 100px; border-radius: 50%; margin-right: 1em; }
-        .vote-link, .admin-login { text-align: center; margin-top: 2em; }
-        .vote-link a, .admin-login button { text-decoration: none; padding: 0.8em 2em; color: white; background-color: #4CAF50; border: none; border-radius: 5px; font-size: 1em; }
-        .vote-link a:hover, .admin-login button:hover { background-color: #45a049; }
-        .admin-form { display: none; margin-top: 1em; }
-        footer { background-color: #333; color: white; text-align: center; padding: 1em; }
-        .contact-form { max-width: 400px; margin: auto; }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 0.5em; margin: 0.5em 0; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elecciones Escolares 2024</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f5;
+      color: #333;
+    }
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #4CAF50;
+    }
+    .candidate {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 15px 0;
+      background-color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .candidate img {
+      width: 70px;
+      height: 70px;
+      margin-right: 15px;
+      border-radius: 50%;
+    }
+    .candidate-info {
+      flex: 1;
+    }
+    .vote-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .vote-button:hover {
+      background-color: #45a049;
+    }
+    .proposals {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 15px 0;
+    }
+    .results {
+      background-color: #e7f3e7;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none; /* Oculto por defecto */
+    }
+    .progress-bar {
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .progress {
+      height: 100%;
+      background-color: #4CAF50;
+      width: 0;
+      border-radius: 5px;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 20px;
+    }
+  </style>
+  <script>
+    function mostrarResultados() {
+      const password = prompt("Ingrese la contraseña para ver los resultados:");
+      if (password === "voto2025") {
+        document.getElementById("results").style.display = "block";
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+    }
+  </script>
 </head>
 <body>
+  <div class="container">
+    <h1>Elecciones Escolares 2024</h1>
+    <p>¡Vota por el candidato que consideres mejor para mejorar el colegio!</p>
 
-    <header>
-        <h1>Tu Voto Cuenta</h1>
-        <p>¡Participa y haz la diferencia en tu institución!</p>
-    </header>
-
-    <nav>
-        <a href="#inicio">Inicio</a>
-        <a href="#porque-votar">¿Por qué votar?</a>
-        <a href="#candidatos">Candidatos</a>
-        <a href="#como-votar">Cómo votar</a>
-        <a href="#contacto">Contáctanos</a>
-    </nav>
-
-    <div id="inicio" class="container section">
-        <h2>Bienvenido</h2>
-        <p>La participación de los estudiantes es fundamental para mejorar nuestra institución. ¡Tu voto cuenta!</p>
-    </div>
-
-    <div id="porque-votar" class="container section">
-        <h2>¿Por qué votar?</h2>
-        <ul>
-            <li>Votar es un derecho y una responsabilidad.</li>
-            <li>Con tu voto, eliges quién te representará en decisiones importantes.</li>
-            <li>El voto es la herramienta que tienes para cambiar y mejorar la institución.</li>
+    <!-- Candidatos -->
+    <div class="candidate">
+      <img src="https://via.placeholder.com/70?text=👓" alt="Candidato 1">
+      <div class="candidate-info">
+        <h2>Candidato 1: Juan "Mejoras visibles"</h2>
+        <p>Propuestas:</p>
+        <ul class="proposals">
+          <li>Instalación de nuevas áreas de estudio.</li>
+          <li>Creación de un club de lectura.</li>
+          <li>Mejoras en la cafetería escolar.</li>
+          <li>Implementación de más bebederos de agua.</li>
+          <li>Instalación de Wi-Fi gratuito en el campus.</li>
+          <li>Organización de actividades extracurriculares.</li>
         </ul>
+        <a href="https://enlace-a-la-votacion.com" class="vote-button">Votar</a>
+      </div>
     </div>
 
-    <div id="candidatos" class="container section">
-        <h2>Candidatos</h2>
-        <div class="candidate">
-            <img src="https://via.placeholder.com/100" alt="Foto de candidato 1">
-            <div>
-                <h3>Ana Martínez</h3>
-                <p>Propuesta principal: Ampliar las actividades deportivas y culturales.</p>
-                <p>Ana se enfoca en la inclusión de todos los estudiantes en actividades extracurriculares.</p>
-            </div>
-        </div>
-        <div class="candidate">
-            <img src="https://via.placeholder.com/100" alt="Foto de candidato 2">
-            <div>
-                <h3>Jorge Ramírez</h3>
-                <p>Propuesta principal: Mejorar los espacios de estudio y recreación.</p>
-                <p>Jorge busca mejorar las áreas de estudio y descanso para todos los estudiantes.</p>
-            </div>
-        </div>
-        <div class="candidate">
-            <img src="https://via.placeholder.com/100" alt="Foto de candidato 3">
-            <div>
-                <h3>Lucía Fernández</h3>
-                <p>Propuesta principal: Fomentar proyectos de sostenibilidad en el campus.</p>
-                <p>Lucía quiere implementar prácticas de reciclaje y cuidado del medio ambiente en la institución.</p>
-            </div>
-        </div>
+    <div class="candidate">
+      <img src="https://via.placeholder.com/70?text=✂️" alt="Candidato 2">
+      <div class="candidate-info">
+        <h2>Candidato 2: Ana "Cambio y acción"</h2>
+        <p>Propuestas:</p>
+        <ul class="proposals">
+          <li>Mejoras en el gimnasio escolar.</li>
+          <li>Organización de talleres de arte.</li>
+          <li>Renovación de laboratorios.</li>
+          <li>Fomento de prácticas ecológicas.</li>
+          <li>Reducción de desperdicio en el comedor.</li>
+          <li>Implementación de un programa de reciclaje.</li>
+        </ul>
+        <a href="https://enlace-a-la-votacion.com" class="vote-button">Votar</a>
+      </div>
     </div>
 
-    <div id="como-votar" class="container section">
-        <h2>Cómo votar</h2>
-        <p>Sigue estos pasos para votar:</p>
-        <ol>
-            <li>Revisa las propuestas de cada candidato.</li>
-            <li>El día de las elecciones, accede al área de votación.</li>
-            <li>Emite tu voto de manera confidencial.</li>
-        </ol>
-        <p><strong>Fecha de votación:</strong> 10 de noviembre de 2024</p>
-        <div class="vote-link">
-            <a href="https://enlace-a-la-votacion.com" target="_blank">Ir a Votar</a>
-        </div>
+    <div class="candidate">
+      <img src="https://via.placeholder.com/70?text=🔧" alt="Candidato 3">
+      <div class="candidate-info">
+        <h2>Candidato 3: Pedro "Eficiencia y renovación"</h2>
+        <p>Propuestas:</p>
+        <ul class="proposals">
+          <li>Reducción del uso de papel.</li>
+          <li>Creación de un sistema de reciclaje.</li>
+          <li>Organización de ferias científicas.</li>
+          <li>Instalación de paneles solares.</li>
+          <li>Fomento de transporte compartido.</li>
+          <li>Renovación de mobiliario escolar.</li>
+        </ul>
+        <a href="https://enlace-a-la-votacion.com" class="vote-button">Votar</a>
+      </div>
     </div>
 
-    <div class="container section admin-login">
-        <h2>Acceso Administrativo</h2>
-        <button onclick="toggleAdminForm()">Iniciar Sesión</button>
-        <div class="admin-form" id="admin-form">
-            <form onsubmit="checkPassword(event)">
-                <label for="admin-password">Contraseña:</label>
-                <input type="password" id="admin-password" required>
-                <button type="submit">Acceder</button>
-            </form>
+    <!-- Resultados protegidos por contraseña -->
+    <button onclick="mostrarResultados()" class="vote-button" style="margin: 20px auto; display: block;">Ver Resultados</button>
+    <div id="results" class="results">
+      <h2>Resultados de las Elecciones</h2>
+      <div>
+        <p>Juan "Mejoras visibles":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 40%;">40%</div>
         </div>
-        <div id="admin-panel" style="display: none;">
-            <h3>Panel de Resultados</h3>
-            <p>Aquí podrás revisar los votos.</p>
-            <!-- Aquí puedes integrar la lógica de resultados o manejar desde otro enlace -->
+      </div>
+      <div>
+        <p>Ana "Cambio y acción":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 35%;">35%</div>
         </div>
+      </div>
+      <div>
+        <p>Pedro "Eficiencia y renovación":</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 25%;">25%</div>
+        </div>
+      </div>
     </div>
 
-    <div id="contacto" class="container section">
-        <h2>Contáctanos</h2>
-        <div class="contact-form">
-            <form action="#" method="post">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Correo electrónico:</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="message">Mensaje:</label>
-                <textarea id="message" name="message" rows="4" required></textarea>
-
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
+    <!-- Créditos -->
+    <div class="footer">
+      <p>Página creada por las compañías Platanito Tentación, Manzanita Tentación, Acuña Corporación, en conjunto con la compañía TP (Top Globales).</p>
     </div>
-
-    <footer>
-        <p>© 2024 Tu Voto Cuenta. Todos los derechos reservados.</p>
-        <p>Síguenos en nuestras redes sociales para más información.</p>
-    </footer>
-
-    <script>
-        function toggleAdminForm() {
-            document.getElementById('admin-form').style.display = 
-                document.getElementById('admin-form').style.display === 'none' ? 'block' : 'none';
-        }
-
-        function checkPassword(event) {
-            event.preventDefault();
-            const password = document.getElementById('admin-password').value;
-            const correctPassword = "voto2024"; // Cambia esta contraseña según prefieras
-
-            if (password === correctPassword) {
-                document.getElementById('admin-panel').style.display = 'block';
-                alert("Acceso concedido");
-            } else {
-                alert("Contraseña incorrecta");
-            }
-        }
-    </script>
-
+  </div>
 </body>
 </html>
