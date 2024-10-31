@@ -21,14 +21,13 @@
     }
     .section {
       border: 2px solid #4CAF50;
-      padding: 30px;
+      padding: 20px;
       margin: 15px 0;
       border-radius: 8px;
       background-color: #fff;
-      font-size: 1.1em;
     }
     .section h2 {
-      font-size: 1.8em;
+      font-size: 1.6em;
       font-weight: bold;
     }
     .candidate {
@@ -57,10 +56,6 @@
     }
     .vote-button:hover {
       background-color: #45a049;
-    }
-    .vote-count, .progress-percentage {
-      font-size: 1.2em;
-      margin-top: 5px;
     }
     .footer {
       text-align: center;
@@ -104,7 +99,7 @@
       font-size: 14px;
     }
     .emoji-surprise {
-      position: absolute;
+      position: fixed;
       font-size: 40px;
       pointer-events: none;
       z-index: 1000;
@@ -164,7 +159,6 @@
         const porcentaje = totalVotos === 0 ? 0 : (votos[index] / totalVotos * 100).toFixed(2);
         resultado.querySelector('.progress').style.width = porcentaje + '%';
         resultado.querySelector('.progress').textContent = porcentaje + '%';
-        resultado.querySelector('.vote-count').textContent = `Votos: ${votos[index]}`;
       });
     }
 
@@ -177,15 +171,15 @@
     }
 
     document.addEventListener('click', function(event) {
+      if (event.target.classList.contains('vote-button')) return;
+
       const emojiDiv = document.createElement('div');
       emojiDiv.classList.add('emoji-surprise');
       emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.body.appendChild(emojiDiv);
 
-      const x = event.pageX;
-      const y = event.pageY;
-      emojiDiv.style.left = `${x}px`;
-      emojiDiv.style.top = `${y}px`;
+      emojiDiv.style.left = `${event.pageX}px`;
+      emojiDiv.style.top = `${event.pageY}px`;
 
       setTimeout(() => {
         emojiDiv.remove();
@@ -199,7 +193,6 @@
     <div id="seccionLectura" class="section">
       <h2>Lee la información antes de continuar</h2>
       <p>La importancia de votar radica en elegir al candidato con las mejores propuestas, evaluando cada una y pensando en el bienestar del colegio.</p>
-      <p>¿Cómo votar responsablemente? Reflexiona sobre las necesidades actuales de los estudiantes, revisa las propuestas de cada candidato y elige con criterio.</p>
       <button onclick="mostrarBotonContinuar()">He leído todo</button>
       <button id="botonContinuar" onclick="continuarPagina()" style="display: none;">Continuar</button>
     </div>
@@ -207,22 +200,22 @@
     <div id="contenidoPrincipal" style="display: none;">
       <div class="section candidate" id="candidato1">
         <img src="ruta/a/tu/imagen1.jpg" alt="Candidato 1">
-        <h2>Candidato 1: Juan "Mejoras visibles"</h2>
-        <p>Propuestas: Construcción de una biblioteca digital, talleres de arte, renovación de laboratorios de ciencias, y actividades recreativas al aire libre.</p>
+        <h2>Candidato 1: Juan "El Futuro Brillante"</h2>
+        <p>"Vota por el cambio que quieres ver. Hagamos historia juntos."</p>
         <button class="vote-button" onclick="votar(0)">Votar</button>
       </div>
 
       <div class="section candidate" id="candidato2">
         <img src="ruta/a/tu/imagen2.jpg" alt="Candidato 2">
-        <h2>Candidato 2: María "Escuela pacífica"</h2>
-        <p>Propuestas: Talleres de mediación escolar, formación de una brigada ecológica, y desarrollo de proyectos solidarios.</p>
+        <h2>Candidato 2: María "Con Compromiso y Valores"</h2>
+        <p>"Juntos lograremos un ambiente de paz y progreso para todos."</p>
         <button class="vote-button" onclick="votar(1)">Votar</button>
       </div>
 
       <div class="section candidate" id="candidato3">
         <img src="ruta/a/tu/imagen3.jpg" alt="Candidato 3">
-        <h2>Candidato 3: Pedro "Transformación digital"</h2>
-        <p>Propuestas: Introducción de una plataforma para actividades escolares y creación de un canal de comunicación directo con alumnos.</p>
+        <h2>Candidato 3: Pedro "Innovación y Tecnología"</h2>
+        <p>"Liderando la transformación digital de nuestro colegio."</p>
         <button class="vote-button" onclick="votar(2)">Votar</button>
       </div>
 
@@ -233,21 +226,18 @@
           <div class="progress-bar">
             <div class="progress"></div>
           </div>
-          <div class="vote-count">Votos: 0</div>
         </div>
         <div id="resultado-candidato2" class="section">
           <h3>Candidato 2</h3>
           <div class="progress-bar">
             <div class="progress"></div>
           </div>
-          <div class="vote-count">Votos: 0</div>
         </div>
         <div id="resultado-candidato3" class="section">
           <h3>Candidato 3</h3>
           <div class="progress-bar">
             <div class="progress"></div>
           </div>
-          <div class="vote-count">Votos: 0</div>
         </div>
       </div>
 
