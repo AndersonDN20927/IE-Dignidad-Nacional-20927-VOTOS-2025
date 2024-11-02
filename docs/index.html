@@ -104,7 +104,7 @@
     }
   </style>
 </head>
-<body>
+<body onload="document.getElementById('inicio').style.display = 'block';">
 
   <!-- Enlace para Administrador -->
   <span class="admin-link" onclick="mostrarAdmin()">Admin</span>
@@ -152,7 +152,34 @@
         <p>Lema: "¡Educación y unión para un mejor mañana!"</p>
       </div>
     </div>
-    <!-- Añadir más candidatos aquí -->
+    <div class="candidate" onclick="mostrarPerfil('candidato2')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <div class="candidate-info">
+        <h3>Juan González</h3>
+        <p>Lema: "Unidos por un cambio real"</p>
+      </div>
+    </div>
+    <div class="candidate" onclick="mostrarPerfil('candidato3')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <div class="candidate-info">
+        <h3>Carmen Ruiz</h3>
+        <p>Lema: "Innovación para un mejor futuro"</p>
+      </div>
+    </div>
+    <div class="candidate" onclick="mostrarPerfil('candidato4')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <div class="candidate-info">
+        <h3>Pedro López</h3>
+        <p>Lema: "Transparencia y confianza"</p>
+      </div>
+    </div>
+    <div class="candidate" onclick="mostrarPerfil('candidato5')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <div class="candidate-info">
+        <h3>Sofía García</h3>
+        <p>Lema: "Juntos somos más fuertes"</p>
+      </div>
+    </div>
   </div>
 
   <!-- Perfil del Candidato -->
@@ -178,16 +205,67 @@
         nombre: "María Pérez",
         lema: "¡Educación y unión para un mejor mañana!",
         propuestas: [
-          "Propuesta 1 de María",
-          "Propuesta 2 de María",
-          "Propuesta 3 de María",
-          "Propuesta 4 de María",
-          "Propuesta 5 de María",
-          "Propuesta 6 de María"
+          "Implementar talleres extracurriculares.",
+          "Renovar la biblioteca escolar.",
+          "Fomentar el reciclaje.",
+          "Mejorar la seguridad en las salidas escolares.",
+          "Organizar eventos de integración.",
+          "Apoyar a los estudiantes con dificultades académicas."
         ],
         votos: localStorage.getItem("candidato1") ? parseInt(localStorage.getItem("candidato1")) : 0
       },
-      // Añadir más candidatos aquí
+      candidato2: {
+        nombre: "Juan González",
+        lema: "Unidos por un cambio real",
+        propuestas: [
+          "Ampliar el horario de estudio en la biblioteca.",
+          "Promover el uso de tecnología en clases.",
+          "Realizar concursos culturales.",
+          "Incrementar la participación estudiantil.",
+          "Reforzar los programas de tutorías.",
+          "Mejorar las instalaciones deportivas."
+        ],
+        votos: localStorage.getItem("candidato2") ? parseInt(localStorage.getItem("candidato2")) : 0
+      },
+      candidato3: {
+        nombre: "Carmen Ruiz",
+        lema: "Innovación para un mejor futuro",
+        propuestas: [
+          "Implementar talleres de robótica.",
+          "Mejorar los laboratorios de ciencias.",
+          "Aumentar la inversión en recursos tecnológicos.",
+          "Fomentar el aprendizaje basado en proyectos.",
+          "Promover el trabajo en equipo.",
+          "Crear un club de ciencia y tecnología."
+        ],
+        votos: localStorage.getItem("candidato3") ? parseInt(localStorage.getItem("candidato3")) : 0
+      },
+      candidato4: {
+        nombre: "Pedro López",
+        lema: "Transparencia y confianza",
+        propuestas: [
+          "Realizar auditorías estudiantiles.",
+          "Mejorar la comunicación entre docentes y alumnos.",
+          "Crear una plataforma digital de transparencia.",
+          "Fomentar una cultura de responsabilidad social.",
+          "Crear un consejo estudiantil transparente.",
+          "Promover la ética escolar."
+        ],
+        votos: localStorage.getItem("candidato4") ? parseInt(localStorage.getItem("candidato4")) : 0
+      },
+      candidato5: {
+        nombre: "Sofía García",
+        lema: "Juntos somos más fuertes",
+        propuestas: [
+          "Organizar ferias solidarias.",
+          "Fomentar el trabajo colaborativo.",
+          "Crear un programa de apoyo social.",
+          "Ampliar las actividades extracurriculares.",
+          "Mejorar las relaciones entre estudiantes.",
+          "Promover campañas de concientización social."
+        ],
+        votos: localStorage.getItem("candidato5") ? parseInt(localStorage.getItem("candidato5")) : 0
+      }
     };
 
     // Función para mostrar la página de candidatos
