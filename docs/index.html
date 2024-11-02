@@ -43,8 +43,6 @@
       cursor: pointer;
       font-size: 1em;
       margin-top: 10px;
-      opacity: 0.5; /* Deshabilitado inicialmente */
-      pointer-events: none; /* Deshabilitar eventos */
     }
     .button:hover {
       background-color: #45a049;
@@ -180,23 +178,23 @@
     <p>Ingresa tus datos para participar en las elecciones</p>
     
     <label for="dni">DNI (8 dígitos):</label>
-    <input type="text" id="dni" maxlength="8" required oninput="validarFormulario()">
+    <input type="text" id="dni" maxlength="8" required>
 
     <label for="nombre">Nombre Completo:</label>
-    <input type="text" id="nombre" required oninput="validarFormulario()">
+    <input type="text" id="nombre" required>
 
     <label for="fecha">Fecha de Nacimiento:</label>
-    <input type="date" id="fecha" required oninput="validarFormulario()">
+    <input type="date" id="fecha" required>
 
     <label for="grado">Grado y Sección:</label>
-    <select id="grado" required oninput="validarFormulario()">
+    <select id="grado" required>
       <option value="" disabled selected>Seleccionar</option>
       <option value="1A">1°A</option>
       <option value="1B">1°B</option>
       <!-- Agregar más grados -->
     </select>
 
-    <button class="button" id="continuar" onclick="mostrarCandidatos()">Continuar</button>
+    <button class="button" onclick="mostrarCandidatos()">Continuar</button>
   </div>
 
   <!-- Página de Candidatos -->
@@ -245,4 +243,118 @@
   <div id="admin" class="container admin-container">
     <h1>Resultados de las Elecciones</h1>
     <div id="resultados"></div>
-    <button class="button" onclick="
+    <button class="button" onclick="cerrarAdmin()">Cerrar</button>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const candidatos = {
+      "candidato1": {
+        nombre: "Jonathan Torres",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png",
+        propuestas: [
+          "Aumentar las horas de recreo.",
+          "Organizar más actividades deportivas.",
+          "Crear un consejo estudiantil representativo."
+        ],
+        votos: 0
+      },
+      "candidato2": {
+        nombre: "Laura Fernández",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png",
+        propuestas: [
+          "Implementar un sistema de reciclaje.",
+          "Fomentar la lectura con actividades semanales.",
+          "Mejorar la infraestructura del colegio."
+        ],
+        votos: 0
+      },
+      "candidato3": {
+        nombre: "Carlos Ramírez",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png",
+        propuestas: [
+          "Realizar excursiones educativas.",
+          "Crear un club de ciencias.",
+          "Incluir más tecnología en las clases."
+        ],
+        votos: 0
+      }
+    };
+
+    let totalVotos = 0;
+
+    function mostrarCandidatos() {
+      const inicio = document.getElementById('inicio');
+      const candidatosDiv = document.getElementById('candidatos');
+      inicio.style.display = 'none';
+      candidatosDiv.style.display = 'block';
+    }
+
+    function mostrarPerfil(candidatoId) {
+      const perfilDiv = document.getElementById('perfil');
+      const candidato = candidatos[candidatoId];
+      document.getElementById('profile-img').style.backgroundImage = `url(${candidato.img})`;
+      document.getElementById('nombre-candidato').innerText = candidato.nombre;
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      candidato.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.innerText = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+      perfilDiv.style.display = 'block';
+      const candidatosDiv = document.getElementById('candidatos');
+      candidatosDiv.style.display = 'none';
+    }
+
+    function votar() {
+      const candidatoId = document.getElementById('nombre-candidato').innerText.toLowerCase().replace(' ', '');
+      candidatos[candidatoId].votos++;
+      totalVotos++;
+      alert(`Has votado por ${candidatos[candidatoId].nombre}`);
+      mostrarCandidatos();
+    }
+
+    function verificarAdmin() {
+      const password = prompt("Ingresa la contraseña de administrador:");
+      if (password === "admin123") {
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+    }
+
+    function mostrarResultados() {
+      const adminDiv = document.getElementById('admin');
+      adminDiv.style.display = 'block';
+      const resultadosDiv = document.getElementById('resultados');
+      resultadosDiv.innerHTML = '';
+
+      for (const candidatoId in candidatos) {
+        const candidato = candidatos[candidatoId];
+        const porcentaje = totalVotos > 0 ? (candidato.votos / totalVotos * 100).toFixed(2) : 0;
+        const resultadosItem = document.createElement('div');
+        resultadosItem.className = 'resultados-item';
+        resultadosItem.innerHTML = `${candidato.nombre}: ${candidato.votos} votos (${porcentaje}%)`;
+        
+        // Barra de progreso
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        const fill = document.createElement('div');
+        fill.className = 'progress-bar-fill';
+        fill.style.width = `${porcentaje}%`;
+        fill.innerText = `${porcentaje}%`;
+        progressBar.appendChild(fill);
+        resultadosItem.appendChild(progressBar);
+
+        resultadosDiv.appendChild(resultadosItem);
+      }
+    }
+
+    function cerrarAdmin() {
+      const adminDiv = document.getElementById('admin');
+      adminDiv.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
