@@ -43,12 +43,11 @@
       cursor: pointer;
       font-size: 1em;
       margin-top: 10px;
-      opacity: 0.5;
-      pointer-events: none; /* Deshabilitado por defecto */
+      opacity: 0.5; /* Deshabilitado inicialmente */
+      pointer-events: none; /* Deshabilitar eventos */
     }
-    .button.enabled {
-      opacity: 1; /* Habilitado */
-      pointer-events: auto; /* Habilitar eventos */
+    .button:hover {
+      background-color: #45a049;
     }
     input, select {
       width: 100%;
@@ -57,6 +56,8 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
+    /* Enlace de Admin */
     .admin-link {
       position: absolute;
       top: 10px;
@@ -65,6 +66,18 @@
       color: #4CAF50;
       cursor: pointer;
     }
+
+    /* Estilos de la Página de Inicio */
+    #inicio img {
+      display: block;
+      margin: 0 auto;
+      width: 100px;
+      height: auto;
+    }
+    #inicio h1 {
+      font-size: 1.8em;
+    }
+
     /* Estilos de la Página de Candidatos */
     .candidate {
       border: 2px solid #4CAF50;
@@ -81,6 +94,54 @@
       height: 80px;
       border-radius: 50%;
     }
+    .candidate-info {
+      flex-grow: 1;
+      padding-left: 15px;
+    }
+    .candidate-info h3 {
+      margin: 0;
+      color: #4CAF50;
+    }
+    .candidate-info p {
+      margin: 5px 0;
+    }
+
+    /* Estilos de la Página de Perfil del Candidato */
+    .back-button {
+      padding: 10px;
+      background-color: #f0f0f5;
+      color: #4CAF50;
+      border: 1px solid #4CAF50;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      margin: 20px auto;
+      background-size: cover;
+      background-position: center;
+    }
+    .vote-button {
+      font-size: 1.3em;
+      background-color: #4CAF50;
+      padding: 15px;
+      text-align: center;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .vote-button:hover {
+      background-color: #45a049;
+    }
+
     /* Resultados en Admin */
     .admin-container {
       text-align: center;
@@ -141,6 +202,8 @@
   <!-- Página de Candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
+
+    <!-- Candidato 1 -->
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png" alt="👨">
       <div class="candidate-info">
@@ -148,6 +211,8 @@
         <p>Lema: "Juntos podemos lograr grandes cambios"</p>
       </div>
     </div>
+
+    <!-- Candidato 2 -->
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png" alt="👩">
       <div class="candidate-info">
@@ -155,6 +220,8 @@
         <p>Lema: "Creciendo juntos hacia un futuro mejor"</p>
       </div>
     </div>
+
+    <!-- Candidato 3 -->
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png" alt="👨🏻">
       <div class="candidate-info">
@@ -162,6 +229,7 @@
         <p>Lema: "Unidos en cada paso del camino"</p>
       </div>
     </div>
+
   </div>
 
   <!-- Perfil del Candidato -->
@@ -177,132 +245,4 @@
   <div id="admin" class="container admin-container">
     <h1>Resultados de las Elecciones</h1>
     <div id="resultados"></div>
-    <button class="button" onclick="cerrarAdmin()">Cerrar</button>
-  </div>
-
-  <!-- JavaScript -->
-  <script>
-    const candidatos = {
-      "candidato1": {
-        nombre: "Jonathan Torres",
-        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png",
-        propuestas: [
-          "Aumentar las horas de recreo.",
-          "Organizar más actividades deportivas.",
-          "Crear un consejo estudiantil representativo.",
-        ],
-        votos: 0
-      },
-      "candidato2": {
-        nombre: "Laura Fernández",
-        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png",
-        propuestas: [
-          "Mejorar la calidad de la comida en la cafetería.",
-          "Aumentar el presupuesto para actividades culturales.",
-          "Crear un equipo de voluntariado estudiantil.",
-        ],
-        votos: 0
-      },
-      "candidato3": {
-        nombre: "Carlos Ramírez",
-        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png",
-        propuestas: [
-          "Impulsar proyectos de reciclaje en la escuela.",
-          "Mejorar las áreas verdes del colegio.",
-          "Establecer un sistema de mentoría entre alumnos mayores y menores.",
-        ],
-        votos: 0
-      }
-    };
-
-    let haVotado = false; // Variable para controlar si el usuario ha votado
-
-    function validarFormulario() {
-      const dni = document.getElementById('dni').value;
-      const nombre = document.getElementById('nombre').value;
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-      const continuarButton = document.getElementById('continuar');
-
-      // Verifica que todos los campos estén completos
-      if (dni.length === 8 && nombre && fecha && grado) {
-        continuarButton.classList.add('enabled'); // Habilitar botón
-      } else {
-        continuarButton.classList.remove('enabled'); // Deshabilitar botón
-      }
-    }
-
-    function mostrarCandidatos() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    function mostrarPerfil(candidato) {
-      const perfil = candidatos[candidato];
-      document.getElementById('nombre-candidato').innerText = perfil.nombre;
-      document.getElementById('profile-img').innerHTML = `<img src="${perfil.img}" alt="${perfil.nombre}">`;
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      perfil.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.innerText = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('perfil').style.display = 'block';
-    }
-
-    function votar() {
-      if (!haVotado) {
-        const candidatoVotado = document.getElementById('nombre-candidato').innerText;
-        for (const key in candidatos) {
-          if (candidatos[key].nombre === candidatoVotado) {
-            candidatos[key].votos++;
-            haVotado = true;
-            alert(`¡Has votado por ${candidatoVotado}!`);
-            break;
-          }
-        }
-        mostrarResultados();
-      } else {
-        alert("Ya has votado.");
-      }
-    }
-
-    function mostrarResultados() {
-      const resultadosDiv = document.getElementById('resultados');
-      resultadosDiv.innerHTML = '';
-
-      const totalVotos = Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
-      for (const key in candidatos) {
-        const candidato = candidatos[key];
-        const porcentaje = totalVotos ? ((candidato.votos / totalVotos) * 100).toFixed(2) : 0;
-        resultadosDiv.innerHTML += `
-          <div class="resultados-item">
-            ${candidato.nombre} - ${candidato.votos} votos (${porcentaje}%) 
-            <div class="progress-bar">
-              <div class="progress-bar-fill" style="width: ${porcentaje}%">${porcentaje}%</div>
-            </div>
-          </div>
-        `;
-      }
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('admin').style.display = 'block';
-    }
-
-    function verificarAdmin() {
-      const adminPassword = prompt("Ingresa la contraseña de administrador:");
-      if (adminPassword === "admin123") {
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta.");
-      }
-    }
-
-    function cerrarAdmin() {
-      document.getElementById('admin').style.display = 'none';
-    }
-  </script>
-
-</body>
-</html>
+    <button class="button" onclick="
