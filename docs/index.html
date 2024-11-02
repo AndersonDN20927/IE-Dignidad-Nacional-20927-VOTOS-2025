@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
+    /* Estilos Generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -32,13 +33,13 @@
     .button {
       display: block;
       width: 100%;
-      padding: 15px;
+      padding: 10px;
       background-color: #4CAF50;
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 1.2em;
+      font-size: 1em;
       margin-top: 10px;
     }
     .button:hover {
@@ -46,12 +47,13 @@
     }
     input, select {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
 
+    /* Estilos para el Enlace de Admin */
     .admin-link {
       position: absolute;
       top: 10px;
@@ -61,6 +63,18 @@
       cursor: pointer;
     }
 
+    /* Página de Inicio */
+    #inicio img {
+      display: block;
+      margin: 0 auto;
+      width: 100px;
+      height: auto;
+    }
+    #inicio h1 {
+      font-size: 1.8em;
+    }
+
+    /* Estilos de la Página de Candidatos */
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -87,65 +101,86 @@
       margin: 5px 0;
     }
 
-    /* Estilo personalizado para la sección de perfil */
+    /* Estilos de la Página de Perfil del Candidato */
     .back-button {
-      padding: 15px;
+      padding: 10px;
       background-color: #f0f0f5;
       color: #4CAF50;
-      border: 2px solid #4CAF50;
-      border-radius: 10px;
+      border: 1px solid #4CAF50;
+      border-radius: 5px;
       cursor: pointer;
       display: inline-block;
-      margin-bottom: 15px;
-      font-size: 1.2em;
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      margin-bottom: 20px;
+    }
+    .vote-button {
+      font-size: 1.3em;
+      background-color: #4CAF50;
+      padding: 15px;
+      text-align: center;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .vote-button:hover {
+      background-color: #45a049;
     }
 
-    /* Página de administración más atractiva */
+    /* Estilos para los Resultados en Admin */
     .resultados-item {
-      font-size: 1.1em;
-      margin: 5px 0;
+      font-size: 1.2em;
+      margin-bottom: 10px;
     }
     .progress-bar {
-      background-color: #ddd;
-      border-radius: 5px;
-      margin-top: 5px;
-      height: 20px;
-      position: relative;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 25px;
+      margin-bottom: 20px;
     }
     .progress-bar-fill {
       background-color: #4CAF50;
       height: 100%;
-      border-radius: 5px;
-      text-align: center;
-      line-height: 20px;
       color: white;
+      text-align: center;
     }
   </style>
 </head>
-<body onload="document.getElementById('inicio').style.display = 'block';">
+<body>
 
   <!-- Enlace para Administrador -->
   <span class="admin-link" onclick="mostrarAdmin()">Admin</span>
 
   <!-- Página de Inicio -->
   <div id="inicio" class="container">
-    <h1>Votaciones Escolares</h1>
-    <h2>Ingresa tus datos para continuar</h2>
-    <p class="quote">"Recuerda, vota bien y elige a quien mejor represente tus ideas y valores."</p>
+    <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="📘">
+    <h1>Elecciones Escolares 2025</h1>
+    <p>Ingresa tus datos para participar en las elecciones</p>
     
-    <label for="nombres">Nombres:</label>
-    <input type="text" id="nombres" required>
-
-    <label for="apellidos">Apellidos:</label>
-    <input type="text" id="apellidos" required>
-
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required>
 
+    <label for="nombre">Nombre Completo:</label>
+    <input type="text" id="nombre" required>
+
+    <label for="fecha">Fecha de Nacimiento:</label>
+    <input type="date" id="fecha" required>
+
     <label for="grado">Grado y Sección:</label>
-    <select id="grado">
+    <select id="grado" required>
       <option value="" disabled selected>Seleccionar</option>
-      <!-- Opciones de grado -->
+      <option value="1A">1°A</option>
+      <option value="1B">1°B</option>
+      <!-- Agregar más grados -->
     </select>
 
     <button class="button" onclick="mostrarCandidatos()">Continuar</button>
@@ -154,116 +189,204 @@
   <!-- Página de Candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
+
+    <!-- Candidato 1 -->
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png" alt="👨">
       <div class="candidate-info">
-        <h3>María Pérez</h3>
-        <p>Lema: "¡Educación y unión para un mejor mañana!"</p>
+        <h3>Jonathan Torres</h3>
+        <p>Lema: "Juntos podemos lograr grandes cambios"</p>
       </div>
     </div>
-    <!-- Añadir más candidatos -->
+
+    <!-- Candidato 2 -->
+    <div class="candidate" onclick="mostrarPerfil('candidato2')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png" alt="👩">
+      <div class="candidate-info">
+        <h3>Laura Fernández</h3>
+        <p>Lema: "Creciendo juntos hacia un futuro mejor"</p>
+      </div>
+    </div>
+
+    <!-- Candidato 3 -->
+    <div class="candidate" onclick="mostrarPerfil('candidato3')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png" alt="👨🏻">
+      <div class="candidate-info">
+        <h3>Carlos Ramírez</h3>
+        <p>Lema: "Unidos en cada paso del camino"</p>
+      </div>
+    </div>
+
+    <!-- Candidato 4 -->
+    <div class="candidate" onclick="mostrarPerfil('candidato4')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469-1f3fc.png" alt="👩🏻">
+      <div class="candidate-info">
+        <h3>María González</h3>
+        <p>Lema: "Juntos somos más fuertes"</p>
+      </div>
+    </div>
+
+    <!-- Candidato 5 -->
+    <div class="candidate" onclick="mostrarPerfil('candidato5')">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fd.png" alt="👨🏽">
+      <div class="candidate-info">
+        <h3>José Pérez</h3>
+        <p>Lema: "Liderazgo para el cambio"</p>
+      </div>
+    </div>
+
   </div>
 
   <!-- Perfil del Candidato -->
   <div id="perfil" class="container">
     <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
+    <div class="profile-img" id="profile-img"></div>
     <h2 id="nombre-candidato">Nombre del Candidato</h2>
     <p><strong>Descripción de propuestas:</strong></p>
     <ul id="lista-propuestas"></ul>
-    <button class="button" onclick="votar()">Votar</button>
+    <button class="vote-button" onclick="votar()">VOTAR</button>
   </div>
 
   <!-- Página de Administración -->
   <div id="admin" class="container">
     <h1>Panel de Administración</h1>
-    <ul id="resultados"></ul>
-    <button class="button" onclick="ocultarAdmin()">Cerrar</button>
+    <div id="resultados"></div>
+    <button class="button" onclick="ocultarAdmin()">Volver</button>
   </div>
 
   <script>
+    // Información de Candidatos
     const candidatos = {
       candidato1: {
-        nombre: "María Pérez",
-        lema: "¡Educación y unión para un mejor mañana!",
+        nombre: "Jonathan Torres",
         propuestas: [
-          "Propuesta 1",
-          "Propuesta 2",
-          "Propuesta 3",
-          "Propuesta 4",
-          "Propuesta 5",
-          "Propuesta 6"
+          "Mejorar los espacios recreativos.",
+          "Organizar más actividades deportivas.",
+          "Crear un club de liderazgo juvenil.",
+          "Fomentar la participación activa en actividades culturales.",
+          "Incentivar el respeto y trabajo en equipo.",
+          "Promover el uso de tecnologías en el aula."
         ],
-        votos: localStorage.getItem("candidato1") ? parseInt(localStorage.getItem("candidato1")) : 0
+        votos: 0
+      },
+      candidato2: {
+        nombre: "Laura Fernández",
+        propuestas: [
+          "Fomentar el cuidado del medio ambiente.",
+          "Organizar campañas de reciclaje.",
+          "Promover actividades de arte y cultura.",
+          "Aumentar los espacios de participación femenina.",
+          "Impulsar proyectos de inclusión.",
+          "Mejorar la comunicación entre alumnos y directiva."
+        ],
+        votos: 0
+      },
+      candidato3: {
+        nombre: "Carlos Ramírez",
+        propuestas: [
+          "Ampliar las actividades extracurriculares.",
+          "Mejorar las instalaciones deportivas.",
+          "Crear grupos de estudio.",
+          "Organizar torneos escolares.",
+          "Fomentar el compañerismo.",
+          "Implementar sistemas de tutoría."
+        ],
+        votos: 0
+      },
+      candidato4: {
+        nombre: "María González",
+        propuestas: [
+          "Promover una alimentación saludable.",
+          "Crear un comité de bienestar estudiantil.",
+          "Fortalecer la participación en actividades solidarias.",
+          "Impulsar actividades científicas.",
+          "Organizar ferias de emprendimiento.",
+          "Mejorar el acceso a bibliotecas."
+        ],
+        votos: 0
+      },
+      candidato5: {
+        nombre: "José Pérez",
+        propuestas: [
+          "Aumentar la seguridad en la escuela.",
+          "Fomentar el respeto entre compañeros.",
+          "Organizar más eventos de integración.",
+          "Crear programas de voluntariado.",
+          "Incentivar el desarrollo de talentos deportivos.",
+          "Fomentar el desarrollo artístico."
+        ],
+        votos: 0
       }
-      // Añadir más candidatos aquí
     };
 
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
-      document.getElementById("perfil").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("admin").style.display = "none";
     }
 
     function mostrarPerfil(id) {
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "block";
-      document.getElementById("nombre-candidato").innerText = candidatos[id].nombre;
+      const candidato = candidatos[id];
+      document.getElementById("nombre-candidato").textContent = candidato.nombre;
       const listaPropuestas = document.getElementById("lista-propuestas");
       listaPropuestas.innerHTML = "";
-      candidatos[id].propuestas.forEach(propuesta => {
+      candidato.propuestas.forEach((propuesta) => {
         const li = document.createElement("li");
-        li.innerText = propuesta;
+        li.textContent = propuesta;
         listaPropuestas.appendChild(li);
       });
-      localStorage.setItem("candidatoActual", id);
+
+      // Mostrar imagen de perfil (emoji)
+      const img = document.getElementById("profile-img");
+      img.style.backgroundImage = document.querySelector(`.candidate img[alt*="${id}"]`).src;
+
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("perfil").style.display = "block";
     }
 
     function votar() {
-      const id = localStorage.getItem("candidatoActual");
-      candidatos[id].votos += 1;
-      localStorage.setItem(id, candidatos[id].votos);
-      alert("¡Voto registrado!");
-      mostrarCandidatos();
-    }
-
-    function mostrarAdmin() {
-      const password = prompt("Ingrese la contraseña de administrador:");
-      if (password === "admin123") {
-        document.getElementById("inicio").style.display = "none";
-        document.getElementById("candidatos").style.display = "none";
-        document.getElementById("perfil").style.display = "none";
-        document.getElementById("admin").style.display = "block";
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta.");
+      const candidatoNombre = document.getElementById("nombre-candidato").textContent;
+      for (let id in candidatos) {
+        if (candidatos[id].nombre === candidatoNombre) {
+          candidatos[id].votos++;
+          alert(`¡Has votado por ${candidatoNombre}!`);
+          mostrarCandidatos();
+          break;
+        }
       }
     }
 
-    function mostrarResultados() {
-      const totalVotos = Object.values(candidatos).reduce((acc, cand) => acc + cand.votos, 0);
-      const resultadosDiv = document.getElementById("resultados");
-      resultadosDiv.innerHTML = "";
-      for (const key in candidatos) {
-        const candidato = candidatos[key];
-        const porcentaje = ((candidato.votos / totalVotos) * 100).toFixed(2);
-        const li = document.createElement("li");
-        li.className = "resultados-item";
-        li.innerHTML = `${candidato.nombre}: ${candidato.votos} votos (${porcentaje}%)`;
-        const progressBar = document.createElement("div");
-        progressBar.className = "progress-bar";
-        const progressBarFill = document.createElement("div");
-        progressBarFill.className = "progress-bar-fill";
-        progressBarFill.style.width = `${porcentaje}%`;
-        progressBarFill.innerText = `${porcentaje}%`;
-        progressBar.appendChild(progressBarFill);
-        resultadosDiv.appendChild(li);
-        resultadosDiv.appendChild(progressBar);
+    function mostrarAdmin() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("admin").style.display = "block";
+
+      const resultados = document.getElementById("resultados");
+      resultados.innerHTML = "";
+      for (let id in candidatos) {
+        const votos = candidatos[id].votos;
+        const porcentaje = (votos / totalVotos() * 100).toFixed(2);
+        const item = `
+          <div class="resultados-item">
+            <strong>${candidatos[id].nombre}</strong> - ${votos} votos (${porcentaje}%)
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" style="width: ${porcentaje}%;">${porcentaje}%</div>
+          </div>
+        `;
+        resultados.innerHTML += item;
       }
     }
 
     function ocultarAdmin() {
       document.getElementById("admin").style.display = "none";
-      document.getElementById("inicio").style.display = "block";
+      mostrarCandidatos();
+    }
+
+    function totalVotos() {
+      return Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
     }
   </script>
 </body>
