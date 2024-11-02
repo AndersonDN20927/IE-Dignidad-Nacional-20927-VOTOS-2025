@@ -158,10 +158,10 @@
 <body>
 
   <!-- Enlace para Administrador -->
-  <span class="admin-link" onclick="mostrarAdmin()">Admin</span>
+  <span class="admin-link" onclick="verificarAdmin()">Admin</span>
 
   <!-- Página de Inicio -->
-  <div id="inicio" class="container">
+  <div id="inicio" class="container" style="display: block;">
     <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="📘">
     <h1>Elecciones Escolares 2025</h1>
     <p>Ingresa tus datos para participar en las elecciones</p>
@@ -241,15 +241,14 @@
   <div id="perfil" class="container">
     <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
     <div class="profile-img" id="profile-img"></div>
-    <h2 id="nombre-candidato">Nombre del Candidato</h2>
-    <p><strong>Descripción de propuestas:</strong></p>
+    <h2 id="nombre-candidato"></h2>
     <ul id="lista-propuestas"></ul>
-    <button class="vote-button" onclick="votar()">VOTAR</button>
+    <button class="vote-button" onclick="votar()">Votar</button>
   </div>
 
-  <!-- Página de Administración -->
+  <!-- Panel de Administración -->
   <div id="admin" class="container">
-    <h1>Panel de Administración</h1>
+    <h1>Resultados de Administración</h1>
     <div id="resultados"></div>
     <button class="button" onclick="ocultarAdmin()">Volver</button>
   </div>
@@ -259,6 +258,7 @@
     const candidatos = {
       candidato1: {
         nombre: "Jonathan Torres",
+        lema: "Juntos podemos lograr grandes cambios",
         propuestas: [
           "Mejorar los espacios recreativos.",
           "Organizar más actividades deportivas.",
@@ -271,6 +271,7 @@
       },
       candidato2: {
         nombre: "Laura Fernández",
+        lema: "Creciendo juntos hacia un futuro mejor",
         propuestas: [
           "Fomentar el cuidado del medio ambiente.",
           "Organizar campañas de reciclaje.",
@@ -283,6 +284,7 @@
       },
       candidato3: {
         nombre: "Carlos Ramírez",
+        lema: "Unidos en cada paso del camino",
         propuestas: [
           "Ampliar las actividades extracurriculares.",
           "Mejorar las instalaciones deportivas.",
@@ -295,6 +297,7 @@
       },
       candidato4: {
         nombre: "María González",
+        lema: "Juntos somos más fuertes",
         propuestas: [
           "Promover una alimentación saludable.",
           "Crear un comité de bienestar estudiantil.",
@@ -307,6 +310,7 @@
       },
       candidato5: {
         nombre: "José Pérez",
+        lema: "Liderazgo para el cambio",
         propuestas: [
           "Aumentar la seguridad en la escuela.",
           "Fomentar el respeto entre compañeros.",
@@ -319,6 +323,7 @@
       }
     };
 
+    // Funciones para navegar entre páginas
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
@@ -339,7 +344,8 @@
 
       // Mostrar imagen de perfil (emoji)
       const img = document.getElementById("profile-img");
-      img.style.backgroundImage = document.querySelector(`.candidate img[alt*="${id}"]`).src;
+      const emoji = document.querySelector(`.candidate img[alt*="${id}"]`).src;
+      img.style.backgroundImage = `url('${emoji}')`;
 
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
@@ -354,6 +360,15 @@
           mostrarCandidatos();
           break;
         }
+      }
+    }
+
+    function verificarAdmin() {
+      const contraseña = prompt("Ingrese la contraseña de administrador:");
+      if (contraseña === "VOTO2025") {
+        mostrarAdmin();
+      } else {
+        alert("Contraseña incorrecta.");
       }
     }
 
