@@ -206,6 +206,11 @@
       <option value="" disabled selected>Seleccionar</option>
       <option value="1A">1°A</option>
       <option value="1B">1°B</option>
+      <option value="2A">2°A</option>
+      <option value="2B">2°B</option>
+      <option value="3A">3°A</option>
+      <option value="1B">1°B</option>
+      <option value="1B">1°B</option>
       <!-- Agregar más grados -->
     </select>
 
@@ -220,7 +225,7 @@
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png" alt="👨">
       <div class="candidate-info">
-        <h3>Jonathan Torres</h3>
+        <h3>Yenile Rivas</h3>
         <p>Lema: "Juntos podemos lograr grandes cambios"</p>
       </div>
     </div>
@@ -264,7 +269,7 @@
   <script>
     // Variables globales
     let candidatos = {
-      candidato1: { nombre: "Jonathan Torres", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"] },
+      candidato1: { nombre: "Yenile Rivas", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"] },
       candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte"] },
       candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico"] }
     };
@@ -343,7 +348,7 @@
     // Función para verificar admin
     function verificarAdmin() {
       const password = prompt("Ingrese la contraseña de administrador:");
-      if (password === "admin123") { // Cambiar por una contraseña más segura
+      if (password === "Alexesgay") { // Cambiar por una contraseña más segura
         document.getElementById("admin").style.display = "block";
         document.getElementById("inicio").style.display = "none";
         document.getElementById("candidatos").style.display = "none";
