@@ -3,90 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares 2024</title>
+  <title>Elecciones Escolares - Candidatos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f5;
+      background-color: #f9f9f9;
       color: #333;
+      margin: 0;
     }
     .container {
       width: 90%;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
       color: #4CAF50;
+      margin-top: 20px;
     }
-    .section {
+    .candidate {
       border: 2px solid #4CAF50;
-      padding: 20px;
-      margin: 15px 0;
+      padding: 15px;
       border-radius: 8px;
       background-color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    input, select {
-      width: 100%;
+    .candidate img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+    .candidate-info {
+      flex-grow: 1;
+      padding-left: 15px;
+    }
+    .candidate-info h3 {
+      margin: 0;
+      color: #4CAF50;
+    }
+    .candidate-info p {
+      margin: 5px 0;
+    }
+    .candidate button {
       padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-    button {
-      width: 100%;
       background-color: #4CAF50;
-      color: white;
-      padding: 10px;
+      color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 1.1em;
+      font-size: 1em;
     }
-    button:hover {
+    .candidate button:hover {
       background-color: #45a049;
     }
+    .proposal-section {
+      display: none;
+      padding: 20px;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      background-color: #fff;
+      margin-top: 20px;
+    }
+    .back-button {
+      padding: 5px 10px;
+      background-color: #f0f0f5;
+      color: #4CAF50;
+      border: 1px solid #4CAF50;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
   </style>
+  <script>
+    function showProposals(candidateId) {
+      document.querySelectorAll('.proposal-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(candidateId).style.display = 'block';
+    }
+
+    function goBack() {
+      document.querySelectorAll('.proposal-section').forEach(section => {
+        section.style.display = 'none';
+      });
+    }
+  </script>
 </head>
 <body>
   <div class="container">
-    <h1>Elecciones Escolares 2024</h1>
-    <div class="section">
-      <form id="votacionForm">
-        <label for="dni">DNI del Estudiante</label>
-        <input type="text" id="dni" name="dni" placeholder="Ingrese número de DNI" required maxlength="8" pattern="\d{8}">
-        
-        <label for="nombre">Nombre Completo</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre y apellidos" required>
-        
-        <label for="fechaNacimiento">Fecha de Nacimiento</label>
-        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
-        
-        <label for="correo">Correo Electrónico (opcional)</label>
-        <input type="email" id="correo" name="correo" placeholder="Ingrese su correo electrónico">
-        
-        <label for="gradoSeccion">Grado y Sección</label>
-        <select id="gradoSeccion" name="gradoSeccion" required>
-          <option value="">Seleccione su grado y sección</option>
-          <option value="1A">1° A</option>
-          <option value="1B">1° B</option>
-          <option value="2A">2° A</option>
-          <option value="2B">2° B</option>
-          <option value="3A">3° A</option>
-          <option value="3B">3° B</option>
-          <option value="4A">4° A</option>
-          <option value="4B">4° B</option>
-          <option value="5A">5° A</option>
-          <option value="5B">5° B</option>
-        </select>
-        
-        <label for="telefono">Número de Teléfono (opcional)</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Ingrese su número de teléfono" pattern="\d{9}">
-        
-        <button type="submit">Continuar</button>
-      </form>
+    <h1>Lista de Candidatos</h1>
+
+    <!-- Sección de Candidatos -->
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
+      <div class="candidate-info">
+        <h3>María Pérez</h3>
+        <p>Lema: "¡Educación y unión para un mejor mañana!"</p>
+      </div>
+      <button onclick="showProposals('mariaProposals')">📋 Acceder a Propuestas</button>
     </div>
+
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f47e.png" alt="👾">
+      <div class="candidate-info">
+        <h3>Carlos Ramírez</h3>
+        <p>Lema: "Innovación y tecnología para todos."</p>
+      </div>
+      <button onclick="showProposals('carlosProposals')">📋 Acceder a Propuestas</button>
+    </div>
+
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f33f.png" alt="🌿">
+      <div class="candidate-info">
+        <h3>Lucía Gómez</h3>
+        <p>Lema: "Cuidemos el planeta desde nuestra escuela."</p>
+      </div>
+      <button onclick="showProposals('luciaProposals')">📋 Acceder a Propuestas</button>
+    </div>
+
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f680.png" alt="🚀">
+      <div class="candidate-info">
+        <h3>Andrés López</h3>
+        <p>Lema: "Alcanzar nuevas alturas juntos."</p>
+      </div>
+      <button onclick="showProposals('andresProposals')">📋 Acceder a Propuestas</button>
+    </div>
+
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f3c1.png" alt="🏁">
+      <div class="candidate-info">
+        <h3>Valentina Silva</h3>
+        <p>Lema: "¡Aceleremos hacia el éxito!"</p>
+      </div>
+      <button onclick="showProposals('valentinaProposals')">📋 Acceder a Propuestas</button>
+    </div>
+
+    <div class="candidate">
+      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f3a4.png" alt="🎤">
+      <div class="candidate-info">
+        <h3>Jorge Hernández</h3>
+        <p>Lema: "Tu voz, nuestro compromiso."</p>
+      </div>
+      <button onclick="showProposals('jorgeProposals')">📋 Acceder a Propuestas</button>
+    </div>
+
+    <!-- Sección de Propuestas por Candidato -->
+    <div id="mariaProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>María Pérez</h2>
+      <p><strong>Descripción de propuestas:</strong> Promover actividades académicas adicionales, mejorar las aulas, y fomentar el trabajo en equipo.</p>
+      <p><strong>Lema:</strong> "¡Educación y unión para un mejor mañana!"</p>
+    </div>
+
+    <div id="carlosProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>Carlos Ramírez</h2>
+      <p><strong>Descripción de propuestas:</strong> Incluir talleres de robótica, programación, y laboratorios de tecnología avanzada.</p>
+      <p><strong>Lema:</strong> "Innovación y tecnología para todos."</p>
+    </div>
+
+    <div id="luciaProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>Lucía Gómez</h2>
+      <p><strong>Descripción de propuestas:</strong> Crear proyectos de reciclaje, compostaje y actividades ecológicas en la escuela.</p>
+      <p><strong>Lema:</strong> "Cuidemos el planeta desde nuestra escuela."</p>
+    </div>
+
+    <div id="andresProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>Andrés López</h2>
+      <p><strong>Descripción de propuestas:</strong> Incentivar la participación en deportes y actividades de liderazgo juvenil.</p>
+      <p><strong>Lema:</strong> "Alcanzar nuevas alturas juntos."</p>
+    </div>
+
+    <div id="valentinaProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>Valentina Silva</h2>
+      <p><strong>Descripción de propuestas:</strong> Mejorar los espacios deportivos y realizar competencias interescolares.</p>
+      <p><strong>Lema:</strong> "¡Aceleremos hacia el éxito!"</p>
+    </div>
+
+    <div id="jorgeProposals" class="proposal-section">
+      <span class="back-button" onclick="goBack()">← Volver</span>
+      <h2>Jorge Hernández</h2>
+      <p><strong>Descripción de propuestas:</strong> Implementar un canal de comunicación para sugerencias y nuevas ideas de los estudiantes.</p>
+      <p><strong>Lema:</strong> "Tu voz, nuestro compromiso."</p>
+    </div>
+
   </div>
 </body>
 </html>
