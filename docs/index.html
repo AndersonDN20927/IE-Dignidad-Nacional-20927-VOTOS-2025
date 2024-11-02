@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Estilos Generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -15,8 +14,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      position: relative;
-      overflow: hidden;
     }
     .container {
       width: 90%;
@@ -26,11 +23,24 @@
       border-radius: 8px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       background-color: #fff;
-      display: none;
     }
     h1 {
       color: #4CAF50;
       text-align: center;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
     .button {
       display: block;
@@ -42,7 +52,6 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 1em;
-      margin-top: 10px;
     }
     .button:hover {
       background-color: #45a049;
@@ -55,7 +64,6 @@
       margin-bottom: 20px;
       display: flex;
       align-items: center;
-      cursor: pointer;
     }
     .candidate-photo {
       width: 80px;
@@ -73,9 +81,6 @@
       margin: 0;
       color: #4CAF50;
     }
-    .candidate-info p {
-      margin: 5px 0;
-    }
     .profile-img {
       width: 100px;
       height: 100px;
@@ -88,16 +93,35 @@
   </style>
 </head>
 <body>
-  <div id="inicio" class="container" style="display: block;">
+  <!-- Formulario de Datos -->
+  <div id="formulario" class="container">
     <h1>Elecciones Escolares 2025</h1>
-    <button class="button" id="continuarBtn" onclick="mostrarCandidatos()">Continuar</button>
+    <div class="input-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" required>
+    </div>
+    <div class="input-group">
+      <label for="apellido">Apellido</label>
+      <input type="text" id="apellido" required>
+    </div>
+    <div class="input-group">
+      <label for="dni">DNI</label>
+      <input type="text" id="dni" required>
+    </div>
+    <div class="input-group">
+      <label for="fechaNacimiento">Fecha de Nacimiento</label>
+      <input type="date" id="fechaNacimiento" required>
+    </div>
+    <div class="input-group">
+      <label for="gradoSeccion">Grado y Sección</label>
+      <input type="text" id="gradoSeccion" required>
+    </div>
+    <button class="button" onclick="mostrarCandidatos()">Continuar</button>
   </div>
 
   <!-- Página de Candidatos -->
-  <div id="candidatos" class="container">
+  <div id="candidatos" class="container" style="display: none;">
     <h1>Lista de Candidatos</h1>
-
-    <!-- Candidato 1 -->
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <div class="candidate-photo" id="foto-candidato1"></div>
       <div class="candidate-info">
@@ -106,7 +130,6 @@
       </div>
     </div>
 
-    <!-- Candidato 2 -->
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
       <div class="candidate-photo" id="foto-candidato2"></div>
       <div class="candidate-info">
@@ -114,24 +137,15 @@
         <p>Lema: "Creciendo juntos hacia un futuro mejor"</p>
       </div>
     </div>
-
-    <!-- Candidato 3 -->
-    <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <div class="candidate-photo" id="foto-candidato3"></div>
-      <div class="candidate-info">
-        <h3>Carlos Ramírez</h3>
-        <p>Lema: "Unidos en cada paso del camino"</p>
-      </div>
-    </div>
   </div>
 
   <!-- Perfil del Candidato -->
-  <div id="perfil" class="container">
-    <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
+  <div id="perfil" class="container" style="display: none;">
+    <button class="button" onclick="mostrarCandidatos()">← Volver</button>
     <div class="profile-img" id="profile-img"></div>
     <h2 id="nombre-candidato"></h2>
     <ul id="lista-propuestas"></ul>
-    <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
+    <button class="button" id="voteButton" onclick="votar()">Votar</button>
   </div>
 
   <script>
@@ -141,58 +155,51 @@
         nombre: "Yenile Rivas",
         votos: 0,
         propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"],
-        foto: "/mnt/data/image.png" // Ruta de la imagen que subiste
+        foto: "" // Foto se cargará luego
       },
       candidato2: {
         nombre: "Laura Fernández",
         votos: 0,
         propuestas: ["Programa de reciclaje", "Clases de arte"],
-        foto: "https://example.com/foto-2.jpg"
-      },
-      candidato3: {
-        nombre: "Carlos Ramírez",
-        votos: 0,
-        propuestas: ["Más deportes", "Apoyo psicológico"],
-        foto: "https://example.com/foto-3.jpg"
+        foto: "" // Foto se cargará luego
       }
     };
 
-    let usuarioVoto = null;
-
     // Mostrar candidatos
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const dni = document.getElementById('dni').value;
+      const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+      const gradoSeccion = document.getElementById('gradoSeccion').value;
 
-      // Cargar fotos de los candidatos
-      document.getElementById('foto-candidato1').style.backgroundImage = `url('${candidatos.candidato1.foto}')`;
-      document.getElementById('foto-candidato2').style.backgroundImage = `url('${candidatos.candidato2.foto}')`;
-      document.getElementById('foto-candidato3').style.backgroundImage = `url('${candidatos.candidato3.foto}')`;
+      if (nombre && apellido && dni && fechaNacimiento && gradoSeccion) {
+        document.getElementById("formulario").style.display = "none";
+        document.getElementById("candidatos").style.display = "block";
+
+        // Cargar fotos de los candidatos
+        document.getElementById('foto-candidato1').style.backgroundImage = `url('${candidatos.candidato1.foto}')`;
+        document.getElementById('foto-candidato2').style.backgroundImage = `url('${candidatos.candidato2.foto}')`;
+      } else {
+        alert("Por favor, completa todos los campos.");
+      }
     }
 
     // Mostrar perfil de candidato
     function mostrarPerfil(candidato) {
       const { nombre, propuestas, foto } = candidatos[candidato];
-      usuarioVoto = candidato; // Guardamos el voto del usuario
-
       document.getElementById("nombre-candidato").textContent = nombre;
       document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
-      
-      // Cambiar la imagen de perfil en la página de perfil
       document.getElementById("profile-img").style.backgroundImage = `url('${foto}')`;
 
-      // Mostrar la sección del perfil
       document.getElementById("perfil").style.display = "block";
       document.getElementById("candidatos").style.display = "none";
     }
 
     // Función para votar
     function votar() {
-      if (usuarioVoto) {
-        candidatos[usuarioVoto].votos++;
-        alert(`Has votado por ${candidatos[usuarioVoto].nombre}!`);
-        mostrarCandidatos(); // Regresar a la lista de candidatos
-      }
+      alert("¡Voto registrado!");
+      mostrarCandidatos(); // Regresar a la lista de candidatos
     }
   </script>
 </body>
