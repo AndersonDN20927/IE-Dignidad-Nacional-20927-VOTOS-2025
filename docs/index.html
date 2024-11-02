@@ -115,6 +115,27 @@
       padding: 2px;
       border-radius: 4px;
     }
+
+    /* Animación de emojis */
+    .emoji-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 2em;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { top: -10%; }
+      100% { top: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -130,6 +151,9 @@
 
     <label for="nombre">Nombre Completo:</label>
     <input type="text" id="nombre" required>
+
+    <label for="apellido">Apellido Completo:</label>
+    <input type="text" id="apellido" required>
 
     <button class="button" onclick="validarFormulario()">Continuar</button>
   </div>
@@ -175,6 +199,9 @@
     <button class="button" onclick="cerrarAdmin()">Cerrar</button>
   </div>
 
+  <!-- Animación de Emojis -->
+  <div id="emojiAnimation" class="emoji-animation"></div>
+
   <!-- JavaScript -->
   <script>
     // Cargar votos y votantes desde localStorage
@@ -184,8 +211,9 @@
     function validarFormulario() {
       const dni = document.getElementById("dni").value;
       const nombre = document.getElementById("nombre").value;
+      const apellido = document.getElementById("apellido").value;
 
-      if (!dni || dni.length !== 8 || isNaN(dni) || !nombre) {
+      if (!dni || dni.length !== 8 || isNaN(dni) || !nombre || !apellido) {
         alert("Por favor, completa todos los campos correctamente.");
         return;
       }
@@ -220,8 +248,38 @@
       localStorage.setItem("votos", JSON.stringify(votos));
       localStorage.setItem("votantes", JSON.stringify(votantes));
 
-      alert("¡Gracias por tu voto!");
-      mostrarResultadosAdmin();
+      mostrarAnimacion();
+      mostrarMensajeAgradecimiento();
+    }
+
+    function mostrarMensajeAgradecimiento() {
+      setTimeout(() => {
+        alert("¡Gracias por tu voto! Se te agradece mucho.");
+      }, 6000); // Mostrar mensaje después de la animación
+    }
+
+    function mostrarAnimacion() {
+      const emojiAnimation = document.getElementById("emojiAnimation");
+      const emojis = ["🎉", "🎊", "🥳", "🎈", "✨"];
+      emojiAnimation.innerHTML = "";
+      emojiAnimation.style.display = "block";
+
+      for (let i = 0; i < 100; i++) {
+        const emoji = document.createElement("div");
+        emoji.className = "emoji";
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.animationDuration = Math.random() * 3 + 2 + "s"; // duración entre 2s y 5s
+        emojiAnimation.appendChild(emoji);
+
+        setTimeout(() => {
+          emoji.remove();
+        }, 6000); // Duración de la animación
+      }
+
+      setTimeout(() => {
+        emojiAnimation.style.display = "none"; // Ocultar animación después de que termine
+      }, 6000);
     }
 
     function verificarAdmin() {
