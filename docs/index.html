@@ -15,6 +15,8 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      position: relative;
+      overflow: hidden; /* Para evitar que los emojis salgan de la pantalla */
     }
     .container {
       width: 90%;
@@ -276,6 +278,8 @@
       }
     };
 
+    let haVotado = false; // Variable para controlar si el usuario ha votado
+
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
@@ -299,8 +303,46 @@
     }
 
     function votar() {
+      if (haVotado) {
+        alert("Ya has votado una vez. No puedes votar de nuevo.");
+        return;
+      }
+      haVotado = true; // Marcar como votado
       alert("¡Gracias por tu voto!");
+      animarLluviaEmojis();
       mostrarCandidatos();
+    }
+
+    function animarLluviaEmojis() {
+      const emojiArray = ["🎉", "🎊", "🥳", "✨", "🎈"];
+      for (let i = 0; i < 30; i++) {
+        crearEmoji(emojiArray[Math.floor(Math.random() * emojiArray.length)]);
+      }
+    }
+
+    function crearEmoji(emoji) {
+      const emojiElement = document.createElement("div");
+      emojiElement.textContent = emoji;
+      emojiElement.style.position = "absolute";
+      emojiElement.style.fontSize = "24px";
+      emojiElement.style.opacity = "0.8";
+      emojiElement.style.left = Math.random() * window.innerWidth + 'px';
+      emojiElement.style.top = '0px';
+      document.body.appendChild(emojiElement);
+      
+      const animationDuration = Math.random() * 2 + 3; // Duración aleatoria de la caída
+      emojiElement.animate([
+        { transform: 'translateY(0)' },
+        { transform: `translateY(${window.innerHeight}px)` }
+      ], {
+        duration: animationDuration * 1000,
+        easing: 'ease-in',
+        fill: 'forwards'
+      });
+
+      setTimeout(() => {
+        document.body.removeChild(emojiElement);
+      }, animationDuration * 1000); // Remover el emoji después de que termine la animación
     }
 
     function verificarAdmin() {
