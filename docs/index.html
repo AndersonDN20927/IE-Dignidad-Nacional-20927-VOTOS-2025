@@ -52,7 +52,17 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    
+
+    /* Estilos para el Enlace de Admin */
+    .admin-link {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.9em;
+      color: #4CAF50;
+      cursor: pointer;
+    }
+
     /* Estilos de la Página de Candidatos */
     .candidate {
       border: 2px solid #4CAF50;
@@ -96,9 +106,15 @@
 </head>
 <body>
 
+  <!-- Enlace para Administrador -->
+  <span class="admin-link" onclick="mostrarAdmin()">Admin</span>
+
   <!-- Página de Inicio -->
   <div id="inicio" class="container">
-    <h1>Formulario de Ingreso</h1>
+    <h1>Votaciones Escolares</h1>
+    <h2>Ingresa tus datos para continuar</h2>
+    <p class="quote">"Recuerda, vota bien y elige a quien mejor represente tus ideas y valores. Tu decisión es importante para el futuro de nuestra escuela."</p>
+    
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required>
 
@@ -129,15 +145,14 @@
   <!-- Página de Candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
-    <div class="candidate">
+    <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
       <div class="candidate-info">
         <h3>María Pérez</h3>
         <p>Lema: "¡Educación y unión para un mejor mañana!"</p>
       </div>
-      <button class="button" onclick="mostrarPerfil('maria')">📋 Acceder a Propuestas</button>
     </div>
-    <!-- Otros candidatos se pueden añadir de manera similar -->
+    <!-- Añadir más candidatos aquí -->
   </div>
 
   <!-- Perfil del Candidato -->
@@ -145,36 +160,100 @@
     <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
     <h2 id="nombre-candidato">Nombre del Candidato</h2>
     <p><strong>Descripción de propuestas:</strong></p>
-    <p id="descripcion-propuestas">Descripción específica del candidato.</p>
-    <p><strong>Lema:</strong> <span id="lema-candidato">Lema del candidato</span></p>
+    <ul id="lista-propuestas"></ul>
+    <button class="button" onclick="votar()">Votar</button>
+  </div>
+
+  <!-- Página de Administración -->
+  <div id="admin" class="container">
+    <h1>Panel de Administración</h1>
+    <ul id="resultados"></ul>
+    <button class="button" onclick="ocultarAdmin()">Cerrar</button>
   </div>
 
   <script>
-    // Función para mostrar la sección de candidatos
+    // Variables Globales
+    const candidatos = {
+      candidato1: {
+        nombre: "María Pérez",
+        lema: "¡Educación y unión para un mejor mañana!",
+        propuestas: [
+          "Propuesta 1 de María",
+          "Propuesta 2 de María",
+          "Propuesta 3 de María",
+          "Propuesta 4 de María",
+          "Propuesta 5 de María",
+          "Propuesta 6 de María"
+        ],
+        votos: localStorage.getItem("candidato1") ? parseInt(localStorage.getItem("candidato1")) : 0
+      },
+      // Añadir más candidatos aquí
+    };
+
+    // Función para mostrar la página de candidatos
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("perfil").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
-    // Función para mostrar el perfil de un candidato específico
-    function mostrarPerfil(candidato) {
+    // Función para mostrar el perfil del candidato
+    function mostrarPerfil(id) {
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
-
-      if (candidato === "maria") {
-        document.getElementById("nombre-candidato").innerText = "María Pérez";
-        document.getElementById("descripcion-propuestas").innerText = "Promover actividades académicas adicionales, mejorar las aulas, y fomentar el trabajo en equipo.";
-        document.getElementById("lema-candidato").innerText = "¡Educación y unión para un mejor mañana!";
-      }
-      // Aquí puedes añadir más perfiles de candidatos usando else if
+      document.getElementById("nombre-candidato").innerText = candidatos[id].nombre;
+      const listaPropuestas = document.getElementById("lista-propuestas");
+      listaPropuestas.innerHTML = "";
+      candidatos[id].propuestas.forEach(propuesta => {
+        const li = document.createElement("li");
+        li.innerText = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+      localStorage.setItem("candidatoActual", id);
     }
 
-    // Función para volver al formulario inicial
-    window.onload = function() {
-      document.getElementById("inicio").style.display = "block";
+    // Función para votar
+    function votar() {
+      const id = localStorage.getItem("candidatoActual");
+      candidatos[id].votos += 1;
+      localStorage.setItem(id, candidatos[id].votos);
+      alert("¡Voto registrado!");
+      mostrarCandidatos();
+    }
+
+    // Función para mostrar el panel de administración
+    function mostrarAdmin() {
+      const password = prompt("Ingrese la contraseña de administrador:");
+      if (password === "admin123") { // Contraseña para el administrador
+        document.getElementById("inicio").style.display = "none";
+        document.getElementById("candidatos").style.display = "none";
+        document.getElementById("perfil").style.display = "none";
+        document.getElementById("admin").style.display = "block";
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+    }
+
+    // Función para ocultar el panel de administración
+    function ocultarAdmin() {
+      document.getElementById("admin").style.display = "none";
+      mostrarCandidatos();
+    }
+
+    // Función para mostrar los resultados en el panel de administración
+    function mostrarResultados() {
+      const totalVotos = Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
+      const resultadosList = document.getElementById("resultados");
+      resultadosList.innerHTML = "";
+      for (const id in candidatos) {
+        const candidato = candidatos[id];
+        const porcentaje = ((candidato.votos / totalVotos) * 100).toFixed(2);
+        const li = document.createElement("li");
+        li.innerText = `${candidato.nombre}: ${candidato.votos} votos (${porcentaje}%)`;
+        resultadosList.appendChild(li);
+      }
     }
   </script>
-
 </body>
 </html>
