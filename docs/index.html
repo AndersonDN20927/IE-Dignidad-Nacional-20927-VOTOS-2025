@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Estilos Generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -16,7 +15,7 @@
       align-items: center;
       height: 100vh;
       position: relative;
-      overflow: hidden; /* Para evitar que los emojis salgan de la pantalla */
+      overflow: hidden;
     }
     .container {
       width: 90%;
@@ -54,29 +53,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
-    /* Enlace de Admin */
-    .admin-link {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 0.9em;
-      color: #4CAF50;
-      cursor: pointer;
-    }
-
-    /* Estilos de la Página de Inicio */
-    #inicio img {
-      display: block;
-      margin: 0 auto;
-      width: 100px;
-      height: auto;
-    }
-    #inicio h1 {
-      font-size: 1.8em;
-    }
-
-    /* Estilos de la Página de Candidatos */
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -86,44 +62,17 @@
       display: flex;
       align-items: center;
       cursor: pointer;
-    }
-    .candidate img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-    }
-    .candidate-info {
-      flex-grow: 1;
-      padding-left: 15px;
+      font-size: 1.5em;
+      justify-content: center;
     }
     .candidate-info h3 {
-      margin: 0;
       color: #4CAF50;
+      margin-bottom: 5px;
     }
-    .candidate-info p {
-      margin: 5px 0;
-    }
-
-    /* Estilos de la Página de Perfil del Candidato */
-    .back-button {
-      padding: 10px;
-      background-color: #f0f0f5;
-      color: #4CAF50;
-      border: 1px solid #4CAF50;
-      border-radius: 5px;
-      cursor: pointer;
-      display: inline-block;
-      margin-bottom: 10px;
-      font-size: 1em;
-    }
-    .profile-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background-color: #e0e0e0;
-      margin: 20px auto;
-      background-size: cover;
-      background-position: center;
+    .profile-emoji {
+      font-size: 4em;
+      text-align: center;
+      margin-top: 20px;
     }
     .vote-button {
       font-size: 1.3em;
@@ -139,56 +88,23 @@
     .vote-button:hover {
       background-color: #45a049;
     }
-
-    /* Resultados en Admin */
-    .admin-container {
-      text-align: center;
-    }
-    .resultados-item {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-    .progress-bar {
-      background-color: #e0e0e0;
-      border-radius: 4px;
-      overflow: hidden;
-      height: 25px;
-      margin-bottom: 20px;
-    }
-    .progress-bar-fill {
-      background-color: #4CAF50;
-      height: 100%;
-      color: white;
-      text-align: center;
-      padding: 2px;
-      border-radius: 4px;
-    }
-
-    /* Estilos para emojis */
     .emoji {
       position: absolute;
       width: 50px;
       height: 50px;
-      pointer-events: none; /* Para que no interrumpa el clic */
-      animation: fall 5s linear forwards;
+      pointer-events: none;
+      animation: fall 3s linear forwards;
     }
-
     @keyframes fall {
       to {
-        transform: translateY(100vh); /* Caer desde la parte superior hasta el fondo */
+        transform: translateY(100vh);
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Enlace para Administrador -->
-  <span class="admin-link" onclick="verificarAdmin()">Admin</span>
-
-  <!-- Página de Inicio -->
   <div id="inicio" class="container" style="display: block;">
-    <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="📘">
     <h1>Elecciones Escolares 2025</h1>
     <p>Ingresa tus datos para participar en las elecciones</p>
     
@@ -209,187 +125,98 @@
       <option value="2A">2°A</option>
       <option value="2B">2°B</option>
       <option value="3A">3°A</option>
+      <option value="3B">3°B</option>
       <option value="4A">4°A</option>
       <option value="4B">4°B</option>
       <option value="5A">5°A</option>
       <option value="5B">5°B</option>
-      <!-- Agregar más grados -->
     </select>
 
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
 
-  <!-- Página de Candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
-
-    <!-- Candidato 1 -->
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png" alt="👨">
-      <div class="candidate-info">
-        <h3>Yenile Rivas</h3>
-        <p>Lema: "Juntos podemos lograr grandes cambios"</p>
-      </div>
+      👩 Yenile Rivas - "Juntos podemos lograr grandes cambios"
     </div>
-
-    <!-- Candidato 2 -->
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png" alt="👩">
-      <div class="candidate-info">
-        <h3>Laura Fernández</h3>
-        <p>Lema: "Creciendo juntos hacia un futuro mejor"</p>
-      </div>
+      👨 Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
-
-    <!-- Candidato 3 -->
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png" alt="👨🏻">
-      <div class="candidate-info">
-        <h3>Carlos Ramírez</h3>
-        <p>Lema: "Unidos en cada paso del camino"</p>
-      </div>
+      👩🏻 Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
-
   </div>
 
-  <!-- Perfil del Candidato -->
   <div id="perfil" class="container">
-    <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
-    <div class="profile-img" id="profile-img"></div>
     <h2 id="nombre-candidato"></h2>
+    <div class="profile-emoji" id="profile-emoji"></div>
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
   </div>
 
-  <!-- Página de Administrador -->
-  <div id="admin" class="container admin-container">
-    <h1>Resultados de las Elecciones</h1>
-    <div id="resultados"></div>
-    <button class="button" onclick="cerrarAdmin()">Cerrar</button>
-  </div>
-
   <script>
-    // Variables globales
     let candidatos = {
-      candidato1: { nombre: "Yenile Rivas", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte"] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico"] }
+      candidato1: { nombre: "Yenile Rivas", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"], emoji: "👩" },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte"], emoji: "👨" },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico"], emoji: "👩🏻" }
     };
-
+    let votosRegistrados = {}; // Registro de votos por DNI
     let usuarioVoto = null;
 
-    // Función para validar campos y habilitar botón continuar
     document.querySelectorAll('input, select').forEach(input => {
       input.addEventListener('input', () => {
         const dni = document.getElementById("dni").value;
         const nombre = document.getElementById("nombre").value;
         const fecha = document.getElementById("fecha").value;
         const grado = document.getElementById("grado").value;
-        const continuarBtn = document.getElementById("continuarBtn");
-
-        if (dni.length === 8 && nombre && fecha && grado) {
-          continuarBtn.disabled = false;
-        } else {
-          continuarBtn.disabled = true;
-        }
+        document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
       });
     });
 
-    // Mostrar candidatos
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
-    // Mostrar perfil de candidato
     function mostrarPerfil(candidato) {
-      const { nombre, propuestas } = candidatos[candidato];
-      usuarioVoto = candidato; // Guardamos el voto del usuario
-
+      const { nombre, propuestas, emoji } = candidatos[candidato];
+      usuarioVoto = candidato;
       document.getElementById("nombre-candidato").textContent = nombre;
-      document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => <li>${propuesta}</li>).join('');
+      document.getElementById("profile-emoji").textContent = emoji;
+      document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
       document.getElementById("perfil").style.display = "block";
       document.getElementById("candidatos").style.display = "none";
-      document.getElementById("profile-img").style.backgroundImage = url('https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png'); // Placeholder
     }
 
-    // Función para votar
     function votar() {
-      if (usuarioVoto) {
-        candidatos[usuarioVoto].votos++;
-        alert(Has votado por ${candidatos[usuarioVoto].nombre}!);
-        mostrarCandidatos(); // Regresar a la lista de candidatos
-      }
-    }
+      const dni = document.getElementById("dni").value;
 
-    // Función para mostrar resultados en el área de administración
-    function mostrarResultados() {
-      const resultadosDiv = document.getElementById("resultados");
-      resultadosDiv.innerHTML = '';
-
-      Object.keys(candidatos).forEach(candidato => {
-        const votos = candidatos[candidato].votos;
-        resultadosDiv.innerHTML += 
-          <div class="resultados-item">
-            ${candidatos[candidato].nombre}: ${votos} votos
-            <div class="progress-bar">
-              <div class="progress-bar-fill" style="width: ${(votos / totalVotos() * 100 || 0)}%">
-                ${Math.round(votos / totalVotos() * 100 || 0)}%
-              </div>
-            </div>
-          </div>
-        ;
-      });
-    }
-
-    // Total de votos
-    function totalVotos() {
-      return Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
-    }
-
-    // Función para verificar admin
-    function verificarAdmin() {
-      const password = prompt("Ingrese la contraseña de administrador:");
-      if (password === "Alexesgay") { // Cambiar por una contraseña más segura
-        document.getElementById("admin").style.display = "block";
-        document.getElementById("inicio").style.display = "none";
-        document.getElementById("candidatos").style.display = "none";
-        document.getElementById("perfil").style.display = "none";
-        mostrarResultados(); // Mostrar resultados
+      if (votosRegistrados[dni]) {
+        alert("Ya has votado con este DNI.");
       } else {
-        alert("Contraseña incorrecta.");
+        votosRegistrados[dni] = true;
+        candidatos[usuarioVoto].votos++;
+        mostrarLluviaEmojis();
+        alert(`¡Gracias por tu voto por ${candidatos[usuarioVoto].nombre}! 🎉`);
+        mostrarCandidatos();
       }
     }
 
-    // Función para cerrar el área de administración
-    function cerrarAdmin() {
-      document.getElementById("admin").style.display = "none";
-      document.getElementById("inicio").style.display = "block";
-    }
-
-    // Función para lanzar emojis
-    function lanzarEmojis() {
-      const emojiCount = 20; // Número de emojis a lanzar
+    function mostrarLluviaEmojis() {
+      const emojiCount = 30;
       for (let i = 0; i < emojiCount; i++) {
-        const emoji = document.createElement('img');
-        emoji.src = https://twemoji.maxcdn.com/v/13.0.1/72x72/1f60a.png; // Emoji feliz
+        const emoji = document.createElement('div');
+        emoji.textContent = "🎉";
         emoji.classList.add('emoji');
-        emoji.style.left = ${Math.random() * 100}vw;
-        emoji.style.animationDelay = ${Math.random() * 5}s; // Retraso aleatorio
+        emoji.style.left = `${Math.random() * 100}vw`;
+        emoji.style.animationDelay = `${Math.random() * 2}s`;
         document.body.appendChild(emoji);
-
-        // Eliminar emoji después de la animación
         emoji.addEventListener('animationend', () => {
           emoji.remove();
         });
       }
     }
-
-    // Iniciar animación al cargar la página
-    window.onload = () => {
-      document.getElementById("inicio").style.display = "block";
-      lanzarEmojis();
-    };
   </script>
 </body>
 </html>
