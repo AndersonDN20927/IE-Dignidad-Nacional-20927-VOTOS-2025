@@ -3,24 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares - Candidatos</title>
+  <title>Elecciones Escolares</title>
   <style>
+    /* Estilos Generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       color: #333;
       margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
       width: 90%;
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      display: none;
     }
     h1 {
-      text-align: center;
       color: #4CAF50;
-      margin-top: 20px;
+      text-align: center;
     }
+    .button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    /* Estilos de la Página de Candidatos */
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -32,9 +65,8 @@
       justify-content: space-between;
     }
     .candidate img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+      width: 80px;
+      height: 80px;
     }
     .candidate-info {
       flex-grow: 1;
@@ -47,28 +79,10 @@
     .candidate-info p {
       margin: 5px 0;
     }
-    .candidate button {
-      padding: 10px;
-      background-color: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    .candidate button:hover {
-      background-color: #45a049;
-    }
-    .proposal-section {
-      display: none;
-      padding: 20px;
-      border: 2px solid #4CAF50;
-      border-radius: 8px;
-      background-color: #fff;
-      margin-top: 20px;
-    }
+
+    /* Estilos de la Página de Perfil del Candidato */
     .back-button {
-      padding: 5px 10px;
+      padding: 10px;
       background-color: #f0f0f5;
       color: #4CAF50;
       border: 1px solid #4CAF50;
@@ -76,125 +90,91 @@
       cursor: pointer;
       display: inline-block;
       margin-bottom: 10px;
+      font-size: 1em;
     }
   </style>
-  <script>
-    function showProposals(candidateId) {
-      document.querySelectorAll('.proposal-section').forEach(section => {
-        section.style.display = 'none';
-      });
-      document.getElementById(candidateId).style.display = 'block';
-    }
-
-    function goBack() {
-      document.querySelectorAll('.proposal-section').forEach(section => {
-        section.style.display = 'none';
-      });
-    }
-  </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Lista de Candidatos</h1>
 
-    <!-- Sección de Candidatos -->
+  <!-- Página de Inicio -->
+  <div id="inicio" class="container">
+    <h1>Formulario de Ingreso</h1>
+    <label for="dni">DNI (8 dígitos):</label>
+    <input type="text" id="dni" maxlength="8" required>
+
+    <label for="grado">Grado y Sección:</label>
+    <select id="grado">
+      <option value="" disabled selected>Seleccionar</option>
+      <option value="1A">1°A</option>
+      <option value="1B">1°B</option>
+      <option value="2A">2°A</option>
+      <option value="2B">2°B</option>
+      <option value="3A">3°A</option>
+      <option value="3B">3°B</option>
+      <option value="4A">4°A</option>
+      <option value="4B">4°B</option>
+      <option value="5A">5°A</option>
+      <option value="5B">5°B</option>
+    </select>
+
+    <label for="email">Correo Electrónico (opcional):</label>
+    <input type="email" id="email">
+
+    <label for="telefono">Número de Teléfono (opcional):</label>
+    <input type="text" id="telefono">
+
+    <button class="button" onclick="mostrarCandidatos()">Continuar</button>
+  </div>
+
+  <!-- Página de Candidatos -->
+  <div id="candidatos" class="container">
+    <h1>Lista de Candidatos</h1>
     <div class="candidate">
       <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f393.png" alt="🎓">
       <div class="candidate-info">
         <h3>María Pérez</h3>
         <p>Lema: "¡Educación y unión para un mejor mañana!"</p>
       </div>
-      <button onclick="showProposals('mariaProposals')">📋 Acceder a Propuestas</button>
+      <button class="button" onclick="mostrarPerfil('maria')">📋 Acceder a Propuestas</button>
     </div>
-
-    <div class="candidate">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f47e.png" alt="👾">
-      <div class="candidate-info">
-        <h3>Carlos Ramírez</h3>
-        <p>Lema: "Innovación y tecnología para todos."</p>
-      </div>
-      <button onclick="showProposals('carlosProposals')">📋 Acceder a Propuestas</button>
-    </div>
-
-    <div class="candidate">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f33f.png" alt="🌿">
-      <div class="candidate-info">
-        <h3>Lucía Gómez</h3>
-        <p>Lema: "Cuidemos el planeta desde nuestra escuela."</p>
-      </div>
-      <button onclick="showProposals('luciaProposals')">📋 Acceder a Propuestas</button>
-    </div>
-
-    <div class="candidate">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f680.png" alt="🚀">
-      <div class="candidate-info">
-        <h3>Andrés López</h3>
-        <p>Lema: "Alcanzar nuevas alturas juntos."</p>
-      </div>
-      <button onclick="showProposals('andresProposals')">📋 Acceder a Propuestas</button>
-    </div>
-
-    <div class="candidate">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f3c1.png" alt="🏁">
-      <div class="candidate-info">
-        <h3>Valentina Silva</h3>
-        <p>Lema: "¡Aceleremos hacia el éxito!"</p>
-      </div>
-      <button onclick="showProposals('valentinaProposals')">📋 Acceder a Propuestas</button>
-    </div>
-
-    <div class="candidate">
-      <img src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f3a4.png" alt="🎤">
-      <div class="candidate-info">
-        <h3>Jorge Hernández</h3>
-        <p>Lema: "Tu voz, nuestro compromiso."</p>
-      </div>
-      <button onclick="showProposals('jorgeProposals')">📋 Acceder a Propuestas</button>
-    </div>
-
-    <!-- Sección de Propuestas por Candidato -->
-    <div id="mariaProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>María Pérez</h2>
-      <p><strong>Descripción de propuestas:</strong> Promover actividades académicas adicionales, mejorar las aulas, y fomentar el trabajo en equipo.</p>
-      <p><strong>Lema:</strong> "¡Educación y unión para un mejor mañana!"</p>
-    </div>
-
-    <div id="carlosProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>Carlos Ramírez</h2>
-      <p><strong>Descripción de propuestas:</strong> Incluir talleres de robótica, programación, y laboratorios de tecnología avanzada.</p>
-      <p><strong>Lema:</strong> "Innovación y tecnología para todos."</p>
-    </div>
-
-    <div id="luciaProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>Lucía Gómez</h2>
-      <p><strong>Descripción de propuestas:</strong> Crear proyectos de reciclaje, compostaje y actividades ecológicas en la escuela.</p>
-      <p><strong>Lema:</strong> "Cuidemos el planeta desde nuestra escuela."</p>
-    </div>
-
-    <div id="andresProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>Andrés López</h2>
-      <p><strong>Descripción de propuestas:</strong> Incentivar la participación en deportes y actividades de liderazgo juvenil.</p>
-      <p><strong>Lema:</strong> "Alcanzar nuevas alturas juntos."</p>
-    </div>
-
-    <div id="valentinaProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>Valentina Silva</h2>
-      <p><strong>Descripción de propuestas:</strong> Mejorar los espacios deportivos y realizar competencias interescolares.</p>
-      <p><strong>Lema:</strong> "¡Aceleremos hacia el éxito!"</p>
-    </div>
-
-    <div id="jorgeProposals" class="proposal-section">
-      <span class="back-button" onclick="goBack()">← Volver</span>
-      <h2>Jorge Hernández</h2>
-      <p><strong>Descripción de propuestas:</strong> Implementar un canal de comunicación para sugerencias y nuevas ideas de los estudiantes.</p>
-      <p><strong>Lema:</strong> "Tu voz, nuestro compromiso."</p>
-    </div>
-
+    <!-- Otros candidatos se pueden añadir de manera similar -->
   </div>
+
+  <!-- Perfil del Candidato -->
+  <div id="perfil" class="container">
+    <span class="back-button" onclick="mostrarCandidatos()">← Volver</span>
+    <h2 id="nombre-candidato">Nombre del Candidato</h2>
+    <p><strong>Descripción de propuestas:</strong></p>
+    <p id="descripcion-propuestas">Descripción específica del candidato.</p>
+    <p><strong>Lema:</strong> <span id="lema-candidato">Lema del candidato</span></p>
+  </div>
+
+  <script>
+    // Función para mostrar la sección de candidatos
+    function mostrarCandidatos() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+
+    // Función para mostrar el perfil de un candidato específico
+    function mostrarPerfil(candidato) {
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("perfil").style.display = "block";
+
+      if (candidato === "maria") {
+        document.getElementById("nombre-candidato").innerText = "María Pérez";
+        document.getElementById("descripcion-propuestas").innerText = "Promover actividades académicas adicionales, mejorar las aulas, y fomentar el trabajo en equipo.";
+        document.getElementById("lema-candidato").innerText = "¡Educación y unión para un mejor mañana!";
+      }
+      // Aquí puedes añadir más perfiles de candidatos usando else if
+    }
+
+    // Función para volver al formulario inicial
+    window.onload = function() {
+      document.getElementById("inicio").style.display = "block";
+    }
+  </script>
+
 </body>
 </html>
