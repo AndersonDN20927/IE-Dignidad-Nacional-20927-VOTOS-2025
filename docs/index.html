@@ -3,56 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares 2024</title>
+  <title>Elecciones Escolares 2025</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f5;
+      background-color: #e3f2fd;
       color: #333;
     }
     .container {
       width: 90%;
       max-width: 800px;
       margin: 0 auto;
+      padding-top: 20px;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
-      color: #4CAF50;
+      color: #1e88e5;
+      font-size: 2em;
     }
-    .section {
-      border: 2px solid #4CAF50;
+    .form-section {
+      background-color: #ffffff;
       padding: 20px;
-      margin: 15px 0;
       border-radius: 8px;
-      background-color: #fff;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .candidate {
+    .input-group {
+      margin: 15px 0;
+      font-size: 1em;
+    }
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #1e88e5;
+    }
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 10px;
       border: 1px solid #ddd;
-      padding: 15px;
-      margin: 15px 0;
-      background-color: #fff;
-      border-radius: 8px;
-      text-align: center;
-      position: relative;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
-    .candidate img {
-      width: 70px;
-      height: 70px;
-      margin-bottom: 10px;
-      border-radius: 50%;
-    }
-    .vote-button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
+    .continue-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1e88e5;
+      color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 1.2em;
       cursor: pointer;
-      font-size: 1.1em;
-      margin-top: 10px;
+      text-align: center;
     }
-    .vote-button:hover {
-      background-color: #45a049;
+    .continue-button:hover {
+      background-color: #1565c0;
     }
     .footer {
       text-align: center;
@@ -60,197 +65,48 @@
       color: #666;
       margin-top: 20px;
     }
-    .admin-button {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      background-color: #333;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8em;
-    }
-    .results {
-      background-color: #e7f3e7;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-top: 20px;
-      display: none;
-    }
-    .progress-bar {
-      height: 20px;
-      background-color: #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 5px;
-    }
-    .progress {
-      height: 100%;
-      background-color: #4CAF50;
-      width: 0;
-      border-radius: 5px;
-      text-align: center;
-      color: white;
-      font-size: 14px;
-    }
-    .emoji-surprise {
-      position: fixed;
-      font-size: 40px;
-      pointer-events: none;
-      z-index: 1000;
-      animation: fadeOut 1.5s forwards;
-    }
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
   </style>
   <script>
-    let haLeidoTodo = false;
-    let emojis = ["😊", "🎉", "💡", "😎", "🐱", "🚀", "🌟", "🔥"];
-
-    function mostrarBotonContinuar() {
-      document.getElementById('botonContinuar').style.display = 'block';
-    }
-
     function continuarPagina() {
-      haLeidoTodo = true;
-      document.getElementById('contenidoPrincipal').style.display = 'block';
-      document.getElementById('seccionLectura').style.display = 'none';
+      alert("¡Bienvenido a las elecciones escolares 2025! Llena tus datos y continúa.");
     }
-
-    function votar(candidato) {
-      if (!haLeidoTodo) {
-        alert("Debes leer toda la información antes de votar.");
-        return;
-      }
-      const dni = prompt("Ingrese su DNI de 8 dígitos para votar:");
-      if (!dni || dni.length !== 8 || isNaN(dni)) {
-        alert("El DNI debe tener exactamente 8 dígitos.");
-        return;
-      }
-      const votos = getVotos();
-      votos[candidato]++;
-      setVotos(votos);
-      alert("¡Gracias por votar!");
-    }
-
-    function mostrarResultados() {
-      const password = prompt("Ingrese la contraseña para ver los resultados:");
-      if (password === "voto2025") {
-        document.getElementById("results").style.display = "block";
-        actualizarResultados();
-      } else {
-        alert("Contraseña incorrecta.");
-      }
-    }
-
-    function actualizarResultados() {
-      const votos = getVotos();
-      const totalVotos = votos.reduce((a, b) => a + b, 0);
-
-      const resultados = [
-        document.getElementById("resultado-candidato1"),
-        document.getElementById("resultado-candidato2"),
-        document.getElementById("resultado-candidato3")
-      ];
-
-      resultados.forEach((resultado, index) => {
-        const porcentaje = totalVotos === 0 ? 0 : (votos[index] / totalVotos * 100).toFixed(2);
-        resultado.querySelector('.progress').style.width = porcentaje + '%';
-        resultado.querySelector('.progress').textContent = porcentaje + '%';
-      });
-    }
-
-    function getVotos() {
-      return JSON.parse(localStorage.getItem('votos') || '[0, 0, 0]');
-    }
-
-    function setVotos(votos) {
-      localStorage.setItem('votos', JSON.stringify(votos));
-    }
-
-    document.addEventListener('click', function(event) {
-      // Evitar que se muestren emojis dentro de los recuadros de los candidatos y en la sección de lectura
-      const clickedElement = document.elementFromPoint(event.clientX, event.clientY);
-      if (clickedElement.closest('.candidate') || clickedElement.closest('#seccionLectura')) {
-        return;
-      }
-
-      const emojiDiv = document.createElement('div');
-      emojiDiv.classList.add('emoji-surprise');
-      emojiDiv.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      document.body.appendChild(emojiDiv);
-
-      // Colocación exacta del emoji donde el mouse clickea
-      emojiDiv.style.left = `${event.pageX}px`;
-      emojiDiv.style.top = `${event.pageY}px`;
-
-      setTimeout(() => {
-        emojiDiv.remove();
-      }, 1500);
-    });
   </script>
 </head>
 <body>
   <div class="container">
-    <h1>Elecciones Escolares 2024</h1>
-    <div id="seccionLectura" class="section">
-      <h2>Lee la información antes de continuar</h2>
-      <p>La importancia de votar radica en elegir al candidato con las mejores propuestas, evaluando cada una y pensando en el bienestar del colegio.</p>
-      <button onclick="mostrarBotonContinuar()">He leído todo</button>
-      <button id="botonContinuar" onclick="continuarPagina()" style="display: none;">Continuar</button>
+    <h1>Elecciones Escolares 2025</h1>
+    <div class="form-section">
+      <div class="input-group">
+        <label for="dni">DNI del Estudiante</label>
+        <input type="text" id="dni" placeholder="Ingrese número de DNI" maxlength="8">
+      </div>
+      <div class="input-group">
+        <label for="nombre">Nombre Completo</label>
+        <input type="text" id="nombre" placeholder="Ingrese su nombre y apellidos">
+      </div>
+      <div class="input-group">
+        <label for="fecha">Fecha de Nacimiento</label>
+        <input type="date" id="fecha">
+      </div>
+      <div class="input-group">
+        <label for="correo">Correo Electrónico</label>
+        <input type="email" id="correo" placeholder="Ingrese su correo electrónico">
+      </div>
+      <div class="input-group">
+        <label for="grado">Grado y Sección</label>
+        <select id="grado">
+          <option value="">Seleccione su grado y sección</option>
+          <option value="1A">1A</option>
+          <option value="2B">2B</option>
+          <option value="3C">3C</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="telefono">Número de Teléfono (Opcional)</label>
+        <input type="text" id="telefono" placeholder="Ingrese su número de teléfono">
+      </div>
+      <button class="continue-button" onclick="continuarPagina()">Continuar</button>
     </div>
-
-    <div id="contenidoPrincipal" style="display: none;">
-      <div class="section candidate" id="candidato1">
-        <img src="ruta/a/tu/imagen1.jpg" alt="Candidato 1">
-        <h2>Candidato 1: Juan "El Futuro Brillante"</h2>
-        <p>"Vota por el cambio que quieres ver. Hagamos historia juntos."</p>
-        <button class="vote-button" onclick="votar(0)">Votar</button>
-      </div>
-
-      <div class="section candidate" id="candidato2">
-        <img src="ruta/a/tu/imagen2.jpg" alt="Candidato 2">
-        <h2>Candidato 2: María "Con Compromiso y Valores"</h2>
-        <p>"Juntos lograremos un ambiente de paz y progreso para todos."</p>
-        <button class="vote-button" onclick="votar(1)">Votar</button>
-      </div>
-
-      <div class="section candidate" id="candidato3">
-        <img src="ruta/a/tu/imagen3.jpg" alt="Candidato 3">
-        <h2>Candidato 3: Pedro "Innovación y Tecnología"</h2>
-        <p>"Liderando la transformación digital de nuestro colegio."</p>
-        <button class="vote-button" onclick="votar(2)">Votar</button>
-      </div>
-
-      <div id="results" class="results">
-        <h2>Resultados:</h2>
-        <div id="resultado-candidato1" class="section">
-          <h3>Candidato 1</h3>
-          <div class="progress-bar">
-            <div class="progress"></div>
-          </div>
-        </div>
-        <div id="resultado-candidato2" class="section">
-          <h3>Candidato 2</h3>
-          <div class="progress-bar">
-            <div class="progress"></div>
-          </div>
-        </div>
-        <div id="resultado-candidato3" class="section">
-          <h3>Candidato 3</h3>
-          <div class="progress-bar">
-            <div class="progress"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-button" onclick="mostrarResultados()">Admin</div>
-    </div>
-
     <div class="footer">
       <p>Créditos: Desarrollado por Platanito Tentación, Manzanita Tentación y los TG (Top Globales)</p>
     </div>
