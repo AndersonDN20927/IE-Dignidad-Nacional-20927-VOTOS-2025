@@ -53,7 +53,7 @@
       border-radius: 4px;
     }
 
-    /* Estilos para el Enlace de Admin */
+    /* Enlace de Admin */
     .admin-link {
       position: absolute;
       top: 10px;
@@ -63,7 +63,7 @@
       cursor: pointer;
     }
 
-    /* Página de Inicio */
+    /* Estilos de la Página de Inicio */
     #inicio img {
       display: block;
       margin: 0 auto;
@@ -83,7 +83,7 @@
       margin-bottom: 20px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      cursor: pointer;
     }
     .candidate img {
       width: 80px;
@@ -119,6 +119,7 @@
       border-radius: 50%;
       background-color: #e0e0e0;
       margin-bottom: 20px;
+      background-size: cover;
     }
     .vote-button {
       font-size: 1.3em;
@@ -135,7 +136,7 @@
       background-color: #45a049;
     }
 
-    /* Estilos para los Resultados en Admin */
+    /* Resultados en Admin */
     .resultados-item {
       font-size: 1.2em;
       margin-bottom: 10px;
@@ -246,162 +247,91 @@
     <button class="vote-button" onclick="votar()">Votar</button>
   </div>
 
-  <!-- Panel de Administración -->
-  <div id="admin" class="container">
-    <h1>Resultados de Administración</h1>
-    <div id="resultados"></div>
-    <button class="button" onclick="ocultarAdmin()">Volver</button>
-  </div>
-
+  <!-- JavaScript -->
   <script>
-    // Información de Candidatos
     const candidatos = {
-      candidato1: {
+      "candidato1": {
         nombre: "Jonathan Torres",
-        lema: "Juntos podemos lograr grandes cambios",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png",
         propuestas: [
-          "Mejorar los espacios recreativos.",
+          "Aumentar las horas de recreo.",
           "Organizar más actividades deportivas.",
-          "Crear un club de liderazgo juvenil.",
-          "Fomentar la participación activa en actividades culturales.",
-          "Incentivar el respeto y trabajo en equipo.",
-          "Promover el uso de tecnologías en el aula."
-        ],
-        votos: 0
+          "Crear un consejo estudiantil representativo."
+        ]
       },
-      candidato2: {
+      "candidato2": {
         nombre: "Laura Fernández",
-        lema: "Creciendo juntos hacia un futuro mejor",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469.png",
         propuestas: [
-          "Fomentar el cuidado del medio ambiente.",
-          "Organizar campañas de reciclaje.",
-          "Promover actividades de arte y cultura.",
-          "Aumentar los espacios de participación femenina.",
-          "Impulsar proyectos de inclusión.",
-          "Mejorar la comunicación entre alumnos y directiva."
-        ],
-        votos: 0
+          "Mejorar la calidad de la comida en la cafetería.",
+          "Aumentar el presupuesto para actividades culturales.",
+          "Crear un equipo de voluntariado estudiantil."
+        ]
       },
-      candidato3: {
+      "candidato3": {
         nombre: "Carlos Ramírez",
-        lema: "Unidos en cada paso del camino",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fc.png",
         propuestas: [
-          "Ampliar las actividades extracurriculares.",
-          "Mejorar las instalaciones deportivas.",
-          "Crear grupos de estudio.",
-          "Organizar torneos escolares.",
-          "Fomentar el compañerismo.",
-          "Implementar sistemas de tutoría."
-        ],
-        votos: 0
+          "Impulsar proyectos de reciclaje en la escuela.",
+          "Mejorar las áreas verdes del colegio.",
+          "Establecer un sistema de mentoría entre alumnos mayores y menores."
+        ]
       },
-      candidato4: {
+      "candidato4": {
         nombre: "María González",
-        lema: "Juntos somos más fuertes",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f469-1f3fc.png",
         propuestas: [
-          "Promover una alimentación saludable.",
-          "Crear un comité de bienestar estudiantil.",
-          "Fortalecer la participación en actividades solidarias.",
-          "Impulsar actividades científicas.",
-          "Organizar ferias de emprendimiento.",
-          "Mejorar el acceso a bibliotecas."
-        ],
-        votos: 0
+          "Promover talleres extracurriculares gratuitos.",
+          "Desarrollar un periódico escolar.",
+          "Realizar ferias de ciencia y tecnología."
+        ]
       },
-      candidato5: {
+      "candidato5": {
         nombre: "José Pérez",
-        lema: "Liderazgo para el cambio",
+        img: "https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468-1f3fd.png",
         propuestas: [
-          "Aumentar la seguridad en la escuela.",
-          "Fomentar el respeto entre compañeros.",
-          "Organizar más eventos de integración.",
-          "Crear programas de voluntariado.",
-          "Incentivar el desarrollo de talentos deportivos.",
-          "Fomentar el desarrollo artístico."
-        ],
-        votos: 0
+          "Fomentar la participación en eventos deportivos intercolegiales.",
+          "Implementar una semana de cultura y arte.",
+          "Mejorar las instalaciones deportivas."
+        ]
       }
     };
 
-    // Funciones para navegar entre páginas
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("admin").style.display = "none";
     }
 
-    function mostrarPerfil(id) {
-      const candidato = candidatos[id];
+    function mostrarPerfil(candidatoId) {
+      const candidato = candidatos[candidatoId];
       document.getElementById("nombre-candidato").textContent = candidato.nombre;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = "";
-      candidato.propuestas.forEach((propuesta) => {
+      document.getElementById("profile-img").style.backgroundImage = `url('${candidato.img}')`;
+      
+      const propuestasList = document.getElementById("lista-propuestas");
+      propuestasList.innerHTML = "";
+      candidato.propuestas.forEach(propuesta => {
         const li = document.createElement("li");
         li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
+        propuestasList.appendChild(li);
       });
-
-      // Mostrar imagen de perfil (emoji)
-      const img = document.getElementById("profile-img");
-      const emoji = document.querySelector(`.candidate img[alt*="${id}"]`).src;
-      img.style.backgroundImage = `url('${emoji}')`;
-
+      
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
     }
 
     function votar() {
-      const candidatoNombre = document.getElementById("nombre-candidato").textContent;
-      for (let id in candidatos) {
-        if (candidatos[id].nombre === candidatoNombre) {
-          candidatos[id].votos++;
-          alert(`¡Has votado por ${candidatoNombre}!`);
-          mostrarCandidatos();
-          break;
-        }
-      }
+      alert("¡Gracias por tu voto!");
+      mostrarCandidatos();
     }
 
     function verificarAdmin() {
       const contraseña = prompt("Ingrese la contraseña de administrador:");
-      if (contraseña === "VOTO2025") {
-        mostrarAdmin();
+      if (contraseña === "admin123") {
+        alert("Acceso concedido.");
+        // Aquí puedes implementar el acceso a la página de resultados para el administrador
       } else {
         alert("Contraseña incorrecta.");
       }
-    }
-
-    function mostrarAdmin() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("admin").style.display = "block";
-
-      const resultados = document.getElementById("resultados");
-      resultados.innerHTML = "";
-      for (let id in candidatos) {
-        const votos = candidatos[id].votos;
-        const porcentaje = (votos / totalVotos() * 100).toFixed(2);
-        const item = `
-          <div class="resultados-item">
-            <strong>${candidatos[id].nombre}</strong> - ${votos} votos (${porcentaje}%)
-          </div>
-          <div class="progress-bar">
-            <div class="progress-bar-fill" style="width: ${porcentaje}%;">${porcentaje}%</div>
-          </div>
-        `;
-        resultados.innerHTML += item;
-      }
-    }
-
-    function ocultarAdmin() {
-      document.getElementById("admin").style.display = "none";
-      mostrarCandidatos();
-    }
-
-    function totalVotos() {
-      return Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
     }
   </script>
 </body>
