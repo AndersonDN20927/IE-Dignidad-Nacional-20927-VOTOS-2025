@@ -251,7 +251,7 @@
     <div class="profile-img" id="profile-img"></div>
     <h2 id="nombre-candidato"></h2>
     <ul id="lista-propuestas"></ul>
-    <button class="vote-button" onclick="votar()">Votar</button>
+    <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
   </div>
 
   <!-- Página de Administrador -->
@@ -259,4 +259,130 @@
     <h1>Resultados de las Elecciones</h1>
     <div id="resultados"></div>
     <button class="button" onclick="cerrarAdmin()">Cerrar</button>
- 
+  </div>
+
+  <script>
+    // Variables globales
+    let candidatos = {
+      candidato1: { nombre: "Jonathan Torres", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte"] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico"] }
+    };
+
+    let usuarioVoto = null;
+
+    // Función para validar campos y habilitar botón continuar
+    document.querySelectorAll('input, select').forEach(input => {
+      input.addEventListener('input', () => {
+        const dni = document.getElementById("dni").value;
+        const nombre = document.getElementById("nombre").value;
+        const fecha = document.getElementById("fecha").value;
+        const grado = document.getElementById("grado").value;
+        const continuarBtn = document.getElementById("continuarBtn");
+
+        if (dni.length === 8 && nombre && fecha && grado) {
+          continuarBtn.disabled = false;
+        } else {
+          continuarBtn.disabled = true;
+        }
+      });
+    });
+
+    // Mostrar candidatos
+    function mostrarCandidatos() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+
+    // Mostrar perfil de candidato
+    function mostrarPerfil(candidato) {
+      const { nombre, propuestas } = candidatos[candidato];
+      usuarioVoto = candidato; // Guardamos el voto del usuario
+
+      document.getElementById("nombre-candidato").textContent = nombre;
+      document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
+      document.getElementById("perfil").style.display = "block";
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("profile-img").style.backgroundImage = `url('https://twemoji.maxcdn.com/v/13.0.1/72x72/1f468.png')`; // Placeholder
+    }
+
+    // Función para votar
+    function votar() {
+      if (usuarioVoto) {
+        candidatos[usuarioVoto].votos++;
+        alert(`Has votado por ${candidatos[usuarioVoto].nombre}!`);
+        mostrarCandidatos(); // Regresar a la lista de candidatos
+      }
+    }
+
+    // Función para mostrar resultados en el área de administración
+    function mostrarResultados() {
+      const resultadosDiv = document.getElementById("resultados");
+      resultadosDiv.innerHTML = '';
+
+      Object.keys(candidatos).forEach(candidato => {
+        const votos = candidatos[candidato].votos;
+        resultadosDiv.innerHTML += `
+          <div class="resultados-item">
+            ${candidatos[candidato].nombre}: ${votos} votos
+            <div class="progress-bar">
+              <div class="progress-bar-fill" style="width: ${(votos / totalVotos() * 100 || 0)}%">
+                ${Math.round(votos / totalVotos() * 100 || 0)}%
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Total de votos
+    function totalVotos() {
+      return Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
+    }
+
+    // Función para verificar admin
+    function verificarAdmin() {
+      const password = prompt("Ingrese la contraseña de administrador:");
+      if (password === "admin123") { // Cambiar por una contraseña más segura
+        document.getElementById("admin").style.display = "block";
+        document.getElementById("inicio").style.display = "none";
+        document.getElementById("candidatos").style.display = "none";
+        document.getElementById("perfil").style.display = "none";
+        mostrarResultados(); // Mostrar resultados
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+    }
+
+    // Función para cerrar el área de administración
+    function cerrarAdmin() {
+      document.getElementById("admin").style.display = "none";
+      document.getElementById("inicio").style.display = "block";
+    }
+
+    // Función para lanzar emojis
+    function lanzarEmojis() {
+      const emojiCount = 20; // Número de emojis a lanzar
+      for (let i = 0; i < emojiCount; i++) {
+        const emoji = document.createElement('img');
+        emoji.src = `https://twemoji.maxcdn.com/v/13.0.1/72x72/1f60a.png`; // Emoji feliz
+        emoji.classList.add('emoji');
+        emoji.style.left = `${Math.random() * 100}vw`;
+        emoji.style.animationDelay = `${Math.random() * 5}s`; // Retraso aleatorio
+        document.body.appendChild(emoji);
+
+        // Eliminar emoji después de la animación
+        emoji.addEventListener('animationend', () => {
+          emoji.remove();
+        });
+      }
+    }
+
+    // Iniciar animación al cargar la página
+    window.onload = () => {
+      document.getElementById("inicio").style.display = "block";
+      lanzarEmojis();
+    };
+  </script>
+</body>
+</html>
