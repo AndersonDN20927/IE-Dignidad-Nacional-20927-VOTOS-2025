@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -76,8 +76,7 @@
     }
     .emoji {
       position: absolute;
-      width: 50px;
-      height: 50px;
+      font-size: 2em; /* Tamaño más grande */
       pointer-events: none;
       animation: fall 5s linear forwards;
     }
@@ -182,9 +181,9 @@
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares", "Biblioteca digital", "Clases de robótica", "Mayor seguridad", "Talleres de liderazgo", "Mayor enfoque en la ciencia"], img: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte", "Fomento a la lectura", "Comité estudiantil", "Reducción de desperdicios", "Cuidado del medio ambiente", "Mayor participación estudiantil"], img: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico", "Programa de voluntariado", "Desarrollo de habilidades blandas", "Tecnología educativa", "Recreos más largos", "Promoción de la igualdad"], img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares", "Biblioteca digital", "Clases de robótica", "Mayor seguridad", "Talleres de liderazgo", "Mayor enfoque en la ciencia"], emoji: "👩" },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte", "Fomento a la lectura", "Comité estudiantil", "Reducción de desperdicios", "Cuidado del medio ambiente", "Mayor participación estudiantil"], emoji: "👩" },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico", "Programa de voluntariado", "Desarrollo de habilidades blandas", "Tecnología educativa", "Recreos más largos", "Promoción de la igualdad"], emoji: "👨" }
     };
     const votosRegistrados = {}; // Registro de votos por DNI
     let usuarioVoto = null;
@@ -201,131 +200,9 @@
     };
 
     document.querySelectorAll('input, select').forEach(input => {
-      input.addEventListener('input', verificarFormulario);
-    });
-
-    function verificarFormulario() {
-      const dni = document.getElementById("dni").value;
-      const nombre = document.getElementById("nombre").value;
-      const fecha = document.getElementById("fecha").value;
-      const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
-    }
-
-    function mostrarCandidatos() {
-      const dni = document.getElementById("dni").value;
-      if (localStorage.getItem(dni)) {
-        alert("Ya has votado previamente. Solo puedes votar una vez.");
-        return;
-      }
-      usuarioVoto = dni; // Guardar el DNI del usuario para registrar su voto más tarde
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
-    }
-
-    function mostrarPerfil(candidatoKey) {
-      const candidato = candidatos[candidatoKey];
-      document.getElementById("nombre-candidato").textContent = candidato.nombre;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = '';
-      candidato.propuestas.forEach(propuesta => {
-        const li = document.createElement("li");
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-      document.getElementById("profile-emoji").innerHTML = `<img src="${candidato.img}" alt="${candidato.nombre}">`;
-
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "block";
-
-      lluviaDeEmojis(candidato.img);
-    }
-
-    function lluviaDeEmojis(imagenURL) {
-      for (let i = 0; i < 50; i++) {
-        const emoji = document.createElement('img');
-        emoji.src = imagenURL;
-        emoji.classList.add('emoji');
-        emoji.style.left = `${Math.random() * 100}vw`;
-        emoji.style.animationDuration = `${Math.random() * 2 + 3}s`;
-        document.body.appendChild(emoji);
-
-        setTimeout(() => {
-          emoji.remove();
-        }, 5000);
-      }
-    }
-
-    function votar() {
-      const candidatoNombre = document.getElementById("nombre-candidato").textContent;
-      let candidatoSeleccionado = Object.keys(candidatos).find(c => candidatos[c].nombre === candidatoNombre);
-      if (!candidatoSeleccionado) return;
-      
-      // Registrar voto en localStorage
-      localStorage.setItem(usuarioVoto, candidatoSeleccionado);
-      candidatos[candidatoSeleccionado].votos++;
-      alert(`¡Gracias por votar por ${candidatoNombre}!`);
-
-      // Resetear la interfaz para un nuevo usuario
-      reset();
-    }
-
-    function volverLista() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
-    }
-
-    function reset() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("inicio").style.display = "block";
-      document.getElementById("dni").value = "";
-      document.getElementById("nombre").value = "";
-      document.getElementById("fecha").value = "";
-      document.getElementById("grado").value = "";
-    }
-
-    // Gestión de la parte de administración con contraseña
-    const PASSWORD_ADMIN = "admin123";
-
-    function mostrarAdminLogin() {
-      document.getElementById("adminLogin").style.display = "block";
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "none";
-    }
-
-    function verificarPassword() {
-      const inputPassword = document.getElementById("password").value;
-      if (inputPassword === PASSWORD_ADMIN) {
-        mostrarAdminPanel();
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
-
-    function mostrarAdminPanel() {
-      document.getElementById("adminLogin").style.display = "none";
-      document.getElementById("adminPanel").style.display = "block";
-      mostrarResultados();
-    }
-
-    function mostrarResultados() {
-      const resultadosDiv = document.getElementById("resultados");
-      resultadosDiv.innerHTML = "<h2>Resultados de las Elecciones</h2>";
-      Object.keys(candidatos).forEach(candidatoKey => {
-        const candidato = candidatos[candidatoKey];
-        const p = document.createElement("p");
-        p.textContent = `${candidato.nombre}: ${candidato.votos} votos`;
-        resultadosDiv.appendChild(p);
-      });
-    }
-
-    function cerrarAdmin() {
-      document.getElementById("adminPanel").style.display = "none";
-      document.getElementById("inicio").style.display = "block";
-    }
-
-  </script>
-
-</body>
-</html>
+      input.addEventListener('input', () => {
+        const dni = document.getElementById("dni").value;
+        const nombre = document.getElementById("nombre").value;
+        const fecha = document.getElementById("fecha").value;
+        const grado = document.getElementById("grado").value;
+        document.getElementById("continuarBtn").disabled
