@@ -63,7 +63,13 @@
       align-items: center;
       cursor: pointer;
       font-size: 1.5em;
-      justify-content: center;
+      justify-content: start;
+    }
+    .candidate img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
     }
     .candidate-info h3 {
       color: #4CAF50;
@@ -137,14 +143,20 @@
 
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
+
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      👩 Sofia Quispe - "Juntos podemos lograr grandes cambios"
+      <img src="ruta_imagen_candidato1.png" alt="Foto de Sofia Quispe">
+      Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
+
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      👨 Laura Fernández - "Creciendo juntos hacia un futuro mejor"
+      <img src="ruta_imagen_candidato2.png" alt="Foto de Laura Fernández">
+      Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
+
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      👩🏻 Carlos Ramírez - "Unidos en cada paso del camino"
+      <img src="ruta_imagen_candidato3.png" alt="Foto de Carlos Ramírez">
+      Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
   </div>
 
