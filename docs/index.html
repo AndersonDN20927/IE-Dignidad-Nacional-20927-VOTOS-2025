@@ -30,7 +30,7 @@
       color: #4CAF50;
       text-align: center;
     }
-    .button, .vote-button, .back-button {
+    .button, .vote-button {
       display: block;
       width: 100%;
       padding: 10px;
@@ -42,7 +42,7 @@
       font-size: 1em;
       margin-top: 10px;
     }
-    .button:hover, .vote-button:hover, .back-button:hover {
+    .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
     input, select {
@@ -84,9 +84,6 @@
       animation: fall 5s linear forwards;
     }
     @keyframes fall {
-      from {
-        transform: translateY(-100vh);
-      }
       to {
         transform: translateY(100vh);
       }
@@ -95,16 +92,7 @@
 </head>
 <body>
 
-  <!-- Pantalla de selección de dispositivo -->
-  <div id="dispositivo" class="container" style="display: block;">
-    <h1>Selecciona tu dispositivo</h1>
-    <button class="button" onclick="seleccionarDispositivo('pc')">PC</button>
-    <button class="button" onclick="seleccionarDispositivo('tablet')">Tablet</button>
-    <button class="button" onclick="seleccionarDispositivo('celular')">Celular</button>
-  </div>
-
-  <!-- Formulario inicial -->
-  <div id="inicio" class="container">
+  <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
     <p>Ingresa tus datos para participar en las elecciones</p>
     
@@ -122,13 +110,19 @@
       <option value="" disabled selected>Seleccionar</option>
       <option value="1A">1°A</option>
       <option value="1B">1°B</option>
-      <!-- Más opciones aquí -->
+      <option value="2A">2°A</option>
+      <option value="2B">2°B</option>
+      <option value="3A">3°A</option>
+      <option value="3B">3°B</option>
+      <option value="4A">4°A</option>
+      <option value="4B">4°B</option>
+      <option value="5A">5°A</option>
+      <option value="5B">5°B</option>
     </select>
 
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
 
-  <!-- Lista de candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
 
@@ -137,21 +131,70 @@
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
 
-    <!-- Más candidatos aquí -->
+    <div class="candidate" onclick="mostrarPerfil('candidato2')">
+      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
+      Laura Fernández - "Creciendo juntos hacia un futuro mejor"
+    </div>
+
+    <div class="candidate" onclick="mostrarPerfil('candidato3')">
+      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
+      Carlos Ramírez - "Unidos en cada paso del camino"
+    </div>
   </div>
 
-  <!-- Perfil del candidato -->
   <div id="perfil" class="container">
     <h2 id="nombre-candidato"></h2>
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
-    <button class="back-button" onclick="mostrarCandidatos()">Retroceder</button>
   </div>
 
   <script>
-    const candidatos = { /* Información de los candidatos */ };
-    const votosRegistrados = {};
+    const candidatos = {
+      candidato1: {
+        nombre: "Sofia Quispe",
+        votos: 0,
+        propuestas: [
+          "Mejorar la infraestructura",
+          "Actividades extracurriculares",
+          "Biblioteca digital",
+          "Clases de robótica",
+          "Mayor seguridad",
+          "Talleres de liderazgo",
+          "Mayor enfoque en la ciencia"
+        ],
+        img: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c"
+      },
+      candidato2: {
+        nombre: "Laura Fernández",
+        votos: 0,
+        propuestas: [
+          "Programa de reciclaje",
+          "Clases de arte",
+          "Club de debates",
+          "Huertos escolares",
+          "Más becas de estudio",
+          "Apoyo para eventos culturales",
+          "Digitalización de materiales"
+        ],
+        img: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb"
+      },
+      candidato3: {
+        nombre: "Carlos Ramírez",
+        votos: 0,
+        propuestas: [
+          "Más deportes",
+          "Apoyo psicológico",
+          "Torneos intercolegiales",
+          "Comedor escolar gratuito",
+          "Programa de orientación vocacional",
+          "Ampliar la oferta de idiomas",
+          "Apoyo en proyectos sociales"
+        ],
+        img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
+      }
+    };
+    const votosRegistrados = {}; // Registro de votos por DNI
     let usuarioVoto = null;
 
     document.querySelectorAll('input, select').forEach(input => {
@@ -164,15 +207,8 @@
       });
     });
 
-    function seleccionarDispositivo(dispositivo) {
-      document.getElementById("dispositivo").style.display = "none";
-      document.getElementById("inicio").style.display = "block";
-      ajustarDimensiones(dispositivo);
-    }
-
     function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
-      document.getElementById("perfil").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
@@ -188,6 +224,7 @@
 
     function votar() {
       const dni = document.getElementById("dni").value;
+
       if (votosRegistrados[dni]) {
         alert("Ya has votado con este DNI.");
       } else {
@@ -200,27 +237,31 @@
     }
 
     function mostrarLluviaEmojis() {
-      const emojiCount = 50;
+      const emojiCount = 50; // Aumentar la cantidad de emojis
       for (let i = 0; i < emojiCount; i++) {
         const emoji = document.createElement('div');
         emoji.textContent = "🎉";
         emoji.classList.add('emoji');
-        emoji.style.left = `${Math.random() * 100}vw`;
-        emoji.style.animationDelay = `${Math.random() * 2}s`;
+        emoji.style.left = `${Math.random() * 100}vw`; // Random position
+        emoji.style.animationDelay = `${Math.random() * 2}s`; // Random delay
         document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 5000);
+        setTimeout(() => emoji.remove(), 5000); // Remove after 5 seconds
       }
     }
 
-    function ajustarDimensiones(dispositivo) {
-      if (dispositivo === 'celular') {
-        document.body.style.fontSize = "0.9em";
-      } else if (dispositivo === 'tablet') {
-        document.body.style.fontSize = "1em";
+    function ajustarDimensiones() {
+      const width = window.innerWidth;
+      if (width <= 768) {
+        document.body.style.fontSize = "0.9em"; // Ajuste para móviles
+      } else if (width <= 1024) {
+        document.body.style.fontSize = "1em"; // Ajuste para tablets
       } else {
-        document.body.style.fontSize = "1.2em";
+        document.body.style.fontSize = "1.2em"; // Ajuste para PC
       }
     }
+
+    window.addEventListener('resize', ajustarDimensiones);
+    window.addEventListener('load', ajustarDimensiones);
   </script>
 
 </body>
