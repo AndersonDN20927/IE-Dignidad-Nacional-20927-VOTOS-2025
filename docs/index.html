@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -76,30 +76,15 @@
     }
     .emoji {
       position: absolute;
-      font-size: 2em; /* Tamaño más grande */
+      width: 50px;
+      height: 50px;
       pointer-events: none;
-      animation: fall 5s linear forwards;
+      animation: fall 3s linear forwards;
     }
     @keyframes fall {
-      from {
-        transform: translateY(-50px); /* Inicia desde arriba */
-      }
       to {
-        transform: translateY(100vh); /* Cae hasta abajo */
+        transform: translateY(100vh);
       }
-    }
-    /* Estilos para la sección de administración */
-    #adminLogin, #adminPanel {
-      display: none;
-    }
-    #adminLogin input {
-      width: calc(100% - 20px);
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    #adminPanel {
-      background-color: #333;
-      color: white;
     }
   </style>
 </head>
@@ -160,44 +145,16 @@
     <div class="profile-emoji" id="profile-emoji"></div>
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
-    <button class="button" id="volverBtn" onclick="volverLista()">Volver</button>
-  </div>
-
-  <!-- Sección de Admin -->
-  <div id="adminLogin" class="container">
-    <h2>Acceso de Administrador</h2>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" required>
-    <button class="button" onclick="verificarPassword()">Ingresar</button>
-  </div>
-
-  <div id="adminPanel" class="container">
-    <h2>Panel de Administración</h2>
-    <div id="resultados">
-      <!-- Aquí aparecerán los votos -->
-    </div>
-    <button class="button" onclick="cerrarAdmin()">Cerrar Sesión</button>
   </div>
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares", "Biblioteca digital", "Clases de robótica", "Mayor seguridad", "Talleres de liderazgo", "Mayor enfoque en la ciencia"], emoji: "👩" },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte", "Fomento a la lectura", "Comité estudiantil", "Reducción de desperdicios", "Cuidado del medio ambiente", "Mayor participación estudiantil"], emoji: "👩" },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico", "Programa de voluntariado", "Desarrollo de habilidades blandas", "Tecnología educativa", "Recreos más largos", "Promoción de la igualdad"], emoji: "👨" }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Actividades extracurriculares"], emoji: "👩" },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Programa de reciclaje", "Clases de arte"], emoji: "👨" },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Más deportes", "Apoyo psicológico"], emoji: "👩🏻" }
     };
     const votosRegistrados = {}; // Registro de votos por DNI
     let usuarioVoto = null;
-
-    // Al cargar la página, cargar los votos guardados en localStorage
-    window.onload = () => {
-      for (let i = 0; i < localStorage.length; i++) {
-        const dni = localStorage.key(i);
-        const candidato = localStorage.getItem(dni);
-        if (candidatos[candidato]) {
-          candidatos[candidato].votos++;
-        }
-      }
-    };
 
     document.querySelectorAll('input, select').forEach(input => {
       input.addEventListener('input', () => {
@@ -205,4 +162,52 @@
         const nombre = document.getElementById("nombre").value;
         const fecha = document.getElementById("fecha").value;
         const grado = document.getElementById("grado").value;
-        document.getElementById("continuarBtn").disabled
+        document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
+      });
+    });
+
+    function mostrarCandidatos() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+
+    function mostrarPerfil(candidato) {
+      const { nombre, propuestas, emoji } = candidatos[candidato];
+      usuarioVoto = candidato;
+      document.getElementById("nombre-candidato").textContent = nombre;
+      document.getElementById("profile-emoji").textContent = emoji;
+      document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
+      document.getElementById("perfil").style.display = "block";
+      document.getElementById("candidatos").style.display = "none";
+    }
+
+    function votar() {
+      const dni = document.getElementById("dni").value;
+
+      if (votosRegistrados[dni]) {
+        alert("Ya has votado con este DNI.");
+      } else {
+        votosRegistrados[dni] = true;
+        candidatos[usuarioVoto].votos++;
+        mostrarLluviaEmojis();
+        alert(`¡Gracias por tu voto por ${candidatos[usuarioVoto].nombre}! 🎉`);
+        mostrarCandidatos();
+      }
+    }
+
+    function mostrarLluviaEmojis() {
+      const emojiCount = 30;
+      for (let i = 0; i < emojiCount; i++) {
+        const emoji = document.createElement('div');
+        emoji.textContent = "🎉";
+        emoji.classList.add('emoji');
+        emoji.style.left = `${Math.random() * 100}vw`; // Random position
+        emoji.style.animationDelay = `${Math.random() * 2}s`; // Random delay
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 3000); // Remove after animation
+      }
+    }
+  </script>
+
+</body>
+</html>
