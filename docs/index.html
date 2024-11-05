@@ -105,7 +105,7 @@
       top: 10px;
       right: 10px;
       padding: 10px 15px;
-      background-color: #FF6347; /* Color llamativo */
+      background-color: #FF6347;
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -150,16 +150,16 @@
     <p>Ingresa tus datos para participar en las elecciones</p>
 
     <label for="dni">DNI (8 dígitos):</label>
-    <input type="text" id="dni" maxlength="8" required>
+    <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
 
     <label for="nombre">Nombre Completo:</label>
-    <input type="text" id="nombre" required>
+    <input type="text" id="nombre" required oninput="verificarFormulario()">
 
     <label for="fecha">Fecha de Nacimiento:</label>
-    <input type="date" id="fecha" required>
+    <input type="date" id="fecha" required oninput="verificarFormulario()">
 
     <label for="grado">Grado y Sección:</label>
-    <select id="grado" required>
+    <select id="grado" required onchange="verificarFormulario()">
       <option value="" disabled selected>Seleccionar</option>
       <option value="1A">1°A</option>
       <option value="1B">1°B</option>
@@ -253,12 +253,28 @@
       }
     };
 
+    function verificarFormulario() {
+      const dni = document.getElementById("dni").value;
+      const nombre = document.getElementById("nombre").value;
+      const fecha = document.getElementById("fecha").value;
+      const grado = document.getElementById("grado").value;
+      const continuarBtn = document.getElementById("continuarBtn");
+
+      const dniValido = /^\d{8}$/.test(dni);
+      continuarBtn.disabled = !(dniValido && nombre && fecha && grado);
+    }
+
+    function mostrarCandidatos() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+
     const votosBtn = document.getElementById("votosBtn");
     const resultadosDiv = document.getElementById("resultados");
 
     function mostrarResultados() {
       const pass = prompt("Ingrese la contraseña para ver los resultados:");
-      if (pass === "TuContraseña123") { // Cambia "TuContraseña123" por la contraseña que deseas
+      if (pass === "TuContraseña123") {
         let resultadosHTML = "";
         for (let key in candidatos) {
           resultadosHTML += `<li>${candidatos[key].nombre}: ${candidatos[key].votos} votos</li>`;
@@ -290,6 +306,7 @@
       mostrarEmojis();
       alert("Gracias por votar!");
       document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarEmojis() {
