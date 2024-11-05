@@ -78,15 +78,20 @@
     }
     .emoji {
       position: absolute;
-      width: 50px;
-      height: 50px;
-      pointer-events: none;
-      animation: fall 5s linear forwards;
+      font-size: 50px; /* Tamaño más grande */
+      pointer-events: auto;
+      animation: fall 4s linear forwards; /* Animación de 4 segundos */
+      cursor: pointer;
     }
     @keyframes fall {
       to {
         transform: translateY(100vh);
       }
+    }
+    .login-container {
+      display: block;
+      text-align: center;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -149,6 +154,17 @@
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
   </div>
 
+  <div id="admin" class="container" style="display: none;">
+    <h2>Panel de Administración</h2>
+    <p>Resultados de la votación:</p>
+    <ul id="resultsList"></ul>
+  </div>
+
+  <div class="login-container">
+    <input type="password" id="adminPassword" placeholder="Ingrese contraseña">
+    <button onclick="checkPassword()">Entrar</button>
+  </div>
+
   <script>
     const candidatos = {
       candidato1: {
@@ -194,7 +210,7 @@
         img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
       }
     };
-    const votosRegistrados = {}; // Registro de votos por DNI
+    const votosRegistrados = {};
     let usuarioVoto = null;
 
     document.querySelectorAll('input, select').forEach(input => {
@@ -237,15 +253,16 @@
     }
 
     function mostrarLluviaEmojis() {
-      const emojiCount = 50; // Aumentar la cantidad de emojis
+      const emojiCount = 50; // Cantidad de emojis
       for (let i = 0; i < emojiCount; i++) {
         const emoji = document.createElement('div');
         emoji.textContent = "🎉";
         emoji.classList.add('emoji');
-        emoji.style.left = `${Math.random() * 100}vw`; // Random position
-        emoji.style.animationDelay = `${Math.random() * 2}s`; // Random delay
+        emoji.style.left = `${Math.random() * 100}vw`; // Posición aleatoria
+        emoji.style.animationDelay = `${Math.random() * 2}s`; // Retardo aleatorio
+        emoji.addEventListener('click', () => emoji.remove()); // Interactividad
         document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 5000); // Remove after 5 seconds
+        setTimeout(() => emoji.remove(), 4000); // Remover después de 4 segundos
       }
     }
 
@@ -262,6 +279,26 @@
 
     window.addEventListener('resize', ajustarDimensiones);
     window.addEventListener('load', ajustarDimensiones);
+
+    function checkPassword() {
+      const password = document.getElementById("adminPassword").value;
+      if (password === "admin123") {
+        document.getElementById("admin").style.display = "block";
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta");
+      }
+    }
+
+    function mostrarResultados() {
+      const totalVotos = candidatos.candidato1.votos + candidatos.candidato2.votos + candidatos.candidato3.votos;
+      const resultsList = document.getElementById("resultsList");
+      resultsList.innerHTML = `
+        <li>Sofia Quispe: ${candidatos.candidato1.votos} votos (${((candidatos.candidato1.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
+        <li>Laura Fernández: ${candidatos.candidato2.votos} votos (${((candidatos.candidato2.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
+        <li>Carlos Ramírez: ${candidatos.candidato3.votos} votos (${((candidatos.candidato3.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
+      `;
+    }
   </script>
 
 </body>
