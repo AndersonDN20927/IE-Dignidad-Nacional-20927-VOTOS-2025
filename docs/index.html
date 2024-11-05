@@ -25,7 +25,6 @@
       border-radius: 8px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       background-color: #fff;
-      display: none;
     }
 
     h1, h2 {
@@ -46,7 +45,12 @@
       margin-top: 10px;
     }
 
-    .button:hover, .vote-button:hover {
+    .button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .button:hover:not(:disabled), .vote-button:hover {
       background-color: #45a049;
     }
 
@@ -105,7 +109,7 @@
       top: 10px;
       right: 10px;
       padding: 10px 15px;
-      background-color: #FF5722;
+      background-color: #2196F3;
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -114,7 +118,7 @@
     }
 
     #votosBtn:hover {
-      background-color: #E64A19;
+      background-color: #1976D2;
     }
 
     #resultados {
@@ -253,12 +257,17 @@
       }
     };
 
-    document.querySelector('#dni, #nombre, #fecha, #grado').addEventListener('input', () => {
-      const dni = document.getElementById('dni').value;
-      const nombre = document.getElementById('nombre').value;
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-      document.getElementById('continuarBtn').disabled = !(dni && nombre && fecha && grado);
+    // Evento para habilitar el botón solo si todos los campos están completos
+    document.querySelectorAll('#dni, #nombre, #fecha, #grado').forEach(input => {
+      input.addEventListener('input', () => {
+        const dni = document.getElementById('dni').value;
+        const nombre = document.getElementById('nombre').value;
+        const fecha = document.getElementById('fecha').value;
+        const grado = document.getElementById('grado').value;
+        const continuarBtn = document.getElementById('continuarBtn');
+        
+        continuarBtn.disabled = !(dni.length === 8 && nombre && fecha && grado);
+      });
     });
 
     function mostrarCandidatos() {
@@ -288,6 +297,21 @@
       alert('¡Voto registrado para ' + candidatos[candidato].nombre + '!');
       document.getElementById('perfil').style.display = 'none';
       document.getElementById('inicio').style.display = 'block';
+      iniciarLluviaEmojis(); // Inicia la lluvia de emojis solo después de votar
+    }
+
+    function iniciarLluviaEmojis() {
+      setInterval(() => {
+        const emoji = document.createElement('img');
+        emoji.src = 'https://emojicdn.elk.sh/🎉';
+        emoji.classList.add('emoji');
+        emoji.style.left = Math.random() * 100 + 'vw';
+        document.body.appendChild(emoji);
+
+        setTimeout(() => {
+          emoji.remove();
+        }, 5000);
+      }, 300);
     }
 
     function mostrarResultados() {
@@ -302,18 +326,6 @@
       }
       resultadosContainer.style.display = 'block';
     }
-
-    setInterval(() => {
-      const emoji = document.createElement('img');
-      emoji.src = 'https://emojicdn.elk.sh/🎉';
-      emoji.classList.add('emoji');
-      emoji.style.left = Math.random() * 100 + 'vw';
-      document.body.appendChild(emoji);
-
-      setTimeout(() => {
-        emoji.remove();
-      }, 5000);
-    }, 300);
   </script>
 
 </body>
