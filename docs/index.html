@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
+    /* Mantener estilos previos */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -17,7 +18,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .container {
       width: 90%;
       max-width: 500px;
@@ -27,12 +27,10 @@
       background-color: #fff;
       display: none;
     }
-
     h1, h2 {
       color: #4CAF50;
       text-align: center;
     }
-
     .button, .vote-button {
       display: block;
       width: 100%;
@@ -45,11 +43,9 @@
       font-size: 1em;
       margin-top: 10px;
     }
-
     .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
-
     input, select {
       width: 100%;
       padding: 8px;
@@ -57,7 +53,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -69,14 +64,12 @@
       cursor: pointer;
       font-size: 1.5em;
     }
-
     .candidate img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       margin-right: 15px;
     }
-
     .profile-img {
       width: 100px;
       height: 100px;
@@ -84,7 +77,6 @@
       margin: 20px auto;
       display: block;
     }
-
     .emoji {
       position: absolute;
       top: 0;
@@ -93,13 +85,11 @@
       pointer-events: none;
       animation: fall 5s linear forwards;
     }
-
     @keyframes fall {
       to {
         transform: translateY(100vh);
       }
     }
-
     #votosBtn {
       position: absolute;
       top: 10px;
@@ -112,11 +102,9 @@
       cursor: pointer;
       font-size: 1em;
     }
-
     #votosBtn:hover {
       background-color: #FF4500;
     }
-
     #resultados {
       position: fixed;
       top: 20%;
@@ -129,15 +117,33 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       display: none;
     }
-
     #resultados ul {
       list-style-type: none;
       padding: 0;
     }
-
     #resultados ul li {
       margin: 10px 0;
       font-size: 1.2em;
+    }
+    #cerrarResultados {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #cerrarResultados:hover {
+      background-color: #FF4500;
+    }
+    #credits {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
     }
   </style>
 </head>
@@ -147,20 +153,20 @@
 
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
-    <p>Ingresa tus datos para participar en las elecciones</p>
+    <p>Introduce tus datos para participar en las elecciones</p>
 
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
 
-    <label for="nombre">Nombre Completo:</label>
+    <label for="nombre">Nombre completo:</label>
     <input type="text" id="nombre" required oninput="verificarFormulario()">
 
-    <label for="fecha">Fecha de Nacimiento:</label>
+    <label for="fecha">Fecha de nacimiento:</label>
     <input type="date" id="fecha" required oninput="verificarFormulario()">
 
-    <label for="grado">Grado y Sección:</label>
+    <label for="grado">Grado y sección:</label>
     <select id="grado" required onchange="verificarFormulario()">
-      <option value="" disabled selected>Seleccionar</option>
+      <option value="" disabled selected>Seleccione</option>
       <option value="1A">1°A</option>
       <option value="1B">1°B</option>
       <option value="2A">2°A</option>
@@ -206,6 +212,11 @@
   <div id="resultados">
     <h2>Resultados de Votos</h2>
     <ul id="resultsList"></ul>
+    <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
+  </div>
+
+  <div id="credits">
+    Créditos: Platanito Tentación, Manzanita Tentación y TG (Top Globales)
   </div>
 
   <script>
@@ -219,8 +230,8 @@
           "Biblioteca digital",
           "Clases de robótica",
           "Mayor seguridad",
-          "Talleres de liderazgo",
-          "Mayor enfoque en la ciencia"
+          "Fomentar la inclusión",
+          "Talleres de emprendimiento"
         ],
         img: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c"
       },
@@ -292,22 +303,66 @@
       const candidato = Object.values(candidatos).find(c => c.nombre === candidatoNombre);
       if (candidato) {
         candidato.votos += 1;
-        alert(`Voto registrado para ${candidato.nombre}.`);
+        guardarVotosEnLocalStorage();
+        mostrarEmojis();
+        alert(`Se ha registrado tu voto para ${candidato.nombre}.`);
         volverALista();
       }
     }
 
-    function mostrarResultados() {
-      const resultados = document.getElementById("resultados");
-      const resultsList = document.getElementById("resultsList");
-      resultsList.innerHTML = "";
-      Object.values(candidatos).forEach(candidato => {
-        const li = document.createElement("li");
-        li.textContent = `${candidato.nombre}: ${candidato.votos} votos`;
-        resultsList.appendChild(li);
-      });
-      resultados.style.display = "block";
+    function guardarVotosEnLocalStorage() {
+      localStorage.setItem("votos", JSON.stringify(candidatos));
     }
+
+    function cargarVotosDesdeLocalStorage() {
+      const votosGuardados = localStorage.getItem("votos");
+      if (votosGuardados) {
+        const votosCargados = JSON.parse(votosGuardados);
+        Object.keys(candidatos).forEach(candidatoId => {
+          candidatos[candidatoId].votos = votosCargados[candidatoId].votos || 0;
+        });
+      }
+    }
+
+    function mostrarResultados() {
+      const password = prompt("Introduzca la contraseña de administrador:");
+      if (password === "dignidad2025") {
+        cargarVotosDesdeLocalStorage();
+        const totalVotos = Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
+        const resultsList = document.getElementById("resultsList");
+        resultsList.innerHTML = "";
+        Object.values(candidatos).forEach(candidato => {
+          const porcentaje = totalVotos ? ((candidato.votos / totalVotos) * 100).toFixed(2) : 0;
+          const li = document.createElement("li");
+          li.textContent = `${candidato.nombre}: ${candidato.votos} votos (${porcentaje}%)`;
+          resultsList.appendChild(li);
+        });
+        document.getElementById("resultados").style.display = "block";
+      } else {
+        alert("La contraseña es incorrecta.");
+      }
+    }
+
+    function cerrarResultados() {
+      document.getElementById("resultados").style.display = "none";
+    }
+
+    function mostrarEmojis() {
+      const emojis = ["🎉", "✨", "🎆", "🎇", "🔥", "💥"];
+      for (let i = 0; i < 50; i++) {
+        const emoji = document.createElement("div");
+        emoji.classList.add("emoji");
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = `${Math.random() * 100}vw`;
+        emoji.style.animationDelay = `${Math.random() * 2}s`;
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 5000);
+      }
+    }
+
+    // Cargar votos guardados al cargar la página
+    cargarVotosDesdeLocalStorage();
+
   </script>
 
 </body>
