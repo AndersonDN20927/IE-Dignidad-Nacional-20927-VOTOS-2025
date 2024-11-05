@@ -17,6 +17,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .container {
       width: 90%;
       max-width: 500px;
@@ -26,10 +27,12 @@
       background-color: #fff;
       display: none;
     }
+
     h1, h2 {
       color: #4CAF50;
       text-align: center;
     }
+
     .button, .vote-button {
       display: block;
       width: 100%;
@@ -42,9 +45,11 @@
       font-size: 1em;
       margin-top: 10px;
     }
+
     .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
+
     input, select {
       width: 100%;
       padding: 8px;
@@ -52,6 +57,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -63,12 +69,14 @@
       cursor: pointer;
       font-size: 1.5em;
     }
+
     .candidate img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       margin-right: 15px;
     }
+
     .profile-img {
       width: 100px;
       height: 100px;
@@ -76,31 +84,71 @@
       margin: 20px auto;
       display: block;
     }
+
     .emoji {
       position: absolute;
-      font-size: 50px; /* Tamaño más grande */
-      pointer-events: auto;
-      animation: fall 4s linear forwards; /* Animación de 4 segundos */
-      cursor: pointer;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      pointer-events: none;
+      animation: fall 5s linear forwards;
     }
+
     @keyframes fall {
       to {
         transform: translateY(100vh);
       }
     }
-    .login-container {
-      display: block;
-      text-align: center;
-      margin-bottom: 10px;
+
+    #votosBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 15px;
+      background-color: #FF5722;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    #votosBtn:hover {
+      background-color: #E64A19;
+    }
+
+    #resultados {
+      position: fixed;
+      top: 20%;
+      right: 5%;
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    #resultados ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #resultados ul li {
+      margin: 10px 0;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
 
+  <button id="votosBtn" onclick="mostrarResultados()">Votos</button>
+
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
     <p>Ingresa tus datos para participar en las elecciones</p>
-    
+
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required>
 
@@ -154,15 +202,9 @@
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
   </div>
 
-  <div id="admin" class="container" style="display: none;">
-    <h2>Panel de Administración</h2>
-    <p>Resultados de la votación:</p>
+  <div id="resultados">
+    <h2>Resultados de Votos</h2>
     <ul id="resultsList"></ul>
-  </div>
-
-  <div class="login-container">
-    <input type="password" id="adminPassword" placeholder="Ingrese contraseña">
-    <button onclick="checkPassword()">Entrar</button>
   </div>
 
   <script>
@@ -210,95 +252,68 @@
         img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
       }
     };
-    const votosRegistrados = {};
-    let usuarioVoto = null;
 
-    document.querySelectorAll('input, select').forEach(input => {
-      input.addEventListener('input', () => {
-        const dni = document.getElementById("dni").value;
-        const nombre = document.getElementById("nombre").value;
-        const fecha = document.getElementById("fecha").value;
-        const grado = document.getElementById("grado").value;
-        document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
-      });
+    document.querySelector('#dni, #nombre, #fecha, #grado').addEventListener('input', () => {
+      const dni = document.getElementById('dni').value;
+      const nombre = document.getElementById('nombre').value;
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      document.getElementById('continuarBtn').disabled = !(dni && nombre && fecha && grado);
     });
 
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
     function mostrarPerfil(candidato) {
-      const { nombre, propuestas, img } = candidatos[candidato];
-      usuarioVoto = candidato;
-      document.getElementById("nombre-candidato").textContent = nombre;
-      document.getElementById("profile-img").src = img;
-      document.getElementById("lista-propuestas").innerHTML = propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
-      document.getElementById("perfil").style.display = "block";
-      document.getElementById("candidatos").style.display = "none";
+      const candidatoData = candidatos[candidato];
+      document.getElementById('nombre-candidato').textContent = candidatoData.nombre;
+      document.getElementById('profile-img').src = candidatoData.img;
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      candidatoData.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+      document.getElementById('candidatos').style.display = 'none';
+      document.getElementById('perfil').style.display = 'block';
+      document.getElementById('voteButton').dataset.candidato = candidato;
     }
 
     function votar() {
-      const dni = document.getElementById("dni").value;
-
-      if (votosRegistrados[dni]) {
-        alert("Ya has votado con este DNI.");
-      } else {
-        votosRegistrados[dni] = true;
-        candidatos[usuarioVoto].votos++;
-        mostrarLluviaEmojis();
-        alert(`¡Gracias por tu voto por ${candidatos[usuarioVoto].nombre}! 🎉`);
-        mostrarCandidatos();
-      }
-    }
-
-    function mostrarLluviaEmojis() {
-      const emojiCount = 50; // Cantidad de emojis
-      for (let i = 0; i < emojiCount; i++) {
-        const emoji = document.createElement('div');
-        emoji.textContent = "🎉";
-        emoji.classList.add('emoji');
-        emoji.style.left = `${Math.random() * 100}vw`; // Posición aleatoria
-        emoji.style.animationDelay = `${Math.random() * 2}s`; // Retardo aleatorio
-        emoji.addEventListener('click', () => emoji.remove()); // Interactividad
-        document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 4000); // Remover después de 4 segundos
-      }
-    }
-
-    function ajustarDimensiones() {
-      const width = window.innerWidth;
-      if (width <= 768) {
-        document.body.style.fontSize = "0.9em"; // Ajuste para móviles
-      } else if (width <= 1024) {
-        document.body.style.fontSize = "1em"; // Ajuste para tablets
-      } else {
-        document.body.style.fontSize = "1.2em"; // Ajuste para PC
-      }
-    }
-
-    window.addEventListener('resize', ajustarDimensiones);
-    window.addEventListener('load', ajustarDimensiones);
-
-    function checkPassword() {
-      const password = document.getElementById("adminPassword").value;
-      if (password === "admin123") {
-        document.getElementById("admin").style.display = "block";
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta");
-      }
+      const candidato = document.getElementById('voteButton').dataset.candidato;
+      candidatos[candidato].votos++;
+      alert('¡Voto registrado para ' + candidatos[candidato].nombre + '!');
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('inicio').style.display = 'block';
     }
 
     function mostrarResultados() {
-      const totalVotos = candidatos.candidato1.votos + candidatos.candidato2.votos + candidatos.candidato3.votos;
-      const resultsList = document.getElementById("resultsList");
-      resultsList.innerHTML = `
-        <li>Sofia Quispe: ${candidatos.candidato1.votos} votos (${((candidatos.candidato1.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
-        <li>Laura Fernández: ${candidatos.candidato2.votos} votos (${((candidatos.candidato2.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
-        <li>Carlos Ramírez: ${candidatos.candidato3.votos} votos (${((candidatos.candidato3.votos / totalVotos) * 100 || 0).toFixed(2)}%)</li>
-      `;
+      const resultadosContainer = document.getElementById('resultados');
+      const resultsList = document.getElementById('resultsList');
+      resultsList.innerHTML = '';
+      for (const key in candidatos) {
+        const candidato = candidatos[key];
+        const li = document.createElement('li');
+        li.textContent = `${candidato.nombre}: ${candidato.votos} votos`;
+        resultsList.appendChild(li);
+      }
+      resultadosContainer.style.display = 'block';
     }
+
+    setInterval(() => {
+      const emoji = document.createElement('img');
+      emoji.src = 'https://emojicdn.elk.sh/🎉';
+      emoji.classList.add('emoji');
+      emoji.style.left = Math.random() * 100 + 'vw';
+      document.body.appendChild(emoji);
+
+      setTimeout(() => {
+        emoji.remove();
+      }, 5000);
+    }, 300);
   </script>
 
 </body>
