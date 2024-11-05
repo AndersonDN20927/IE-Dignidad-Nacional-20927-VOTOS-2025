@@ -25,6 +25,7 @@
       border-radius: 8px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       background-color: #fff;
+      display: none;
     }
 
     h1, h2 {
@@ -45,12 +46,7 @@
       margin-top: 10px;
     }
 
-    .button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    .button:hover:not(:disabled), .vote-button:hover {
+    .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
 
@@ -109,7 +105,7 @@
       top: 10px;
       right: 10px;
       padding: 10px 15px;
-      background-color: #2196F3;
+      background-color: #FF5722;
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -118,7 +114,7 @@
     }
 
     #votosBtn:hover {
-      background-color: #1976D2;
+      background-color: #E64A19;
     }
 
     #resultados {
@@ -147,7 +143,7 @@
 </head>
 <body>
 
-  <button id="votosBtn" onclick="mostrarResultados()">Votos</button>
+  <button id="votosBtn" onclick="pedirContraseña()">Votos</button>
 
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
@@ -213,61 +209,17 @@
 
   <script>
     const candidatos = {
-      candidato1: {
-        nombre: "Sofia Quispe",
-        votos: 0,
-        propuestas: [
-          "Mejorar la infraestructura",
-          "Actividades extracurriculares",
-          "Biblioteca digital",
-          "Clases de robótica",
-          "Mayor seguridad",
-          "Talleres de liderazgo",
-          "Mayor enfoque en la ciencia"
-        ],
-        img: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c"
-      },
-      candidato2: {
-        nombre: "Laura Fernández",
-        votos: 0,
-        propuestas: [
-          "Programa de reciclaje",
-          "Clases de arte",
-          "Club de debates",
-          "Huertos escolares",
-          "Más becas de estudio",
-          "Apoyo para eventos culturales",
-          "Digitalización de materiales"
-        ],
-        img: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb"
-      },
-      candidato3: {
-        nombre: "Carlos Ramírez",
-        votos: 0,
-        propuestas: [
-          "Más deportes",
-          "Apoyo psicológico",
-          "Torneos intercolegiales",
-          "Comedor escolar gratuito",
-          "Programa de orientación vocacional",
-          "Ampliar la oferta de idiomas",
-          "Apoyo en proyectos sociales"
-        ],
-        img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
-      }
+      candidato1: { nombre: "Sofia Quispe", votos: 0 },
+      candidato2: { nombre: "Laura Fernández", votos: 0 },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0 },
     };
 
-    // Evento para habilitar el botón solo si todos los campos están completos
-    document.querySelectorAll('#dni, #nombre, #fecha, #grado').forEach(input => {
-      input.addEventListener('input', () => {
-        const dni = document.getElementById('dni').value;
-        const nombre = document.getElementById('nombre').value;
-        const fecha = document.getElementById('fecha').value;
-        const grado = document.getElementById('grado').value;
-        const continuarBtn = document.getElementById('continuarBtn');
-        
-        continuarBtn.disabled = !(dni.length === 8 && nombre && fecha && grado);
-      });
+    document.querySelector('#dni, #nombre, #fecha, #grado').addEventListener('input', () => {
+      const dni = document.getElementById('dni').value;
+      const nombre = document.getElementById('nombre').value;
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      document.getElementById('continuarBtn').disabled = !(dni && nombre && fecha && grado);
     });
 
     function mostrarCandidatos() {
@@ -278,7 +230,6 @@
     function mostrarPerfil(candidato) {
       const candidatoData = candidatos[candidato];
       document.getElementById('nombre-candidato').textContent = candidatoData.nombre;
-      document.getElementById('profile-img').src = candidatoData.img;
       const listaPropuestas = document.getElementById('lista-propuestas');
       listaPropuestas.innerHTML = '';
       candidatoData.propuestas.forEach(propuesta => {
@@ -294,28 +245,35 @@
     function votar() {
       const candidato = document.getElementById('voteButton').dataset.candidato;
       candidatos[candidato].votos++;
-      alert('¡Voto registrado para ' + candidatos[candidato].nombre + '!');
+      generarLluviaEmojis();
+      setTimeout(() => alert(`Has votado por ${candidatos[candidato].nombre}`), 500);
       document.getElementById('perfil').style.display = 'none';
       document.getElementById('inicio').style.display = 'block';
-      iniciarLluviaEmojis(); // Inicia la lluvia de emojis solo después de votar
     }
 
-    function iniciarLluviaEmojis() {
-      setInterval(() => {
-        const emoji = document.createElement('img');
-        emoji.src = 'https://emojicdn.elk.sh/🎉';
+    function generarLluviaEmojis() {
+      for (let i = 0; i < 30; i++) {
+        const emoji = document.createElement('div');
+        emoji.textContent = '🎉';
         emoji.classList.add('emoji');
-        emoji.style.left = Math.random() * 100 + 'vw';
+        emoji.style.left = `${Math.random() * 100}vw`;
+        emoji.style.animationDuration = `${Math.random() * 3 + 2}s`;
         document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 5000);
+      }
+    }
 
-        setTimeout(() => {
-          emoji.remove();
-        }, 5000);
-      }, 300);
+    function pedirContraseña() {
+      const contraseña = prompt("Ingrese la contraseña para ver los resultados:");
+      if (contraseña === "miContraseña123") {
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta.");
+      }
     }
 
     function mostrarResultados() {
-      const resultadosContainer = document.getElementById('resultados');
+      const resultadosDiv = document.getElementById('resultados');
       const resultsList = document.getElementById('resultsList');
       resultsList.innerHTML = '';
       for (const key in candidatos) {
@@ -324,9 +282,8 @@
         li.textContent = `${candidato.nombre}: ${candidato.votos} votos`;
         resultsList.appendChild(li);
       }
-      resultadosContainer.style.display = 'block';
+      resultadosDiv.style.display = 'block';
     }
   </script>
-
 </body>
 </html>
