@@ -200,6 +200,7 @@
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
+    <button class="button" onclick="volverALista()">Volver</button>
   </div>
 
   <div id="resultados">
@@ -258,10 +259,7 @@
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      const continuarBtn = document.getElementById("continuarBtn");
-
-      const dniValido = /^\d{8}$/.test(dni);
-      continuarBtn.disabled = !(dniValido && nombre && fecha && grado);
+      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
     }
 
     function mostrarCandidatos() {
@@ -269,59 +267,46 @@
       document.getElementById("candidatos").style.display = "block";
     }
 
-    const votosBtn = document.getElementById("votosBtn");
-    const resultadosDiv = document.getElementById("resultados");
-
-    function mostrarResultados() {
-      const pass = prompt("Ingrese la contraseña para ver los resultados:");
-      if (pass === "ronaldo240186") {
-        let resultadosHTML = "";
-        for (let key in candidatos) {
-          resultadosHTML += `<li>${candidatos[key].nombre}: ${candidatos[key].votos} votos</li>`;
-        }
-        document.getElementById("resultsList").innerHTML = resultadosHTML;
-        resultadosDiv.style.display = "block";
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
-
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
       document.getElementById("nombre-candidato").innerText = candidato.nombre;
       document.getElementById("profile-img").src = candidato.img;
-      document.getElementById("lista-propuestas").innerHTML = candidato.propuestas.map(p => `<li>${p}</li>`).join("");
+      const listaPropuestas = document.getElementById("lista-propuestas");
+      listaPropuestas.innerHTML = "";
+      candidato.propuestas.forEach(propuesta => {
+        const li = document.createElement("li");
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
     }
 
-    function votar() {
-      const candidatoId = document.getElementById("nombre-candidato").innerText;
-      for (let key in candidatos) {
-        if (candidatos[key].nombre === candidatoId) {
-          candidatos[key].votos++;
-          break;
-        }
-      }
-      mostrarEmojis();
-      alert("Gracias por votar!");
+    function volverALista() {
       document.getElementById("perfil").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
-    function mostrarEmojis() {
-      for (let i = 0; i < 100; i++) {
-        const emoji = document.createElement("div");
-        emoji.className = "emoji";
-        emoji.innerText = ["🎉", "🎈", "✨", "🎊", "🥳"][Math.floor(Math.random() * 5)];
-        emoji.style.left = `${Math.random() * 100}vw`;
-        emoji.style.animationDuration = `${Math.random() * 3 + 2}s`;
-        document.body.appendChild(emoji);
-
-        emoji.addEventListener("animationend", () => {
-          emoji.remove();
-        });
+    function votar() {
+      const candidatoNombre = document.getElementById("nombre-candidato").innerText;
+      const candidato = Object.values(candidatos).find(c => c.nombre === candidatoNombre);
+      if (candidato) {
+        candidato.votos += 1;
+        alert(`Voto registrado para ${candidato.nombre}.`);
+        volverALista();
       }
+    }
+
+    function mostrarResultados() {
+      const resultados = document.getElementById("resultados");
+      const resultsList = document.getElementById("resultsList");
+      resultsList.innerHTML = "";
+      Object.values(candidatos).forEach(candidato => {
+        const li = document.createElement("li");
+        li.textContent = `${candidato.nombre}: ${candidato.votos} votos`;
+        resultsList.appendChild(li);
+      });
+      resultados.style.display = "block";
     }
   </script>
 
