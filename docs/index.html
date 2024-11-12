@@ -80,10 +80,10 @@
     .emoji {
       position: absolute;
       top: 0;
-      width: 100px; /* Cambiado a 100px para mayor tamaño */
-      height: 100px; /* Cambiado a 100px para mayor tamaño */
+      width: 50px;
+      height: 50px;
       pointer-events: none;
-      animation: fall 5s linear forwards;
+      animation: fall 6s linear forwards;
     }
     @keyframes fall {
       to {
@@ -221,52 +221,12 @@
 
   <script>
     const candidatos = {
-      candidato1: {
-        nombre: "Sofia Quispe",
-        votos: 0,
-        propuestas: [
-          "Mejorar la infraestructura",
-          "Actividades extracurriculares",
-          "Biblioteca digital",
-          "Clases de robótica",
-          "Mayor seguridad",
-          "Fomentar la inclusión",
-          "Talleres de emprendimiento"
-        ],
-        img: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c"
-      },
-      candidato2: {
-        nombre: "Laura Fernández",
-        votos: 0,
-        propuestas: [
-          "Cursos de apoyo",
-          "Mejorar la alimentación",
-          "Deportes para todos",
-          "Días de concientización",
-          "Reforzar la seguridad",
-          "Conciertos escolares",
-          "Más opciones de becas"
-        ],
-        img: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb"
-      },
-      candidato3: {
-        nombre: "Carlos Ramírez",
-        votos: 0,
-        propuestas: [
-          "Centro cultural",
-          "Educación ambiental",
-          "Actividades recreativas",
-          "Mejorar el internet",
-          "Mayor participación",
-          "Viajes educativos",
-          "Cursos de orientación vocacional"
-        ],
-        img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
-      }
+      candidato1: { nombre: "Sofia Quispe", votos: 0 },
+      candidato2: { nombre: "Laura Fernández", votos: 0 },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0 }
     };
 
-    const emojis = ["😀", "😂", "😃", "😆", "😅", "😍", "🤩", "🥳", "🤪", "😜"];
-    let emojiIndex = 0;
+    let hasVoted = false;
 
     function mostrarCandidatos() {
       document.getElementById('inicio').style.display = 'none';
@@ -276,19 +236,10 @@
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
       document.getElementById('nombre-candidato').innerText = candidato.nombre;
-      document.getElementById('profile-img').src = candidato.img;
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      candidato.propuestas.forEach(prop => {
-        const li = document.createElement('li');
-        li.innerText = prop;
-        listaPropuestas.appendChild(li);
-      });
+      document.getElementById('voteButton').setAttribute('data-candidato', candidatoId);
       document.getElementById('perfil').style.display = 'block';
       document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('voteButton').onclick = function() {
-        votar(candidatoId);
-      };
+      document.getElementById('voteButton').disabled = false;
     }
 
     function volverALista() {
@@ -296,44 +247,56 @@
       document.getElementById('candidatos').style.display = 'block';
     }
 
-    function votar(candidatoId) {
-      candidatos[candidatoId].votos++;
-      localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
-      mostrarEmojis();
-    }
-
-    function mostrarEmojis() {
-      const emoji = document.createElement('div');
-      emoji.classList.add('emoji');
-      emoji.innerText = emojis[emojiIndex];
-      emoji.style.left = Math.random() * window.innerWidth + 'px';
-      document.body.appendChild(emoji);
-      emojiIndex = (emojiIndex + 1) % emojis.length;
-    }
-
-    function mostrarResultados() {
-      document.getElementById('resultados').style.display = 'block';
-      document.getElementById('votosBtn').style.display = 'none';
-      const resultsList = document.getElementById('resultsList');
-      resultsList.innerHTML = '';
-      for (const candidatoId in candidatos) {
-        const li = document.createElement('li');
-        li.innerText = `${candidatos[candidatoId].nombre}: ${candidatos[candidatoId].votos} votos`;
-        resultsList.appendChild(li);
-      }
-    }
-
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
-      document.getElementById('votosBtn').style.display = 'block';
-    }
-
     function verificarFormulario() {
       const dni = document.getElementById('dni').value;
       const nombre = document.getElementById('nombre').value;
       const fecha = document.getElementById('fecha').value;
       const grado = document.getElementById('grado').value;
-      document.getElementById('continuarBtn').disabled = !(dni && nombre && fecha && grado);
+
+      const formularioCompleto = dni.length === 8 && nombre && fecha && grado;
+      document.getElementById('continuarBtn').disabled = !formularioCompleto;
+    }
+
+    function votar() {
+      if (hasVoted) return;
+
+      const candidatoId = document.getElementById('voteButton').getAttribute('data-candidato');
+      candidatos[candidatoId].votos++;
+      document.getElementById('voteButton').disabled = true;
+      hasVoted = true;
+      mostrarEmojis();
+    }
+
+    function mostrarEmojis() {
+      const emojis = ['🎉', '🎊', '🌟', '💥'];
+      const duracion = 6000;
+
+      const intervalo = setInterval(() => {
+        const emojiElement = document.createElement('div');
+        emojiElement.className = 'emoji';
+        emojiElement.style.left = `${Math.random() * 100}vw`;
+        emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        document.body.appendChild(emojiElement);
+
+        setTimeout(() => emojiElement.remove(), duracion);
+      }, 200);
+
+      setTimeout(() => clearInterval(intervalo), duracion);
+    }
+
+    function mostrarResultados() {
+      const resultados = document.getElementById('resultsList');
+      resultados.innerHTML = '';
+      for (const candidato in candidatos) {
+        const item = document.createElement('li');
+        item.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
+        resultados.appendChild(item);
+      }
+      document.getElementById('resultados').style.display = 'block';
+    }
+
+    function cerrarResultados() {
+      document.getElementById('resultados').style.display = 'none';
     }
   </script>
 </body>
