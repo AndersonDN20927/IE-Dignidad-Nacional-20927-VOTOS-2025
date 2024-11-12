@@ -149,7 +149,7 @@
 </head>
 <body>
 
-  <button id="votosBtn" onclick="mostrarResultados()">Votos</button>
+  <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
 
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
@@ -221,78 +221,56 @@
 
   <script>
     const candidatos = {
-      candidato1: { 
-        nombre: "Sofia Quispe", 
-        votos: 0,
-        propuestas: [
-          "Mejorar las instalaciones deportivas.",
-          "Aumentar las actividades extracurriculares.",
-          "Implementar un programa de reciclaje en la escuela."
-        ]
-      },
-      candidato2: { 
-        nombre: "Laura Fernández", 
-        votos: 0,
-        propuestas: [
-          "Promover actividades artísticas y culturales.",
-          "Crear un comité estudiantil para escuchar propuestas.",
-          "Mejorar la calidad de los almuerzos escolares."
-        ]
-      },
-      candidato3: { 
-        nombre: "Carlos Ramírez", 
-        votos: 0,
-        propuestas: [
-          "Organizar más salidas educativas.",
-          "Fomentar el uso de la biblioteca.",
-          "Instalar más zonas de descanso en el patio."
-        ]
-      }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar las instalaciones deportivas.", "Aumentar las actividades extracurriculares.", "Implementar un programa de reciclaje en la escuela."] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover actividades artísticas y culturales.", "Crear un comité estudiantil para escuchar propuestas.", "Mejorar la calidad de los almuerzos escolares."] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar más salidas educativas.", "Fomentar el uso de la biblioteca.", "Instalar más zonas de descanso en el patio."] }
     };
 
     let hasVoted = false;
 
+    // Cargar votos desde localStorage
+    window.onload = function() {
+      for (const key in candidatos) {
+        const votos = localStorage.getItem(key);
+        if (votos) candidatos[key].votos = parseInt(votos);
+      }
+    };
+
+    function verificarFormulario() {
+      const dni = document.getElementById("dni").value;
+      const nombre = document.getElementById("nombre").value;
+      const fecha = document.getElementById("fecha").value;
+      const grado = document.getElementById("grado").value;
+      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
+    }
+
     function mostrarCandidatos() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
-      document.getElementById('nombre-candidato').innerText = candidato.nombre;
-      document.getElementById('profile-img').src = document.querySelector(`[onclick="mostrarPerfil('${candidatoId}')"] img`).src;
-      document.getElementById('voteButton').setAttribute('data-candidato', candidatoId);
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      candidato.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.innerText = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-      document.getElementById('perfil').style.display = 'block';
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('voteButton').disabled = false;
+      document.getElementById("nombre-candidato").innerText = candidato.nombre;
+      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidatoId}-photo.png`;
+      const propuestas = candidato.propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
+      document.getElementById("lista-propuestas").innerHTML = propuestas;
+      document.getElementById("voteButton").setAttribute("data-candidato", candidatoId);
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("perfil").style.display = "block";
     }
 
     function volverALista() {
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    function verificarFormulario() {
-      const dni = document.getElementById('dni').value;
-      const nombre = document.getElementById('nombre').value;
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-      const formularioCompleto = dni.length === 8 && nombre && fecha && grado;
-      document.getElementById('continuarBtn').disabled = !formularioCompleto;
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
 
     function votar() {
       if (hasVoted) return;
-      const candidatoId = document.getElementById('voteButton').getAttribute('data-candidato');
+      const candidatoId = document.getElementById("voteButton").getAttribute("data-candidato");
       candidatos[candidatoId].votos++;
-      document.getElementById('voteButton').disabled = true;
+      localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
+      document.getElementById("voteButton").disabled = true;
       hasVoted = true;
       mostrarEmojis();
     }
@@ -301,8 +279,8 @@
       const emojis = ['🎉', '🎊', '🌟', '💥'];
       const duracion = 6000;
       const intervalo = setInterval(() => {
-        const emojiElement = document.createElement('div');
-        emojiElement.className = 'emoji';
+        const emojiElement = document.createElement("div");
+        emojiElement.className = "emoji";
         emojiElement.style.left = `${Math.random() * 100}vw`;
         emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
         document.body.appendChild(emojiElement);
@@ -311,20 +289,30 @@
       setTimeout(() => clearInterval(intervalo), duracion);
     }
 
+    function verificarContraseña() {
+      const password = prompt("Introduce la contraseña:");
+      if (password === "dignidad2025") {
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+    }
+
     function mostrarResultados() {
-      const resultados = document.getElementById('resultsList');
+      const resultados = document.getElementById("resultsList");
       resultados.innerHTML = '';
       for (const candidato in candidatos) {
-        const item = document.createElement('li');
+        const item = document.createElement("li");
         item.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
         resultados.appendChild(item);
       }
-      document.getElementById('resultados').style.display = 'block';
+      document.getElementById("resultados").style.display = "block";
     }
 
     function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
+      document.getElementById("resultados").style.display = "none";
     }
   </script>
+
 </body>
 </html>
