@@ -221,9 +221,33 @@
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0 },
-      candidato2: { nombre: "Laura Fernández", votos: 0 },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0 }
+      candidato1: { 
+        nombre: "Sofia Quispe", 
+        votos: 0,
+        propuestas: [
+          "Mejorar las instalaciones deportivas.",
+          "Aumentar las actividades extracurriculares.",
+          "Implementar un programa de reciclaje en la escuela."
+        ]
+      },
+      candidato2: { 
+        nombre: "Laura Fernández", 
+        votos: 0,
+        propuestas: [
+          "Promover actividades artísticas y culturales.",
+          "Crear un comité estudiantil para escuchar propuestas.",
+          "Mejorar la calidad de los almuerzos escolares."
+        ]
+      },
+      candidato3: { 
+        nombre: "Carlos Ramírez", 
+        votos: 0,
+        propuestas: [
+          "Organizar más salidas educativas.",
+          "Fomentar el uso de la biblioteca.",
+          "Instalar más zonas de descanso en el patio."
+        ]
+      }
     };
 
     let hasVoted = false;
@@ -236,7 +260,15 @@
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
       document.getElementById('nombre-candidato').innerText = candidato.nombre;
+      document.getElementById('profile-img').src = document.querySelector(`[onclick="mostrarPerfil('${candidatoId}')"] img`).src;
       document.getElementById('voteButton').setAttribute('data-candidato', candidatoId);
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      candidato.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.innerText = propuesta;
+        listaPropuestas.appendChild(li);
+      });
       document.getElementById('perfil').style.display = 'block';
       document.getElementById('candidatos').style.display = 'none';
       document.getElementById('voteButton').disabled = false;
@@ -252,14 +284,12 @@
       const nombre = document.getElementById('nombre').value;
       const fecha = document.getElementById('fecha').value;
       const grado = document.getElementById('grado').value;
-
       const formularioCompleto = dni.length === 8 && nombre && fecha && grado;
       document.getElementById('continuarBtn').disabled = !formularioCompleto;
     }
 
     function votar() {
       if (hasVoted) return;
-
       const candidatoId = document.getElementById('voteButton').getAttribute('data-candidato');
       candidatos[candidatoId].votos++;
       document.getElementById('voteButton').disabled = true;
@@ -270,17 +300,14 @@
     function mostrarEmojis() {
       const emojis = ['🎉', '🎊', '🌟', '💥'];
       const duracion = 6000;
-
       const intervalo = setInterval(() => {
         const emojiElement = document.createElement('div');
         emojiElement.className = 'emoji';
         emojiElement.style.left = `${Math.random() * 100}vw`;
         emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
         document.body.appendChild(emojiElement);
-
         setTimeout(() => emojiElement.remove(), duracion);
       }, 200);
-
       setTimeout(() => clearInterval(intervalo), duracion);
     }
 
