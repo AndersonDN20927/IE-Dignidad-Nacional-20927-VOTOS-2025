@@ -243,9 +243,9 @@
           "Clases de arte",
           "Club de debates",
           "Huertos escolares",
-          "Más becas de estudio",
-          "Apoyo para eventos culturales",
-          "Digitalización de materiales"
+          "Más becas",
+          "Desarrollo personal",
+          "Semana cultural"
         ],
         img: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb"
       },
@@ -253,13 +253,13 @@
         nombre: "Carlos Ramírez",
         votos: 0,
         propuestas: [
-          "Más deportes",
-          "Apoyo psicológico",
-          "Torneos intercolegiales",
-          "Comedor escolar gratuito",
-          "Programa de orientación vocacional",
-          "Ampliar la oferta de idiomas",
-          "Apoyo en proyectos sociales"
+          "Deporte para todos",
+          "Viajes de estudio",
+          "Aula virtual",
+          "Consejería estudiantil",
+          "Eventos musicales",
+          "Charla vocacional",
+          "Concurso de innovación"
         ],
         img: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
       }
@@ -270,6 +270,7 @@
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
+
       document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
     }
 
@@ -280,8 +281,9 @@
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
-      document.getElementById("nombre-candidato").innerText = candidato.nombre;
+      document.getElementById("nombre-candidato").textContent = candidato.nombre;
       document.getElementById("profile-img").src = candidato.img;
+
       const listaPropuestas = document.getElementById("lista-propuestas");
       listaPropuestas.innerHTML = "";
       candidato.propuestas.forEach(propuesta => {
@@ -289,8 +291,36 @@
         li.textContent = propuesta;
         listaPropuestas.appendChild(li);
       });
+
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
+      document.getElementById("voteButton").setAttribute("data-candidato", candidatoId);
+    }
+
+    function votar() {
+      const candidatoId = document.getElementById("voteButton").getAttribute("data-candidato");
+      candidatos[candidatoId].votos++;
+
+      generarEmojiLluvia();
+      alert("¡Gracias por votar por " + candidatos[candidatoId].nombre + "!");
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+
+    function mostrarResultados() {
+      const resultsList = document.getElementById("resultsList");
+      resultsList.innerHTML = "";
+      for (const key in candidatos) {
+        const li = document.createElement("li");
+        const porcentaje = ((candidatos[key].votos / obtenerTotalVotos()) * 100).toFixed(2);
+        li.textContent = `${candidatos[key].nombre}: ${porcentaje}% de los votos`;
+        resultsList.appendChild(li);
+      }
+      document.getElementById("resultados").style.display = "block";
+    }
+
+    function cerrarResultados() {
+      document.getElementById("resultados").style.display = "none";
     }
 
     function volverALista() {
@@ -298,72 +328,26 @@
       document.getElementById("candidatos").style.display = "block";
     }
 
-    function votar() {
-      const candidatoNombre = document.getElementById("nombre-candidato").innerText;
-      const candidato = Object.values(candidatos).find(c => c.nombre === candidatoNombre);
-      if (candidato) {
-        candidato.votos += 1;
-        guardarVotosEnLocalStorage();
-        mostrarEmojis();
-        alert(`Se ha registrado tu voto para ${candidato.nombre}.`);
-        volverALista();
+    function obtenerTotalVotos() {
+      return Object.values(candidatos).reduce((total, candidato) => total + candidato.votos, 0);
+    }
+
+    function generarEmojiLluvia() {
+      const emojis = ["🎉", "🥳", "🎊", "🚀", "🌟"];
+      for (let i = 0; i < 20; i++) {
+        const emojiElement = document.createElement("div");
+        emojiElement.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emojiElement.classList.add("emoji");
+        emojiElement.style.left = Math.random() * 100 + "vw";
+        emojiElement.style.animationDuration = Math.random() * 2 + 3 + "s";
+
+        document.body.appendChild(emojiElement);
+
+        setTimeout(() => {
+          emojiElement.remove();
+        }, 5000);
       }
     }
-
-    function guardarVotosEnLocalStorage() {
-      localStorage.setItem("votos", JSON.stringify(candidatos));
-    }
-
-    function cargarVotosDesdeLocalStorage() {
-      const votosGuardados = localStorage.getItem("votos");
-      if (votosGuardados) {
-        const votosCargados = JSON.parse(votosGuardados);
-        Object.keys(candidatos).forEach(candidatoId => {
-          candidatos[candidatoId].votos = votosCargados[candidatoId].votos || 0;
-        });
-      }
-    }
-
-    function mostrarResultados() {
-      const password = prompt("Introduzca la contraseña de administrador:");
-      if (password === "dignidad2025") {
-        cargarVotosDesdeLocalStorage();
-        const totalVotos = Object.values(candidatos).reduce((acc, candidato) => acc + candidato.votos, 0);
-        const resultsList = document.getElementById("resultsList");
-        resultsList.innerHTML = "";
-        Object.values(candidatos).forEach(candidato => {
-          const porcentaje = totalVotos ? ((candidato.votos / totalVotos) * 100).toFixed(2) : 0;
-          const li = document.createElement("li");
-          li.textContent = `${candidato.nombre}: ${candidato.votos} votos (${porcentaje}%)`;
-          resultsList.appendChild(li);
-        });
-        document.getElementById("resultados").style.display = "block";
-      } else {
-        alert("La contraseña es incorrecta.");
-      }
-    }
-
-    function cerrarResultados() {
-      document.getElementById("resultados").style.display = "none";
-    }
-
-    function mostrarEmojis() {
-      const emojis = ["🎉", "✨", "🎆", "🎇", "🔥", "💥"];
-      for (let i = 0; i < 50; i++) {
-        const emoji = document.createElement("div");
-        emoji.classList.add("emoji");
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.left = `${Math.random() * 100}vw`;
-        emoji.style.animationDelay = `${Math.random() * 2}s`;
-        document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 5000);
-      }
-    }
-
-    // Cargar votos guardados al cargar la página
-    cargarVotosDesdeLocalStorage();
-
   </script>
-
 </body>
 </html>
