@@ -231,67 +231,81 @@
     // Cargar votos desde localStorage
     window.onload = function() {
       for (const key in candidatos) {
-        const votos = localStorage.getItem(key);
-        if (votos) candidatos[key].votos = parseInt(votos);
+        const votos = localStorage.getItem(key + 'Votos');
+        if (votos) {
+          candidatos[key].votos = parseInt(votos);
+        }
       }
-    };
+    }
 
     function verificarFormulario() {
-      const dni = document.getElementById("dni").value;
-      const nombre = document.getElementById("nombre").value;
-      const fecha = document.getElementById("fecha").value;
-      const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
+      const dni = document.getElementById('dni').value;
+      const nombre = document.getElementById('nombre').value;
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      const continuarBtn = document.getElementById('continuarBtn');
+
+      if (dni.length === 8 && nombre && fecha && grado) {
+        continuarBtn.disabled = false;
+      } else {
+        continuarBtn.disabled = true;
+      }
     }
 
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
-    function mostrarPerfil(candidatoId) {
-      const candidato = candidatos[candidatoId];
-      document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidatoId}-photo.png`;
-      const propuestas = candidato.propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
-      document.getElementById("lista-propuestas").innerHTML = propuestas;
-      document.getElementById("voteButton").setAttribute("data-candidato", candidatoId);
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "block";
-    }
+    function mostrarPerfil(candidato) {
+      const perfil = candidatos[candidato];
+      document.getElementById('nombre-candidato').textContent = perfil.nombre;
 
-    function volverALista() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      if (candidato === 'candidato1') {
+        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c';
+      } else if (candidato === 'candidato2') {
+        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb';
+      } else if (candidato === 'candidato3') {
+        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a';
+      }
+
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      perfil.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+
+      document.getElementById('candidatos').style.display = 'none';
+      document.getElementById('perfil').style.display = 'block';
     }
 
     function votar() {
-      if (hasVoted) return;
-      const candidatoId = document.getElementById("voteButton").getAttribute("data-candidato");
-      candidatos[candidatoId].votos++;
-      localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
-      document.getElementById("voteButton").disabled = true;
+      if (hasVoted) {
+        alert("Ya has votado. Solo se permite un voto.");
+        return;
+      }
+      const nombreCandidato = document.getElementById('nombre-candidato').textContent;
+      for (const key in candidatos) {
+        if (candidatos[key].nombre === nombreCandidato) {
+          candidatos[key].votos++;
+          localStorage.setItem(key + 'Votos', candidatos[key].votos);
+        }
+      }
       hasVoted = true;
-      mostrarEmojis();
+      alert(`Voto registrado para ${nombreCandidato}. ¡Gracias por participar!`);
+      volverALista();
     }
 
-    function mostrarEmojis() {
-      const emojis = ['🎉', '🎊', '🌟', '💥'];
-      const duracion = 6000;
-      const intervalo = setInterval(() => {
-        const emojiElement = document.createElement("div");
-        emojiElement.className = "emoji";
-        emojiElement.style.left = `${Math.random() * 100}vw`;
-        emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        document.body.appendChild(emojiElement);
-        setTimeout(() => emojiElement.remove(), duracion);
-      }, 200);
-      setTimeout(() => clearInterval(intervalo), duracion);
+    function volverALista() {
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
     function verificarContraseña() {
-      const password = prompt("Introduce la contraseña:");
-      if (password === "dignidad2025") {
+      const contraseña = prompt("Ingrese la contraseña de administrador para ver los resultados:");
+      if (contraseña === "dignidad2025") {
         mostrarResultados();
       } else {
         alert("Contraseña incorrecta.");
@@ -299,20 +313,31 @@
     }
 
     function mostrarResultados() {
-      const resultados = document.getElementById("resultsList");
-      resultados.innerHTML = '';
-      for (const candidato in candidatos) {
-        const item = document.createElement("li");
-        item.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
-        resultados.appendChild(item);
+      const resultados = document.getElementById('resultados');
+      const listaResultados = document.getElementById('resultsList');
+      listaResultados.innerHTML = '';
+
+      for (const key in candidatos) {
+        const li = document.createElement('li');
+        const porcentaje = ((candidatos[key].votos / totalVotos()) * 100).toFixed(2);
+        li.textContent = `${candidatos[key].nombre}: ${candidatos[key].votos} votos (${porcentaje}%)`;
+        listaResultados.appendChild(li);
       }
-      document.getElementById("resultados").style.display = "block";
+
+      resultados.style.display = 'block';
+    }
+
+    function totalVotos() {
+      let total = 0;
+      for (const key in candidatos) {
+        total += candidatos[key].votos;
+      }
+      return total;
     }
 
     function cerrarResultados() {
-      document.getElementById("resultados").style.display = "none";
+      document.getElementById('resultados').style.display = 'none';
     }
   </script>
-
 </body>
 </html>
