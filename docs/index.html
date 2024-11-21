@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Mantener estilos previos */
+    /* Estilos generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -77,14 +77,14 @@
       margin: 20px auto;
       display: block;
     }
-    /* Ajustar el tamaño de los emojis */
+    /* Estilos para emojis grandes */
     .emoji {
       position: absolute;
       top: 0;
-      width: 100px; /* Tamaño más grande */
-      height: 100px;
+      width: 150px; /* Tamaño más grande */
+      height: 150px;
       pointer-events: auto;
-      animation: fall 6s linear forwards;
+      animation: fall 2s linear forwards; /* Duración de 2 segundos */
       cursor: grab; /* Interacción con el usuario */
     }
     @keyframes fall {
@@ -228,7 +228,6 @@
       candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar ferias de ciencia y tecnología.", "Mejorar la comunicación entre estudiantes y profesores.", "Establecer un consejo estudiantil para representar a los alumnos."] }
     };
 
-    // Bloqueo de DNI duplicado mediante localStorage
     const dniVotantes = JSON.parse(localStorage.getItem('dniVotantes')) || [];
 
     function verificarFormulario() {
@@ -259,7 +258,7 @@
     function mostrarPerfil(candidato) {
       const candidatoObj = candidatos[candidato];
       document.getElementById('nombre-candidato').textContent = candidatoObj.nombre;
-      document.getElementById('profile-img').src = `./${candidato}.png`;
+      document.getElementById('profile-img').src = `https://github.com/user-attachments/assets/${candidato}.png`;
 
       const listaPropuestas = document.getElementById('lista-propuestas');
       listaPropuestas.innerHTML = '';
@@ -289,15 +288,18 @@
       localStorage.setItem('dniVotantes', JSON.stringify(dniVotantes));
 
       alert("Gracias por votar. Regresando a la pantalla principal...");
-      
+
+      generarEmojis();  // Genera los emojis inmediatamente después de votar
+
       setTimeout(() => {
+        document.querySelectorAll('.emoji').forEach(emoji => emoji.remove()); // Eliminar los emojis antes de regresar a la pantalla principal
         document.getElementById('perfil').style.display = 'none';
         document.getElementById('inicio').style.display = 'block';
         document.getElementById('dni').value = '';
         document.getElementById('nombre').value = '';
         document.getElementById('fecha').value = '';
         document.getElementById('grado').value = '';
-      }, 6000); // Espera de 6 segundos
+      }, 2000); // Espera de 2 segundos para que desaparezcan los emojis
     }
 
     function verificarContraseña() {
@@ -325,10 +327,9 @@
       document.getElementById('resultados').style.display = 'none';
     }
 
-    // Generar emojis interactivos más grandes
     function generarEmojis() {
       const emojis = ['😃', '🎉', '👏', '🎈', '🎁'];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 50; i++) {  // Generar más emojis
         const emoji = document.createElement('div');
         emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         emoji.classList.add('emoji');
@@ -343,9 +344,14 @@
           emoji.style.cursor = 'grab';
         };
       }
+      setTimeout(() => {
+        document.querySelectorAll('.emoji').forEach(emoji => emoji.remove()); // Eliminar los emojis después de 2 segundos
+      }, 2000);
     }
 
-    setInterval(generarEmojis, 5000); // Generar emojis cada 5 segundos
+    // Intervalo para generar emojis cada 5 segundos de forma automática
+    setInterval(generarEmojis, 5000);
   </script>
+
 </body>
 </html>
