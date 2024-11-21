@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Estilos existentes */
+    /* Estilos generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -77,51 +77,16 @@
       margin: 20px auto;
       display: block;
     }
-    #votosBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 15px;
-      background-color: #FF6347;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    #votosBtn:hover {
-      background-color: #FF4500;
-    }
-    #resultados {
-      position: fixed;
-      top: 20%;
-      right: 5%;
-      width: 300px;
-      padding: 20px;
-      background-color: #fff;
-      border: 2px solid #4CAF50;
-      border-radius: 8px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    #mensaje-voto {
       display: none;
-    }
-    #resultados ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    #resultados ul li {
-      margin: 10px 0;
+      border: 2px solid #4CAF50;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      background-color: #f0f9f0;
+      color: #2d602d;
+      text-align: center;
       font-size: 1.2em;
-    }
-    #cerrarResultados {
-      background-color: #FF6347;
-      color: white;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #cerrarResultados:hover {
-      background-color: #FF4500;
     }
     #credits {
       position: fixed;
@@ -129,7 +94,7 @@
       width: 100%;
       text-align: center;
       padding: 10px;
-      background-color: #FF8C00;
+      background-color: #4CAF50;
       color: white;
       font-size: 1.2em;
       font-weight: bold;
@@ -137,13 +102,8 @@
   </style>
 </head>
 <body>
-  <!-- Contenido existente -->
-  <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
-
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
-    <p>Introduce tus datos para participar en las elecciones</p>
-    <!-- Formulario -->
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
     <label for="nombre">Nombre completo:</label>
@@ -166,20 +126,19 @@
     </select>
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
-  </div>
 
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Foto de Sofia Quispe">
+      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-sofia-quispe.jpg" alt="Sofía Quispe">
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
+      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-laura-fernandez.jpg" alt="Laura Fernández">
       Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
+      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-carlos-ramirez.jpg" alt="Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
   </div>
@@ -192,10 +151,8 @@
     <button class="button" onclick="volverALista()">Volver</button>
   </div>
 
-  <div id="resultados">
-    <h2>Resultados de Votos</h2>
-    <ul id="resultsList"></ul>
-    <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
+  <div id="mensaje-voto">
+    🎉 ¡Gracias por votar responsablemente! 😊
   </div>
 
   <div id="credits">
@@ -209,71 +166,7 @@
       candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas.", "Fomentar la biblioteca.", "Instalar zonas de descanso."] }
     };
 
-    let hasVoted = false;
-
-    window.onload = function() {
-      for (const key in candidatos) {
-        const storedVotos = localStorage.getItem(key);
-        if (storedVotos) candidatos[key].votos = parseInt(storedVotos);
-      }
-    };
-
-    function mostrarPerfil(candidatoId) {
-      const candidato = candidatos[candidatoId];
-      document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidatoId}.jpg`;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = "";
-      candidato.propuestas.forEach(function(propuesta) {
-        const li = document.createElement("li");
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-      document.getElementById("perfil").style.display = "block";
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("voteButton").onclick = function() { votar(candidatoId); };
-    }
-
-    function volverALista() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
-    }
-
-    function votar(candidatoId) {
-      if (!hasVoted) {
-        candidatos[candidatoId].votos++;
-        localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
-        alert("🎉 Gracias por votar responsablemente 😊");
-        document.getElementById("perfil").style.display = "none";
-        document.getElementById("candidatos").style.display = "none";
-        document.getElementById("inicio").style.display = "block";
-        hasVoted = false;
-      }
-    }
-
-    function verificarContraseña() {
-      const password = prompt("Introduce la contraseña:");
-      if (password === "admin123") {
-        document.getElementById("resultados").style.display = "block";
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
-
-    function mostrarResultados() {
-      const resultsList = document.getElementById("resultsList");
-      resultsList.innerHTML = "";
-      for (const candidato in candidatos) {
-        const li = document.createElement("li");
-        li.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
-        resultsList.appendChild(li);
-      }
-    }
-
-    function cerrarResultados() {
-      document.getElementById("resultados").style.display = "none";
-    }
+    const votantes = new Set();
 
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
@@ -283,10 +176,46 @@
       document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
     }
 
-    document.getElementById("continuarBtn").onclick = function() {
+    function mostrarCandidatos() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
-    };
+    }
+
+    function mostrarPerfil(candidatoId) {
+      const candidato = candidatos[candidatoId];
+      document.getElementById("nombre-candidato").innerText = candidato.nombre;
+      document.getElementById("profile-img").src = `https://raw.githubusercontent.com/usuario/repositorio/${candidatoId}.jpg`;
+      const listaPropuestas = document.getElementById("lista-propuestas");
+      listaPropuestas.innerHTML = "";
+      candidato.propuestas.forEach(propuesta => {
+        const li = document.createElement("li");
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("perfil").style.display = "block";
+    }
+
+    function votar() {
+      const dni = document.getElementById("dni").value;
+      if (votantes.has(dni)) {
+        alert("Este DNI ya votó.");
+        return;
+      }
+      votantes.add(dni);
+      const mensaje = document.getElementById("mensaje-voto");
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        mensaje.style.display = "none";
+        document.getElementById("perfil").style.display = "none";
+        document.getElementById("inicio").style.display = "block";
+      }, 5000);
+    }
+
+    function volverALista() {
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
   </script>
 </body>
 </html>
