@@ -226,76 +226,40 @@
       candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar más salidas educativas.", "Fomentar el uso de la biblioteca.", "Instalar más zonas de descanso en el patio."] }
     };
 
-    let hasVoted = false;
-
-    // Cargar votos desde localStorage
-    window.onload = function() {
-      for (const key in candidatos) {
-        const votos = localStorage.getItem(key + 'Votos');
-        if (votos) {
-          candidatos[key].votos = parseInt(votos);
-        }
-      }
-    }
+    const emojis = ['🎉', '✨', '🎈', '🥳', '🎊'];
+    const votantes = new Set();
 
     function verificarFormulario() {
       const dni = document.getElementById('dni').value;
       const nombre = document.getElementById('nombre').value;
       const fecha = document.getElementById('fecha').value;
       const grado = document.getElementById('grado').value;
-      const continuarBtn = document.getElementById('continuarBtn');
-
-      if (dni.length === 8 && nombre && fecha && grado) {
-        continuarBtn.disabled = false;
-      } else {
-        continuarBtn.disabled = true;
-      }
+      document.getElementById('continuarBtn').disabled = !(dni && nombre && fecha && grado);
     }
 
     function mostrarCandidatos() {
+      const dni = document.getElementById('dni').value;
+      if (votantes.has(dni)) {
+        alert("Este DNI ya ha votado.");
+        return;
+      }
       document.getElementById('inicio').style.display = 'none';
       document.getElementById('candidatos').style.display = 'block';
     }
 
-    function mostrarPerfil(candidato) {
-      const perfil = candidatos[candidato];
-      document.getElementById('nombre-candidato').textContent = perfil.nombre;
-
-      if (candidato === 'candidato1') {
-        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c';
-      } else if (candidato === 'candidato2') {
-        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb';
-      } else if (candidato === 'candidato3') {
-        document.getElementById('profile-img').src = 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a';
-      }
-
+    function mostrarPerfil(candidatoId) {
+      const candidato = candidatos[candidatoId];
+      document.getElementById('nombre-candidato').textContent = candidato.nombre;
+      document.getElementById('profile-img').src = `./${candidatoId}.png`;
       const listaPropuestas = document.getElementById('lista-propuestas');
       listaPropuestas.innerHTML = '';
-      perfil.propuestas.forEach(propuesta => {
+      candidato.propuestas.forEach(propuesta => {
         const li = document.createElement('li');
         li.textContent = propuesta;
         listaPropuestas.appendChild(li);
       });
-
-      document.getElementById('candidatos').style.display = 'none';
       document.getElementById('perfil').style.display = 'block';
-    }
-
-    function votar() {
-      if (hasVoted) {
-        alert("Ya has votado. Solo se permite un voto.");
-        return;
-      }
-      const nombreCandidato = document.getElementById('nombre-candidato').textContent;
-      for (const key in candidatos) {
-        if (candidatos[key].nombre === nombreCandidato) {
-          candidatos[key].votos++;
-          localStorage.setItem(key + 'Votos', candidatos[key].votos);
-        }
-      }
-      hasVoted = true;
-      alert(`Voto registrado para ${nombreCandidato}. ¡Gracias por participar!`);
-      volverALista();
+      document.getElementById('candidatos').style.display = 'none';
     }
 
     function volverALista() {
@@ -303,9 +267,44 @@
       document.getElementById('candidatos').style.display = 'block';
     }
 
+    function votar() {
+      const dni = document.getElementById('dni').value;
+      if (votantes.has(dni)) {
+        alert("Este DNI ya ha votado.");
+        return;
+      }
+
+      const candidato = document.getElementById('nombre-candidato').textContent;
+      const candidatoId = Object.keys(candidatos).find(key => candidatos[key].nombre === candidato);
+      candidatos[candidatoId].votos++;
+      votantes.add(dni);
+
+      document.getElementById('perfil').style.display = 'none';
+      lanzarEmojis();
+      setTimeout(() => {
+        document.getElementById('inicio').style.display = 'block';
+        document.getElementById('dni').value = '';
+        document.getElementById('nombre').value = '';
+        document.getElementById('fecha').value = '';
+        document.getElementById('grado').value = '';
+        verificarFormulario();
+      }, 6000);
+    }
+
+    function lanzarEmojis() {
+      for (let i = 0; i < 10; i++) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji');
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + 'vw';
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 6000);
+      }
+    }
+
     function verificarContraseña() {
-      const contraseña = prompt("Ingrese la contraseña de administrador para ver los resultados:");
-      if (contraseña === "dignidad2025") {
+      const pass = prompt("Ingrese la contraseña:");
+      if (pass === "admin2024") {
         mostrarResultados();
       } else {
         alert("Contraseña incorrecta.");
@@ -313,26 +312,14 @@
     }
 
     function mostrarResultados() {
-      const resultados = document.getElementById('resultados');
-      const listaResultados = document.getElementById('resultsList');
-      listaResultados.innerHTML = '';
-
-      for (const key in candidatos) {
+      const resultsList = document.getElementById('resultsList');
+      resultsList.innerHTML = '';
+      Object.values(candidatos).forEach(candidato => {
         const li = document.createElement('li');
-        const porcentaje = ((candidatos[key].votos / totalVotos()) * 100).toFixed(2);
-        li.textContent = `${candidatos[key].nombre}: ${candidatos[key].votos} votos (${porcentaje}%)`;
-        listaResultados.appendChild(li);
-      }
-
-      resultados.style.display = 'block';
-    }
-
-    function totalVotos() {
-      let total = 0;
-      for (const key in candidatos) {
-        total += candidatos[key].votos;
-      }
-      return total;
+        li.textContent = `${candidato.nombre}: ${candidato.votos} votos (${((candidato.votos / votantes.size) * 100).toFixed(2)}%)`;
+        resultsList.appendChild(li);
+      });
+      document.getElementById('resultados').style.display = 'block';
     }
 
     function cerrarResultados() {
@@ -341,131 +328,3 @@
   </script>
 </body>
 </html>
-<script>
-  const emojis = ['🎉', '✨', '🎈', '🥳', '🎊'];
-  let hasVoted = false;
-  const usedDNIs = JSON.parse(localStorage.getItem('usedDNIs')) || []; // Cargar DNIs usados
-
-  window.onload = function() {
-    for (const key in candidatos) {
-      const votos = localStorage.getItem(key + 'Votos');
-      if (votos) {
-        candidatos[key].votos = parseInt(votos);
-      }
-    }
-    verificarDNI(); // Revisar si el DNI ya ha sido usado
-  };
-
-  function verificarFormulario() {
-    const dni = document.getElementById('dni').value;
-    const nombre = document.getElementById('nombre').value;
-    const fecha = document.getElementById('fecha').value;
-    const grado = document.getElementById('grado').value;
-    const continuarBtn = document.getElementById('continuarBtn');
-
-    if (dni.length === 8 && nombre && fecha && grado) {
-      continuarBtn.disabled = false;
-    } else {
-      continuarBtn.disabled = true;
-    }
-  }
-
-  function verificarDNI() {
-    const dniInput = document.getElementById('dni');
-    dniInput.addEventListener('input', () => {
-      if (usedDNIs.includes(dniInput.value)) {
-        alert("Este DNI ya fue utilizado para votar.");
-        dniInput.value = "";
-      }
-    });
-  }
-
-  function votar() {
-    if (hasVoted) {
-      alert("Ya has votado. Solo se permite un voto.");
-      return;
-    }
-
-    const dni = document.getElementById('dni').value;
-    if (usedDNIs.includes(dni)) {
-      alert("Este DNI ya fue utilizado para votar.");
-      return;
-    }
-
-    const nombreCandidato = document.getElementById('nombre-candidato').textContent;
-    for (const key in candidatos) {
-      if (candidatos[key].nombre === nombreCandidato) {
-        candidatos[key].votos++;
-        localStorage.setItem(key + 'Votos', candidatos[key].votos);
-      }
-    }
-
-    // Bloquear DNI y guardar en localStorage
-    usedDNIs.push(dni);
-    localStorage.setItem('usedDNIs', JSON.stringify(usedDNIs));
-
-    hasVoted = true;
-    alert(`Voto registrado para ${nombreCandidato}. ¡Gracias por participar!`);
-
-    iniciarLluviaDeEmojis(); // Iniciar animación de emojis
-    setTimeout(() => {
-      window.location.reload(); // Recargar la página después de 8 segundos
-    }, 8000);
-  }
-
-  function iniciarLluviaDeEmojis() {
-    for (let i = 0; i < 100; i++) {
-      const emoji = document.createElement('div');
-      emoji.className = 'emoji';
-      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      emoji.style.left = Math.random() * 100 + 'vw';
-      emoji.style.animationDuration = Math.random() * 2 + 3 + 's';
-      document.body.appendChild(emoji);
-
-      setTimeout(() => {
-        emoji.remove();
-      }, 5000); // Eliminar el emoji después de 5 segundos
-    }
-  }
-
-  function volverALista() {
-    document.getElementById('perfil').style.display = 'none';
-    document.getElementById('candidatos').style.display = 'block';
-  }
-
-  function verificarContraseña() {
-    const contraseña = prompt("Ingrese la contraseña de administrador para ver los resultados:");
-    if (contraseña === "dignidad2025") {
-      mostrarResultados();
-    } else {
-      alert("Contraseña incorrecta.");
-    }
-  }
-
-  function mostrarResultados() {
-    const resultados = document.getElementById('resultados');
-    const listaResultados = document.getElementById('resultsList');
-    listaResultados.innerHTML = '';
-
-    for (const key in candidatos) {
-      const li = document.createElement('li');
-      const porcentaje = ((candidatos[key].votos / totalVotos()) * 100).toFixed(2);
-      li.textContent = `${candidatos[key].nombre}: ${candidatos[key].votos} votos (${porcentaje}%)`;
-      listaResultados.appendChild(li);
-    }
-
-    resultados.style.display = 'block';
-  }
-
-  function totalVotos() {
-    let total = 0;
-    for (const key in candidatos) {
-      total += candidatos[key].votos;
-    }
-    return total;
-  }
-
-  function cerrarResultados() {
-    document.getElementById('resultados').style.display = 'none';
-  }
-</script>
