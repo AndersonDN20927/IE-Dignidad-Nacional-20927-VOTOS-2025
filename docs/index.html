@@ -231,33 +231,27 @@
     // Cargar votos desde localStorage
     window.onload = function() {
       for (const key in candidatos) {
-        const votos = localStorage.getItem(key);
-        if (votos) candidatos[key].votos = parseInt(votos);
+        const storedVotos = localStorage.getItem(key);
+        if (storedVotos) {
+          candidatos[key].votos = parseInt(storedVotos);
+        }
       }
-    };
-
-    function verificarFormulario() {
-      const dni = document.getElementById("dni").value;
-      const nombre = document.getElementById("nombre").value;
-      const fecha = document.getElementById("fecha").value;
-      const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
-    }
-
-    function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
       document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = https://github.com/user-attachments/assets/${candidatoId}-photo.png;
-      const propuestas = candidato.propuestas.map(propuesta => <li>${propuesta}</li>).join('');
-      document.getElementById("lista-propuestas").innerHTML = propuestas;
-      document.getElementById("voteButton").setAttribute("data-candidato", candidatoId);
-      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("profile-img").src = "https://github.com/user-attachments/assets/" + candidatoId + ".jpg";
+      const listaPropuestas = document.getElementById("lista-propuestas");
+      listaPropuestas.innerHTML = "";
+      candidato.propuestas.forEach(function(propuesta) {
+        const li = document.createElement("li");
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
       document.getElementById("perfil").style.display = "block";
+      document.getElementById("candidatos").style.display = "none";
+      document.getElementById("voteButton").onclick = function() { votar(candidatoId); }
     }
 
     function volverALista() {
@@ -265,54 +259,51 @@
       document.getElementById("candidatos").style.display = "block";
     }
 
-    function votar() {
-      if (hasVoted) return;
-      const candidatoId = document.getElementById("voteButton").getAttribute("data-candidato");
-      candidatos[candidatoId].votos++;
-      localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
-      document.getElementById("voteButton").disabled = true;
-      hasVoted = true;
-      mostrarEmojis();
-    }
-
-    function mostrarEmojis() {
-      const emojis = ['🎉', '🎊', '🌟', '💥'];
-      const duracion = 6000;
-      const intervalo = setInterval(() => {
-        const emojiElement = document.createElement("div");
-        emojiElement.className = "emoji";
-        emojiElement.style.left = ${Math.random() * 100}vw;
-        emojiElement.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        document.body.appendChild(emojiElement);
-        setTimeout(() => emojiElement.remove(), duracion);
-      }, 200);
-      setTimeout(() => clearInterval(intervalo), duracion);
+    function votar(candidatoId) {
+      if (!hasVoted) {
+        candidatos[candidatoId].votos++;
+        localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
+        alert("Voto registrado para " + candidatos[candidatoId].nombre);
+        hasVoted = true;
+      }
     }
 
     function verificarContraseña() {
       const password = prompt("Introduce la contraseña:");
-      if (password === "dignidad2025") {
+      if (password === "admin123") {
+        document.getElementById("resultados").style.display = "block";
         mostrarResultados();
       } else {
-        alert("Contraseña incorrecta.");
+        alert("Contraseña incorrecta");
       }
     }
 
     function mostrarResultados() {
-      const resultados = document.getElementById("resultsList");
-      resultados.innerHTML = '';
+      const resultsList = document.getElementById("resultsList");
+      resultsList.innerHTML = "";
       for (const candidato in candidatos) {
-        const item = document.createElement("li");
-        item.textContent = ${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos;
-        resultados.appendChild(item);
+        const li = document.createElement("li");
+        li.textContent = candidatos[candidato].nombre + ": " + candidatos[candidato].votos + " votos";
+        resultsList.appendChild(li);
       }
-      document.getElementById("resultados").style.display = "block";
     }
 
     function cerrarResultados() {
       document.getElementById("resultados").style.display = "none";
     }
-  </script>
 
+    function verificarFormulario() {
+      const dni = document.getElementById("dni").value;
+      const nombre = document.getElementById("nombre").value;
+      const fecha = document.getElementById("fecha").value;
+      const grado = document.getElementById("grado").value;
+      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
+    }
+
+    document.getElementById("continuarBtn").onclick = function() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
+    }
+  </script>
 </body>
 </html>
