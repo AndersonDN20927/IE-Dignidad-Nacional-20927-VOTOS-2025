@@ -341,3 +341,131 @@
   </script>
 </body>
 </html>
+<script>
+  const emojis = ['🎉', '✨', '🎈', '🥳', '🎊'];
+  let hasVoted = false;
+  const usedDNIs = JSON.parse(localStorage.getItem('usedDNIs')) || []; // Cargar DNIs usados
+
+  window.onload = function() {
+    for (const key in candidatos) {
+      const votos = localStorage.getItem(key + 'Votos');
+      if (votos) {
+        candidatos[key].votos = parseInt(votos);
+      }
+    }
+    verificarDNI(); // Revisar si el DNI ya ha sido usado
+  };
+
+  function verificarFormulario() {
+    const dni = document.getElementById('dni').value;
+    const nombre = document.getElementById('nombre').value;
+    const fecha = document.getElementById('fecha').value;
+    const grado = document.getElementById('grado').value;
+    const continuarBtn = document.getElementById('continuarBtn');
+
+    if (dni.length === 8 && nombre && fecha && grado) {
+      continuarBtn.disabled = false;
+    } else {
+      continuarBtn.disabled = true;
+    }
+  }
+
+  function verificarDNI() {
+    const dniInput = document.getElementById('dni');
+    dniInput.addEventListener('input', () => {
+      if (usedDNIs.includes(dniInput.value)) {
+        alert("Este DNI ya fue utilizado para votar.");
+        dniInput.value = "";
+      }
+    });
+  }
+
+  function votar() {
+    if (hasVoted) {
+      alert("Ya has votado. Solo se permite un voto.");
+      return;
+    }
+
+    const dni = document.getElementById('dni').value;
+    if (usedDNIs.includes(dni)) {
+      alert("Este DNI ya fue utilizado para votar.");
+      return;
+    }
+
+    const nombreCandidato = document.getElementById('nombre-candidato').textContent;
+    for (const key in candidatos) {
+      if (candidatos[key].nombre === nombreCandidato) {
+        candidatos[key].votos++;
+        localStorage.setItem(key + 'Votos', candidatos[key].votos);
+      }
+    }
+
+    // Bloquear DNI y guardar en localStorage
+    usedDNIs.push(dni);
+    localStorage.setItem('usedDNIs', JSON.stringify(usedDNIs));
+
+    hasVoted = true;
+    alert(`Voto registrado para ${nombreCandidato}. ¡Gracias por participar!`);
+
+    iniciarLluviaDeEmojis(); // Iniciar animación de emojis
+    setTimeout(() => {
+      window.location.reload(); // Recargar la página después de 8 segundos
+    }, 8000);
+  }
+
+  function iniciarLluviaDeEmojis() {
+    for (let i = 0; i < 100; i++) {
+      const emoji = document.createElement('div');
+      emoji.className = 'emoji';
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.animationDuration = Math.random() * 2 + 3 + 's';
+      document.body.appendChild(emoji);
+
+      setTimeout(() => {
+        emoji.remove();
+      }, 5000); // Eliminar el emoji después de 5 segundos
+    }
+  }
+
+  function volverALista() {
+    document.getElementById('perfil').style.display = 'none';
+    document.getElementById('candidatos').style.display = 'block';
+  }
+
+  function verificarContraseña() {
+    const contraseña = prompt("Ingrese la contraseña de administrador para ver los resultados:");
+    if (contraseña === "dignidad2025") {
+      mostrarResultados();
+    } else {
+      alert("Contraseña incorrecta.");
+    }
+  }
+
+  function mostrarResultados() {
+    const resultados = document.getElementById('resultados');
+    const listaResultados = document.getElementById('resultsList');
+    listaResultados.innerHTML = '';
+
+    for (const key in candidatos) {
+      const li = document.createElement('li');
+      const porcentaje = ((candidatos[key].votos / totalVotos()) * 100).toFixed(2);
+      li.textContent = `${candidatos[key].nombre}: ${candidatos[key].votos} votos (${porcentaje}%)`;
+      listaResultados.appendChild(li);
+    }
+
+    resultados.style.display = 'block';
+  }
+
+  function totalVotos() {
+    let total = 0;
+    for (const key in candidatos) {
+      total += candidatos[key].votos;
+    }
+    return total;
+  }
+
+  function cerrarResultados() {
+    document.getElementById('resultados').style.display = 'none';
+  }
+</script>
