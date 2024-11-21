@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Mantener estilos previos */
+    /* Estilos existentes */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -77,19 +77,6 @@
       margin: 20px auto;
       display: block;
     }
-    .emoji {
-      position: absolute;
-      top: 0;
-      width: 50px;
-      height: 50px;
-      pointer-events: none;
-      animation: fall 6s linear forwards;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
     #votosBtn {
       position: absolute;
       top: 10px;
@@ -142,28 +129,27 @@
       width: 100%;
       text-align: center;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: #FF8C00;
       color: white;
+      font-size: 1.2em;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
+  <!-- Contenido existente -->
   <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
 
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
     <p>Introduce tus datos para participar en las elecciones</p>
-
+    <!-- Formulario -->
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
-
     <label for="nombre">Nombre completo:</label>
     <input type="text" id="nombre" required oninput="verificarFormulario()">
-
     <label for="fecha">Fecha de nacimiento:</label>
     <input type="date" id="fecha" required oninput="verificarFormulario()">
-
     <label for="grado">Grado y sección:</label>
     <select id="grado" required onchange="verificarFormulario()">
       <option value="" disabled selected>Seleccione</option>
@@ -178,23 +164,20 @@
       <option value="5A">5°A</option>
       <option value="5B">5°B</option>
     </select>
-
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
+  </div>
   </div>
 
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
-
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Foto de Sofia Quispe">
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
       <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
       Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
       <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
@@ -221,27 +204,24 @@
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar las instalaciones deportivas.", "Aumentar las actividades extracurriculares.", "Implementar un programa de reciclaje en la escuela."] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover actividades artísticas y culturales.", "Crear un comité estudiantil para escuchar propuestas.", "Mejorar la calidad de los almuerzos escolares."] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar más salidas educativas.", "Fomentar el uso de la biblioteca.", "Instalar más zonas de descanso en el patio."] }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar instalaciones deportivas.", "Aumentar actividades extracurriculares.", "Implementar reciclaje."] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura.", "Crear comité estudiantil.", "Mejorar almuerzos escolares."] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas.", "Fomentar la biblioteca.", "Instalar zonas de descanso."] }
     };
 
     let hasVoted = false;
 
-    // Cargar votos desde localStorage
     window.onload = function() {
       for (const key in candidatos) {
         const storedVotos = localStorage.getItem(key);
-        if (storedVotos) {
-          candidatos[key].votos = parseInt(storedVotos);
-        }
+        if (storedVotos) candidatos[key].votos = parseInt(storedVotos);
       }
-    }
+    };
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
       document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = "https://github.com/user-attachments/assets/" + candidatoId + ".jpg";
+      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidatoId}.jpg`;
       const listaPropuestas = document.getElementById("lista-propuestas");
       listaPropuestas.innerHTML = "";
       candidato.propuestas.forEach(function(propuesta) {
@@ -251,7 +231,7 @@
       });
       document.getElementById("perfil").style.display = "block";
       document.getElementById("candidatos").style.display = "none";
-      document.getElementById("voteButton").onclick = function() { votar(candidatoId); }
+      document.getElementById("voteButton").onclick = function() { votar(candidatoId); };
     }
 
     function volverALista() {
@@ -263,8 +243,11 @@
       if (!hasVoted) {
         candidatos[candidatoId].votos++;
         localStorage.setItem(candidatoId, candidatos[candidatoId].votos);
-        alert("Voto registrado para " + candidatos[candidatoId].nombre);
-        hasVoted = true;
+        alert("🎉 Gracias por votar responsablemente 😊");
+        document.getElementById("perfil").style.display = "none";
+        document.getElementById("candidatos").style.display = "none";
+        document.getElementById("inicio").style.display = "block";
+        hasVoted = false;
       }
     }
 
@@ -283,7 +266,7 @@
       resultsList.innerHTML = "";
       for (const candidato in candidatos) {
         const li = document.createElement("li");
-        li.textContent = candidatos[candidato].nombre + ": " + candidatos[candidato].votos + " votos";
+        li.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
         resultsList.appendChild(li);
       }
     }
@@ -303,7 +286,7 @@
     document.getElementById("continuarBtn").onclick = function() {
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
-    }
+    };
   </script>
 </body>
 </html>
