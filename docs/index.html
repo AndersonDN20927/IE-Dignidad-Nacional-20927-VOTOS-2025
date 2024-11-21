@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares</title>
   <style>
-    /* Estilos generales */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -16,7 +15,6 @@
       align-items: center;
       height: 100vh;
       position: relative;
-      overflow: hidden;
     }
     .container {
       width: 90%;
@@ -76,21 +74,6 @@
       border-radius: 50%;
       margin: 20px auto;
       display: block;
-    }
-    /* Estilos para emojis grandes */
-    .emoji {
-      position: absolute;
-      top: 0;
-      width: 150px; /* Tamaño más grande */
-      height: 150px;
-      pointer-events: auto;
-      animation: fall 2s linear forwards; /* Duración de 2 segundos */
-      cursor: grab; /* Interacción con el usuario */
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
     }
     #votosBtn {
       position: absolute;
@@ -186,19 +169,16 @@
 
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
-
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Foto de Sofia Quispe">
+      <img src="candidato1.jpg" alt="Foto de Sofia Quispe">
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
+      <img src="candidato2.jpg" alt="Foto de Laura Fernández">
       Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
+      <img src="candidato3.jpg" alt="Foto de Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
   </div>
@@ -218,89 +198,54 @@
   </div>
 
   <div id="credits">
-    Créditos: Platanito Tentación, Manzanita Tentación y TG (Top Globales)
+    Créditos: TG (Top Globales)
   </div>
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar las instalaciones deportivas.", "Aumentar las actividades extracurriculares.", "Implementar un programa de reciclaje en la escuela."] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover actividades artísticas y culturales.", "Crear un programa de apoyo académico para estudiantes con dificultades.", "Fomentar la integración entre grados."] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar ferias de ciencia y tecnología.", "Mejorar la comunicación entre estudiantes y profesores.", "Establecer un consejo estudiantil para representar a los alumnos."] }
+      candidato1: {
+        nombre: "Sofia Quispe",
+        votos: 0,
+        propuestas: [
+          "Mejorar la biblioteca escolar.",
+          "Implementar talleres de arte y música.",
+          "Organizar eventos deportivos.",
+          "Promover campañas ecológicas.",
+          "Crear un programa de mentoría.",
+          "Aumentar las actividades culturales.",
+          "Modernizar los laboratorios de ciencias.",
+          "Fomentar el reciclaje en la escuela."
+        ]
+      },
+      candidato2: {
+        nombre: "Laura Fernández",
+        votos: 0,
+        propuestas: [
+          "Construir un área verde escolar.",
+          "Organizar ferias científicas.",
+          "Promover clubes estudiantiles.",
+          "Incrementar la seguridad escolar.",
+          "Crear un boletín estudiantil.",
+          "Fomentar el aprendizaje de idiomas.",
+          "Realizar concursos de talentos.",
+          "Implementar un programa de salud mental."
+        ]
+      },
+      candidato3: {
+        nombre: "Carlos Ramírez",
+        votos: 0,
+        propuestas: [
+          "Ampliar las canchas deportivas.",
+          "Promover la igualdad estudiantil.",
+          "Incentivar el uso de tecnología.",
+          "Fomentar la participación en olimpiadas.",
+          "Implementar un programa de voluntariado.",
+          "Crear un fondo para excursiones educativas.",
+          "Mejorar los servicios higiénicos.",
+          "Organizar campamentos escolares."
+        ]
+      }
     };
-
-    const dniVotantes = JSON.parse(localStorage.getItem('dniVotantes')) || [];
-
-    function verificarFormulario() {
-      const dni = document.getElementById('dni').value;
-      const nombre = document.getElementById('nombre').value;
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-
-      if (dni.length === 8 && nombre !== "" && fecha !== "" && grado !== "" && !dniVotantes.includes(dni)) {
-        document.getElementById('continuarBtn').disabled = false;
-      } else {
-        document.getElementById('continuarBtn').disabled = true;
-      }
-    }
-
-    function mostrarCandidatos() {
-      const dni = document.getElementById('dni').value;
-
-      if (dniVotantes.includes(dni)) {
-        alert("Este DNI ya ha votado.");
-        return;
-      }
-
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    function mostrarPerfil(candidato) {
-      const candidatoObj = candidatos[candidato];
-      document.getElementById('nombre-candidato').textContent = candidatoObj.nombre;
-      document.getElementById('profile-img').src = `https://github.com/user-attachments/assets/${candidato}.png`;
-
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      candidatoObj.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('perfil').style.display = 'block';
-    }
-
-    function volverALista() {
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    function votar() {
-      const dni = document.getElementById('dni').value;
-      const nombreCandidato = document.getElementById('nombre-candidato').textContent;
-      const candidato = Object.keys(candidatos).find(key => candidatos[key].nombre === nombreCandidato);
-
-      candidatos[candidato].votos++;
-
-      dniVotantes.push(dni);
-      localStorage.setItem('dniVotantes', JSON.stringify(dniVotantes));
-
-      alert("Gracias por votar. Regresando a la pantalla principal...");
-
-      generarEmojis();  // Genera los emojis inmediatamente después de votar
-
-      setTimeout(() => {
-        document.querySelectorAll('.emoji').forEach(emoji => emoji.remove()); // Eliminar los emojis antes de regresar a la pantalla principal
-        document.getElementById('perfil').style.display = 'none';
-        document.getElementById('inicio').style.display = 'block';
-        document.getElementById('dni').value = '';
-        document.getElementById('nombre').value = '';
-        document.getElementById('fecha').value = '';
-        document.getElementById('grado').value = '';
-      }, 2000); // Espera de 2 segundos para que desaparezcan los emojis
-    }
 
     function verificarContraseña() {
       const contraseña = prompt("Ingrese la contraseña de administrador:");
@@ -311,46 +256,7 @@
       }
     }
 
-    function mostrarResultados() {
-      const resultsList = document.getElementById('resultsList');
-      resultsList.innerHTML = '';
-      Object.keys(candidatos).forEach(candidato => {
-        const li = document.createElement('li');
-        const porcentaje = (candidatos[candidato].votos / dniVotantes.length) * 100;
-        li.textContent = `${candidatos[candidato].nombre}: ${porcentaje.toFixed(2)}% (${candidatos[candidato].votos} votos)`;
-        resultsList.appendChild(li);
-      });
-      document.getElementById('resultados').style.display = 'block';
-    }
-
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
-    }
-
-    function generarEmojis() {
-      const emojis = ['😃', '🎉', '👏', '🎈', '🎁'];
-      for (let i = 0; i < 50; i++) {  // Generar más emojis
-        const emoji = document.createElement('div');
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.classList.add('emoji');
-        emoji.style.left = Math.random() * 100 + 'vw';
-        document.body.appendChild(emoji);
-
-        emoji.onmousedown = function () {
-          emoji.style.cursor = 'grabbing';
-        };
-
-        emoji.onmouseup = function () {
-          emoji.style.cursor = 'grab';
-        };
-      }
-      setTimeout(() => {
-        document.querySelectorAll('.emoji').forEach(emoji => emoji.remove()); // Eliminar los emojis después de 2 segundos
-      }, 2000);
-    }
-
-    // Intervalo para generar emojis cada 5 segundos de forma automática
-    setInterval(generarEmojis, 5000);
+    // Funciones adicionales...
   </script>
 
 </body>
