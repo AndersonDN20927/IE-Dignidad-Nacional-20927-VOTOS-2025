@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elecciones Escolares 2025</title>
+  <title>Elecciones Escolares</title>
   <style>
-    /* Estilos generales de la página */
+    /* Estilos generales */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #f0f0f0;
       color: #333;
       margin: 0;
       display: flex;
@@ -18,8 +18,6 @@
       position: relative;
       overflow: hidden;
     }
-
-    /* Contenedores principales */
     .container {
       width: 90%;
       max-width: 500px;
@@ -29,13 +27,10 @@
       background-color: #fff;
       display: none;
     }
-
     h1, h2 {
       color: #4CAF50;
       text-align: center;
     }
-
-    /* Botones y formularios */
     .button, .vote-button {
       display: block;
       width: 100%;
@@ -48,11 +43,9 @@
       font-size: 1em;
       margin-top: 10px;
     }
-
     .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
-
     input, select {
       width: 100%;
       padding: 8px;
@@ -60,8 +53,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
-    /* Estilos para los candidatos */
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -73,15 +64,12 @@
       cursor: pointer;
       font-size: 1.5em;
     }
-
     .candidate img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       margin-right: 15px;
     }
-
-    /* Estilos para las imágenes de perfil */
     .profile-img {
       width: 100px;
       height: 100px;
@@ -89,79 +77,20 @@
       margin: 20px auto;
       display: block;
     }
-
-    /* Estilos de la lluvia de emojis */
-    .emoji {
-      position: absolute;
-      top: 0;
-      font-size: 60px; /* Emojis más grandes */
-      pointer-events: auto; /* Hacer interactivo */
-      cursor: pointer; /* Cambiar cursor al interactuar */
-      animation: fall 6s linear forwards;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
-
-    /* Botón de acceso a los votos */
-    #votosBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 15px;
-      background-color: #FF6347;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-
-    #votosBtn:hover {
-      background-color: #FF4500;
-    }
-
-    /* Resultados de votos */
-    #resultados {
-      position: fixed;
-      top: 20%;
-      right: 5%;
-      width: 300px;
-      padding: 20px;
-      background-color: #fff;
-      border: 2px solid #4CAF50;
-      border-radius: 8px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    #mensaje-voto {
       display: none;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      background-color: #e7f9e7;
+      color: #2d602d;
+      text-align: center;
+      font-size: 1.5em;
     }
-
-    #resultados ul {
-      list-style-type: none;
-      padding: 0;
+    #admin-panel {
+      display: none;
+      margin-top: 20px;
     }
-
-    #resultados ul li {
-      margin: 10px 0;
-      font-size: 1.2em;
-    }
-
-    #cerrarResultados {
-      background-color: #FF6347;
-      color: white;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #cerrarResultados:hover {
-      background-color: #FF4500;
-    }
-
-    /* Créditos */
     #credits {
       position: fixed;
       bottom: 0;
@@ -170,28 +99,20 @@
       padding: 10px;
       background-color: #4CAF50;
       color: white;
+      font-size: 1.2em;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
-  <!-- Botón para acceder a los resultados de los votos -->
-  <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
-
-  <!-- Formulario inicial -->
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
-    <p>Introduce tus datos para participar en las elecciones</p>
-
     <label for="dni">DNI (8 dígitos):</label>
     <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
-
     <label for="nombre">Nombre completo:</label>
     <input type="text" id="nombre" required oninput="verificarFormulario()">
-
     <label for="fecha">Fecha de nacimiento:</label>
     <input type="date" id="fecha" required oninput="verificarFormulario()">
-
     <label for="grado">Grado y sección:</label>
     <select id="grado" required onchange="verificarFormulario()">
       <option value="" disabled selected>Seleccione</option>
@@ -206,31 +127,25 @@
       <option value="5A">5°A</option>
       <option value="5B">5°B</option>
     </select>
-
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
 
-  <!-- Lista de candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
-
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Foto de Sofia Quispe">
+      <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Sofía Quispe">
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
+      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Laura Fernández">
       Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
-
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
+      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
   </div>
 
-  <!-- Perfil de candidato seleccionado -->
   <div id="perfil" class="container">
     <h2 id="nombre-candidato"></h2>
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
@@ -239,140 +154,75 @@
     <button class="button" onclick="volverALista()">Volver</button>
   </div>
 
-  <!-- Resultados de votos -->
-  <div id="resultados">
-    <h2>Resultados de Votos</h2>
-    <ul id="resultsList"></ul>
-    <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
+  <div id="mensaje-voto">
+    🎉 ¡Gracias por tu voto! 🌟
   </div>
 
-  <!-- Créditos -->
+  <div id="admin-panel" class="container">
+    <h2>Panel de Administración</h2>
+    <p>Clave de acceso: dignidad2025</p>
+    <ul id="lista-votos">
+      <li><b>Sofía Quispe:</b> <span id="votos-sofia">0</span> votos (0%)</li>
+      <li><b>Laura Fernández:</b> <span id="votos-laura">0</span> votos (0%)</li>
+      <li><b>Carlos Ramírez:</b> <span id="votos-carlos">0</span> votos (0%)</li>
+    </ul>
+  </div>
+
   <div id="credits">
     Créditos: Platanito Tentación, Manzanita Tentación y TG (Top Globales)
   </div>
 
-  <!-- Script de la lógica -->
   <script>
-    // Objetos que almacenan los datos de los candidatos
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar los laboratorios de ciencias.", "Aumentar los talleres de arte.", "Promover el cuidado del medio ambiente."] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Incentivar el deporte y la actividad física.", "Aumentar los recursos tecnológicos.", "Crear más espacios para el desarrollo estudiantil."] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Fomentar el trabajo en equipo.", "Organizar eventos escolares de integración.", "Mejorar los recursos tecnológicos en la escuela."] }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar instalaciones deportivas.", "Aumentar actividades extracurriculares.", "Implementar reciclaje."] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura.", "Crear comité estudiantil.", "Mejorar almuerzos escolares."] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas.", "Fomentar la biblioteca.", "Instalar zonas de descanso."] }
     };
 
-    // Arreglo para almacenar DNIs ya registrados
-    let DNIsRegistrados = [];
+    const votantes = new Set();
 
-    // Función para verificar si el formulario está completo
     function verificarFormulario() {
-      const dni = document.getElementById('dni').value;
-      const nombre = document.getElementById('nombre').value;
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-      const continuarBtn = document.getElementById('continuarBtn');
-      continuarBtn.disabled = !(dni && nombre && fecha && grado && dni.length === 8);
+      const dni = document.getElementById("dni").value;
+      const nombre = document.getElementById("nombre").value;
+      const fecha = document.getElementById("fecha").value;
+      const grado = document.getElementById("grado").value;
+      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
     }
 
-    // Función para mostrar la lista de candidatos
     function mostrarCandidatos() {
-      const dni = document.getElementById('dni').value;
-      if (DNIsRegistrados.includes(dni)) {
-        alert("El DNI ya ha sido usado. No puedes votar nuevamente.");
-        return;
-      }
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
 
-    // Función para mostrar el perfil del candidato seleccionado
     function mostrarPerfil(candidato) {
-      const perfil = candidatos[candidato];
-      document.getElementById('nombre-candidato').textContent = perfil.nombre;
-      document.getElementById('profile-img').src = document.querySelector(`[alt="Foto de ${perfil.nombre}"]`).src;
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      perfil.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.textContent = propuesta;
+      const datos = candidatos[candidato];
+      document.getElementById("nombre-candidato").innerText = datos.nombre;
+      document.getElementById("profile-img").src = document.querySelector(`[alt="${datos.nombre}"]`).src;
+      const listaPropuestas = document.getElementById("lista-propuestas");
+      listaPropuestas.innerHTML = "";
+      datos.propuestas.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = p;
         listaPropuestas.appendChild(li);
       });
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('perfil').style.display = 'block';
+      document.getElementById("perfil").style.display = "block";
+      document.getElementById("candidatos").style.display = "none";
     }
 
-    // Función para volver a la lista de candidatos
-    function volverALista() {
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    // Función para registrar el voto y activar la lluvia de emojis
     function votar() {
-      const dni = document.getElementById('dni').value;
-      if (!DNIsRegistrados.includes(dni)) {
-        DNIsRegistrados.push(dni); // Añadir DNI a la lista de registrados
+      const dni = document.getElementById("dni").value;
+      if (votantes.has(dni)) {
+        alert("Ya has votado con este DNI.");
+        return;
       }
-      // Mostrar animación de emojis
-      iniciarLluviaDeEmojis();
-      setTimeout(() => {
-        document.getElementById('perfil').style.display = 'none';
-        document.getElementById('inicio').style.display = 'block';
-        limpiarFormulario(); // Limpiar formulario para nuevo votante
-      }, 6000); // 6 segundos de espera
+      votantes.add(dni);
+      alert("¡Voto registrado correctamente!");
+      // Añade más lógica para los votos
     }
 
-    // Función para limpiar el formulario después de cada voto
-    function limpiarFormulario() {
-      document.getElementById('dni').value = '';
-      document.getElementById('nombre').value = '';
-      document.getElementById('fecha').value = '';
-      document.getElementById('grado').value = '';
-      verificarFormulario();
-    }
-
-    // Función para iniciar la animación de la lluvia de emojis
-    function iniciarLluviaDeEmojis() {
-      const emojis = ["😀", "🎉", "👍", "🎈", "🎊"];
-      for (let i = 0; i < 20; i++) { // Aumentar número de emojis
-        const emoji = document.createElement('div');
-        emoji.classList.add('emoji');
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.left = Math.random() * 100 + 'vw';
-        emoji.style.animationDelay = Math.random() * 2 + 's';
-        emoji.onclick = () => emoji.remove(); // Interactividad
-        document.body.appendChild(emoji);
-        setTimeout(() => {
-          emoji.remove();
-        }, 6000); // 6 segundos de caída
-      }
-    }
-
-    // Función para verificar la contraseña del administrador
-    function verificarContraseña() {
-      const password = prompt("Introduce la contraseña de administrador:");
-      if (password === "admin123") {
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta.");
-      }
-    }
-
-    // Función para mostrar los resultados de los votos
-    function mostrarResultados() {
-      const resultados = document.getElementById('resultados');
-      const listaResultados = document.getElementById('resultsList');
-      listaResultados.innerHTML = '';
-      for (const candidato in candidatos) {
-        const li = document.createElement('li');
-        li.textContent = `${candidatos[candidato].nombre}: ${candidatos[candidato].votos} votos`;
-        listaResultados.appendChild(li);
-      }
-      resultados.style.display = 'block';
-    }
-
-    // Función para cerrar la vista de resultados
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
+    function volverALista() {
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
   </script>
 </body>
