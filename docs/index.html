@@ -99,9 +99,24 @@
       font-size: 1.2em;
       font-weight: bold;
     }
+    /* Estilo para la zona de administración */
+    #admin {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px 0 0 0;
+      display: none;
+    }
+    #admin h3 {
+      margin: 0;
+    }
   </style>
 </head>
 <body>
+  <!-- Formulario de inicio -->
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
     <label for="dni">DNI (8 dígitos):</label>
@@ -127,22 +142,24 @@
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
 
+  <!-- Zona de candidatos -->
   <div id="candidatos" class="container">
     <h1>Lista de Candidatos</h1>
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
-      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-sofia-quispe.jpg" alt="Sofía Quispe">
+      <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Sofía Quispe">
       Sofia Quispe - "Juntos podemos lograr grandes cambios"
     </div>
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
-      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-laura-fernandez.jpg" alt="Laura Fernández">
+      <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Laura Fernández">
       Laura Fernández - "Creciendo juntos hacia un futuro mejor"
     </div>
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
-      <img src="https://raw.githubusercontent.com/usuario/repositorio/ruta-a-carlos-ramirez.jpg" alt="Carlos Ramírez">
+      <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
   </div>
 
+  <!-- Perfil del candidato -->
   <div id="perfil" class="container">
     <h2 id="nombre-candidato"></h2>
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
@@ -151,8 +168,18 @@
     <button class="button" onclick="volverALista()">Volver</button>
   </div>
 
+  <!-- Mensaje de agradecimiento -->
   <div id="mensaje-voto">
-    🎉 ¡Gracias por votar responsablemente! 😊
+    <img src="/mnt/data/image.png" alt="Gracias por tu apoyo" style="width: 100%; height: auto;">
+  </div>
+
+  <!-- Zona de administración -->
+  <div id="admin">
+    <h3>Admin: Elecciones</h3>
+    <p>Sofía Quispe: <span id="votos-candidato1">0</span> votos (<span id="porcentaje-candidato1">0</span>%)</p>
+    <p>Laura Fernández: <span id="votos-candidato2">0</span> votos (<span id="porcentaje-candidato2">0</span>%)</p>
+    <p>Carlos Ramírez: <span id="votos-candidato3">0</span> votos (<span id="porcentaje-candidato3">0</span>%)</p>
+    <button onclick="mostrarAdmin()">Acceder</button>
   </div>
 
   <div id="credits">
@@ -173,18 +200,23 @@
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
+      document.getElementById("continuarBtn").disabled = dni.length < 8 || !nombre || !fecha || !grado;
     }
 
     function mostrarCandidatos() {
+      const dni = document.getElementById("dni").value;
+      if (votantes.has(dni)) {
+        alert("Este DNI ya ha votado.");
+        return;
+      }
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
-      document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = `https://raw.githubusercontent.com/usuario/repositorio/${candidatoId}.jpg`;
+      document.getElementById("nombre-candidato").textContent = candidato.nombre;
+      document.getElementById("profile-img").src = document.querySelector(`.candidate img[alt="${candidato.nombre}"]`).src;
       const listaPropuestas = document.getElementById("lista-propuestas");
       listaPropuestas.innerHTML = "";
       candidato.propuestas.forEach(propuesta => {
@@ -198,23 +230,40 @@
 
     function votar() {
       const dni = document.getElementById("dni").value;
-      if (votantes.has(dni)) {
-        alert("Este DNI ya votó.");
-        return;
-      }
       votantes.add(dni);
-      const mensaje = document.getElementById("mensaje-voto");
-      mensaje.style.display = "block";
-      setTimeout(() => {
-        mensaje.style.display = "none";
-        document.getElementById("perfil").style.display = "none";
-        document.getElementById("inicio").style.display = "block";
-      }, 5000);
+      const nombreCandidato = document.getElementById("nombre-candidato").textContent;
+      const candidatoId = Object.keys(candidatos).find(id => candidatos[id].nombre === nombreCandidato);
+      candidatos[candidatoId].votos++;
+      actualizarAdmin();
+      document.getElementById("perfil").style.display = "none";
+      mostrarMensajeVoto();
     }
 
     function volverALista() {
       document.getElementById("perfil").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
+    }
+
+    function mostrarMensajeVoto() {
+      document.getElementById("mensaje-voto").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("mensaje-voto").style.display = "none";
+        location.reload(); // Reinicia la página después de votar
+      }, 6000); // Duración de la animación (6 segundos)
+    }
+
+    function actualizarAdmin() {
+      const totalVotos = Object.values(candidatos).reduce((total, candidato) => total + candidato.votos, 0);
+      Object.keys(candidatos).forEach(id => {
+        const votos = candidatos[id].votos;
+        const porcentaje = totalVotos ? ((votos / totalVotos) * 100).toFixed(2) : 0;
+        document.getElementById(`votos-${id}`).textContent = votos;
+        document.getElementById(`porcentaje-${id}`).textContent = porcentaje;
+      });
+    }
+
+    function mostrarAdmin() {
+      document.getElementById("admin").style.display = "block";
     }
   </script>
 </body>
