@@ -247,15 +247,83 @@
   </div>
 
   <!-- Créditos -->
-  <div id="credits">
-    <p>&copy; 2025 Platanito Tentación | Manzanita Tentación | Acuproductions</p>
-  </div>
+  <div id="credits">Proyecto de elecciones escolares 2025 - La Voz del Estudiante</div>
 
   <script>
-    // Guardar votos en localStorage
-    let votos = JSON.parse(localStorage.getItem('votos')) || { 'Sofia Quispe': 0, 'Laura Fernández': 0, 'Carlos Ramírez': 0 };
-    
-    // Verificar que el formulario esté completo
+    let candidatos = {
+      'candidato1': {
+        nombre: 'Sofia Quispe',
+        imagen: 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c',
+        propuestas: ['Mejorar la calidad educativa', 'Más actividades extracurriculares', 'Fomentar la participación estudiantil'],
+        votos: 0
+      },
+      'candidato2': {
+        nombre: 'Laura Fernández',
+        imagen: 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb',
+        propuestas: ['Crear espacios recreativos', 'Aumentar el tiempo de descanso', 'Impulsar la equidad entre todos'],
+        votos: 0
+      },
+      'candidato3': {
+        nombre: 'Carlos Ramírez',
+        imagen: 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a',
+        propuestas: ['Aumentar las becas para estudiantes', 'Mejorar las instalaciones deportivas', 'Fomentar un ambiente saludable'],
+        votos: 0
+      }
+    };
+
+    let votos = [];
+
+    function mostrarCandidatos() {
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
+    }
+
+    function mostrarPerfil(candidato) {
+      const data = candidatos[candidato];
+      document.getElementById('perfil').style.display = 'block';
+      document.getElementById('candidatos').style.display = 'none';
+      document.getElementById('nombre-candidato').innerText = data.nombre;
+      document.getElementById('profile-img').src = data.imagen;
+      const propuestasList = document.getElementById('lista-propuestas');
+      propuestasList.innerHTML = '';
+      data.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.innerText = propuesta;
+        propuestasList.appendChild(li);
+      });
+      document.getElementById('voteButton').disabled = false;
+    }
+
+    function volverALista() {
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
+    }
+
+    function votar() {
+      const candidato = document.getElementById('nombre-candidato').innerText;
+      alert('¡Votaste por ' + candidato + '!');
+      // Almacenar el voto
+      candidatos[candidato].votos++;
+      votos.push(candidato);
+      mostrarResultados();
+    }
+
+    function mostrarResultados() {
+      document.getElementById('resultados').style.display = 'block';
+      const resultsList = document.getElementById('resultsList');
+      resultsList.innerHTML = ''; // Limpiar resultados previos
+      for (let candidato in candidatos) {
+        const li = document.createElement('li');
+        const data = candidatos[candidato];
+        li.innerHTML = `<img src="${data.imagen}" alt="Foto de ${data.nombre}" style="width: 50px; height: 50px; border-radius: 50%;"> ${data.nombre}: ${data.votos} votos (${((data.votos / votos.length) * 100).toFixed(2)}%)`;
+        resultsList.appendChild(li);
+      }
+    }
+
+    function cerrarResultados() {
+      document.getElementById('resultados').style.display = 'none';
+    }
+
     function verificarFormulario() {
       const dni = document.getElementById('dni').value;
       const nombre = document.getElementById('nombre').value;
@@ -269,103 +337,13 @@
       }
     }
 
-    // Mostrar lista de candidatos
-    function mostrarCandidatos() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    // Mostrar perfil de candidato seleccionado
-    function mostrarPerfil(candidato) {
-      const perfiles = {
-        candidato1: {
-          nombre: 'Sofia Quispe',
-          img: 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c',
-          propuestas: ['Mejorar la infraestructura escolar', 'Promover actividades extracurriculares'],
-        },
-        candidato2: {
-          nombre: 'Laura Fernández',
-          img: 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb',
-          propuestas: ['Fortalecer los valores de respeto y responsabilidad', 'Impulsar proyectos ecológicos'],
-        },
-        candidato3: {
-          nombre: 'Carlos Ramírez',
-          img: 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a',
-          propuestas: ['Implementar un programa de tutoría entre compañeros', 'Fomentar la participación estudiantil en actividades'],
-        },
-      };
-
-      document.getElementById('nombre-candidato').innerText = perfiles[candidato].nombre;
-      document.getElementById('profile-img').src = perfiles[candidato].img;
-      document.getElementById('lista-propuestas').innerHTML = perfiles[candidato].propuestas.map(p => `<li>${p}</li>`).join('');
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('perfil').style.display = 'block';
-    }
-
-    // Volver a la lista de candidatos
-    function volverALista() {
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    // Votar por el candidato
-    function votar() {
-      const candidato = document.getElementById('nombre-candidato').innerText;
-      if (votos[candidato] !== undefined) {
-        votos[candidato]++;
-        localStorage.setItem('votos', JSON.stringify(votos)); // Guardar votos
-        alert(`Has votado por ${candidato}. ¡Gracias por participar!`);
-        document.getElementById('perfil').style.display = 'none';
-        setTimeout(() => location.reload(), 6000); // Espera 6 segundos antes de volver
-      }
-    }
-
-    // Verificar contraseña para mostrar resultados
     function verificarContraseña() {
-      const password = prompt("Introduce la contraseña para acceder a los resultados:");
-      if (password === 'dignidad2025') {
+      const password = prompt("Ingrese la contraseña para acceder a los resultados:");
+      if (password === "dignidad2025") {
         mostrarResultados();
       } else {
         alert("Contraseña incorrecta");
       }
-    }
-
-    // Mostrar resultados
-    function mostrarResultados() {
-      document.getElementById('resultados').style.display = 'block';
-      const resultsList = document.getElementById('resultsList');
-      resultsList.innerHTML = Object.keys(votos).map(candidato => {
-        const porcentaje = ((votos[candidato] / Object.values(votos).reduce((a, b) => a + b, 0)) * 100).toFixed(2);
-        return `<li>${candidato}: ${votos[candidato]} votos (${porcentaje}%)</li>`;
-      }).join('');
-    }
-
-    // Cerrar resultados
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
-    }
-
-    // Lógica de la lluvia de emojis
-    function lanzarEmojis() {
-      const emojis = ['🎉', '💥', '🥳', '💫', '🔥', '✨'];
-      for (let i = 0; i < 10; i++) {
-        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-        const emojiElement = document.createElement('div');
-        emojiElement.textContent = emoji;
-        emojiElement.className = 'emoji';
-        emojiElement.style.left = `${Math.random() * 100}vw`;
-        emojiElement.style.animationDuration = `${Math.random() * 5 + 5}s`; // Emojis caen durante 5-10 segundos
-        document.body.appendChild(emojiElement);
-
-        emojiElement.addEventListener('click', function() {
-          this.remove();
-        });
-      }
-    }
-
-    // Iniciar la lluvia de emojis al cargar
-    window.onload = function() {
-      lanzarEmojis();
     }
   </script>
 
