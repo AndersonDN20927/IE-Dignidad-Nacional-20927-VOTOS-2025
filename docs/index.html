@@ -63,6 +63,7 @@
       align-items: center;
       cursor: pointer;
       font-size: 1.5em;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     .candidate img {
       width: 50px;
@@ -98,6 +99,9 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    #admin-panel:hover {
+      background-color: #45a049;
+    }
     #credits {
       position: fixed;
       bottom: 0;
@@ -108,6 +112,36 @@
       color: white;
       font-size: 1.2em;
       font-weight: bold;
+    }
+    .admin-candidate {
+      border: 2px solid #4CAF50;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .admin-candidate img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+    .back-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+    }
+    .back-button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -158,7 +192,7 @@
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="voteButton" onclick="votar()">Votar</button>
-    <button class="button" onclick="volverALista()">Volver</button>
+    <button class="back-button" onclick="volverALista()">Volver</button>
   </div>
 
   <div id="mensaje-voto">
@@ -174,19 +208,18 @@
   <script>
     const candidatos = {
       candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Becas para todos los estudiantes", "Crear un consejo estudiantil", "Mejorar la comida escolar", "Desarrollar proyectos de ciencia", "Fomentar el deporte", "Construir nuevas aulas", "Implementar más eventos escolares"] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura", "Crear comité estudiantil", "Mejorar almuerzos escolares", "Organizar viajes educativos", "Realizar más concursos", "Fomentar la lectura", "Crear una biblioteca digital", "Mejorar el acceso a recursos educativos"] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas", "Fomentar la biblioteca", "Instalar zonas de descanso", "Reparar las canchas", "Hacer intercambios culturales", "Iniciar un programa de reciclaje", "Implementar más deportes", "Crear un espacio para conciertos escolares"] }
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover la educación ambiental", "Crear un espacio de arte y cultura", "Más actividades extracurriculares", "Fomentar la participación estudiantil", "Becas de transporte", "Construir un centro deportivo", "Ampliar la biblioteca", "Implementar clases de innovación"] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Crear una red de apoyo estudiantil", "Reforestar áreas cercanas al colegio", "Programas de voluntariado", "Mejorar el Wi-Fi en el colegio", "Más actividades recreativas", "Incentivar las competencias deportivas", "Crear espacios de descanso", "Fomentar el aprendizaje práctico"] }
     };
 
-    let dniVotante = localStorage.getItem('dni');
+    let userVotes = JSON.parse(localStorage.getItem('votos')) || {};
 
     function verificarFormulario() {
       const dni = document.getElementById('dni').value;
       const nombre = document.getElementById('nombre').value;
       const fecha = document.getElementById('fecha').value;
       const grado = document.getElementById('grado').value;
-      const continuarBtn = document.getElementById('continuarBtn');
-      continuarBtn.disabled = !dni || !nombre || !fecha || !grado;
+      document.getElementById('continuarBtn').disabled = !dni || !nombre || !fecha || !grado;
     }
 
     function mostrarCandidatos() {
@@ -213,7 +246,13 @@
 
     function votar() {
       const candidato = document.getElementById('nombre-candidato').textContent;
+      if (userVotes[dni]) {
+        alert("Ya has votado.");
+        return;
+      }
+
       candidatos[candidato].votos += 1;
+      userVotes[dni] = candidato;
       localStorage.setItem('votos', JSON.stringify(candidatos));
 
       document.getElementById('mensaje-voto').style.display = 'block';
@@ -233,12 +272,15 @@
           const totalVotos = Object.values(candidatos).reduce((sum, c) => sum + c.votos, 0);
           const porcentaje = totalVotos > 0 ? ((votos / totalVotos) * 100).toFixed(2) : 0;
           panelAdmin += `
-            <div style="border: 2px solid #4CAF50; padding: 10px; margin-bottom: 15px; border-radius: 8px;">
-              <h3>${candidatos[candidato].nombre}</h3>
-              <img src="https://github.com/user-attachments/assets/${candidato}.png" alt="${candidatos[candidato].nombre}" style="width: 100px; height: 100px;">
-              <p>Votos: ${votos} (${porcentaje}%)</p>
+            <div class="admin-candidate">
+              <img src="https://github.com/user-attachments/assets/${candidato}.png" alt="${candidatos[candidato].nombre}">
+              <div>
+                <h3>${candidatos[candidato].nombre}</h3>
+                <p>Votos: ${votos} (${porcentaje}%)</p>
+              </div>
             </div>`;
         }
+        panelAdmin += `<button class="back-button" onclick="location.reload()">Volver</button>`;
         document.body.innerHTML = panelAdmin;
       } else {
         alert('Contraseña incorrecta');
