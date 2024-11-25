@@ -89,7 +89,14 @@
     }
     #admin-panel {
       display: none;
-      margin-top: 20px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
     }
     #credits {
       position: fixed;
@@ -158,15 +165,7 @@
     🎉 ¡Gracias por tu voto! 🌟
   </div>
 
-  <div id="admin-panel" class="container">
-    <h2>Panel de Administración</h2>
-    <p>Clave de acceso: dignidad2025</p>
-    <ul id="lista-votos">
-      <li><b>Sofía Quispe:</b> <span id="votos-sofia">0</span> votos (0%)</li>
-      <li><b>Laura Fernández:</b> <span id="votos-laura">0</span> votos (0%)</li>
-      <li><b>Carlos Ramírez:</b> <span id="votos-carlos">0</span> votos (0%)</li>
-    </ul>
-  </div>
+  <div id="admin-panel" onclick="accesoAdmin()">Panel de Administración</div>
 
   <div id="credits">
     Créditos: Platanito Tentación, Manzanita Tentación y TG (Top Globales)
@@ -179,8 +178,8 @@
       candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas", "Fomentar la biblioteca", "Instalar zonas de descanso", "Reparar las canchas", "Hacer intercambios culturales", "Iniciar un programa de reciclaje", "Implementar clases extracurriculares", "Iniciar una campaña de reciclaje"] }
     };
 
-    const votantes = new Set();
-
+    const votantes = new Set(localStorage.getItem("votantes") ? JSON.parse(localStorage.getItem("votantes")) : []);
+    
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
       const nombre = document.getElementById("nombre").value;
@@ -201,18 +200,26 @@
     }
 
     function mostrarPerfil(candidato) {
+      const perfil = candidatos[candidato];
+      document.getElementById("nombre-candidato").textContent = perfil.nombre;
+      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidato}.jpg`;
+      document.getElementById("lista-propuestas").innerHTML = perfil.propuestas.map(p => `<li>${p}</li>`).join('');
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
-      const candidatoData = candidatos[candidato];
-      document.getElementById("nombre-candidato").textContent = candidatoData.nombre;
-      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidato}.png`;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = '';
-      candidatoData.propuestas.forEach(propuesta => {
-        const li = document.createElement("li");
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
+    }
+
+    function votar() {
+      const candidato = document.getElementById("nombre-candidato").textContent;
+      const dni = document.getElementById("dni").value;
+      candidatos[candidato].votos++;
+      votantes.add(dni);
+      localStorage.setItem("votantes", JSON.stringify([...votantes]));
+      alert(`¡Gracias por votar por ${candidato}!`);
+      document.getElementById("mensaje-voto").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("mensaje-voto").style.display = "none";
+        volverALista();
+      }, 2000);
     }
 
     function volverALista() {
@@ -220,53 +227,15 @@
       document.getElementById("candidatos").style.display = "block";
     }
 
-    function votar() {
-      const dni = document.getElementById("dni").value;
-      const candidatoSeleccionado = document.getElementById("nombre-candidato").textContent;
-      const candidatoKey = Object.keys(candidatos).find(key => candidatos[key].nombre === candidatoSeleccionado);
-      candidatos[candidatoKey].votos++;
-      votantes.add(dni);
-
-      // Actualizar el mensaje de agradecimiento y mostrar el panel de administración
-      document.getElementById("mensaje-voto").style.display = "block";
-      setTimeout(() => {
-        document.getElementById("mensaje-voto").style.display = "none";
-        document.getElementById("perfil").style.display = "none";
-        document.getElementById("inicio").style.display = "block";
-
-        // Actualizar la cantidad de votos y porcentaje en el panel de administración
-        actualizarResultados();
-      }, 2000);
-    }
-
-    function actualizarResultados() {
-      const totalVotos = Object.values(candidatos).reduce((sum, candidato) => sum + candidato.votos, 0);
-      Object.keys(candidatos).forEach(candidatoKey => {
-        const votos = candidatos[candidatoKey].votos;
-        const porcentaje = totalVotos > 0 ? ((votos / totalVotos) * 100).toFixed(2) : 0;
-        document.getElementById(`votos-${candidatoKey}`).textContent = `${votos} votos (${porcentaje}%)`;
-      });
-    }
-
-    // Inicializar el panel de administración
     function accesoAdmin() {
-      const password = prompt("Ingrese la contraseña de administrador");
+      const password = prompt("Ingrese la contraseña para acceder al panel de administración");
       if (password === "dignidad2025") {
-        document.getElementById("admin-panel").style.display = "block";
-        actualizarResultados();
+        alert("Acceso concedido al panel de administración");
+        // Aquí podrías mostrar la información del panel de administración
       } else {
-        alert("Contraseña incorrecta");
+        alert("Contraseña incorrecta.");
       }
     }
-
-    // Función para habilitar el acceso al panel de administración
-    document.addEventListener("DOMContentLoaded", () => {
-      const adminBtn = document.createElement("button");
-      adminBtn.classList.add("button");
-      adminBtn.textContent = "Panel de Administración";
-      adminBtn.onclick = accesoAdmin;
-      document.body.appendChild(adminBtn);
-    });
   </script>
 </body>
 </html>
