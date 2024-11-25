@@ -155,7 +155,7 @@
   </div>
 
   <div id="mensaje-voto">
-    🎉 ¡Gracias por tu voto! 🌟
+    🎉 ¡Gracias por tu voto! 🌟<br> ¡Tu voz cuenta! Juntos hacemos el cambio 🙌
   </div>
 
   <div id="admin-panel" class="container">
@@ -187,7 +187,8 @@
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
+      const continuarBtn = document.getElementById("continuarBtn");
+      continuarBtn.disabled = !dni || !nombre || !fecha || !grado || dni.length !== 8;
     }
 
     function mostrarCandidatos() {
@@ -196,66 +197,64 @@
     }
 
     function mostrarPerfil(candidato) {
-      const datos = candidatos[candidato];
-      document.getElementById("nombre-candidato").innerText = datos.nombre;
-      document.getElementById("profile-img").src = document.querySelector(`[alt="${datos.nombre}"]`).src;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = "";
-      datos.propuestas.forEach(p => {
-        const li = document.createElement("li");
-        li.textContent = p;
-        listaPropuestas.appendChild(li);
-      });
-      document.getElementById("perfil").style.display = "block";
       document.getElementById("candidatos").style.display = "none";
+      const perfil = candidatos[candidato];
+      document.getElementById("perfil").style.display = "block";
+      document.getElementById("nombre-candidato").textContent = perfil.nombre;
+      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidato}.png`; // Imágenes de ejemplo
+      document.getElementById("lista-propuestas").innerHTML = perfil.propuestas.map(prop => `<li>${prop}</li>`).join("");
     }
 
     function votar() {
       const dni = document.getElementById("dni").value;
       if (votantes.has(dni)) {
-        alert("Ya has votado con este DNI.");
+        alert("Este DNI ya ha votado.");
         return;
       }
+
+      const candidato = document.getElementById("nombre-candidato").textContent;
       votantes.add(dni);
-      localStorage.setItem("votantes", JSON.stringify([...votantes]));
+      localStorage.setItem("votantes", JSON.stringify(Array.from(votantes)));
 
-      // Incrementar voto
-      const candidatoSeleccionado = document.querySelector(".candidate[onclick='mostrarPerfil('candidato1')']:hover") ? "candidato1" :
-                                   document.querySelector(".candidate[onclick='mostrarPerfil('candidato2')']:hover") ? "candidato2" : "candidato3";
+      candidatos[`candidato${candidato === "Sofia Quispe" ? 1 : candidato === "Laura Fernández" ? 2 : 3}`].votos++;
+      localStorage.setItem("votos", JSON.stringify({
+        candidato1: candidatos.candidato1.votos,
+        candidato2: candidatos.candidato2.votos,
+        candidato3: candidatos.candidato3.votos
+      }));
 
-      candidatos[candidatoSeleccionado].votos++;
-      localStorage.setItem("votos", JSON.stringify({ candidato1: candidatos.candidato1.votos, candidato2: candidatos.candidato2.votos, candidato3: candidatos.candidato3.votos }));
+      actualizarVotos();
+      mostrarMensajeVoto();
+    }
 
-      // Mostrar mensaje de agradecimiento y retorno
+    function mostrarMensajeVoto() {
       document.getElementById("mensaje-voto").style.display = "block";
       setTimeout(() => {
         document.getElementById("mensaje-voto").style.display = "none";
-        window.location.reload();
+        volverALista();
       }, 6000);
-
-      // Actualizar los votos en el admin panel
-      actualizarPanelAdmin();
     }
 
-    function actualizarPanelAdmin() {
+    function volverALista() {
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("inicio").style.display = "block";
+      document.getElementById("dni").value = "";
+      document.getElementById("nombre").value = "";
+      document.getElementById("fecha").value = "";
+      document.getElementById("grado").value = "";
+      verificarFormulario();
+    }
+
+    function actualizarVotos() {
       document.getElementById("votos-sofia").textContent = candidatos.candidato1.votos;
       document.getElementById("votos-laura").textContent = candidatos.candidato2.votos;
       document.getElementById("votos-carlos").textContent = candidatos.candidato3.votos;
 
       const totalVotos = candidatos.candidato1.votos + candidatos.candidato2.votos + candidatos.candidato3.votos;
       if (totalVotos > 0) {
-        document.getElementById("votos-sofia").textContent = ((candidatos.candidato1.votos / totalVotos) * 100).toFixed(2) + "%";
-        document.getElementById("votos-laura").textContent = ((candidatos.candidato2.votos / totalVotos) * 100).toFixed(2) + "%";
-        document.getElementById("votos-carlos").textContent = ((candidatos.candidato3.votos / totalVotos) * 100).toFixed(2) + "%";
-      }
-    }
-
-    // Mostrar panel de admin al tener la clave
-    function mostrarAdmin() {
-      const clave = prompt("Ingrese la clave de administrador:");
-      if (clave === "dignidad2025") {
-        document.getElementById("admin-panel").style.display = "block";
-        actualizarPanelAdmin();
+        document.getElementById("votos-sofia").textContent = `${((candidatos.candidato1.votos / totalVotos) * 100).toFixed(2)}%`;
+        document.getElementById("votos-laura").textContent = `${((candidatos.candidato2.votos / totalVotos) * 100).toFixed(2)}%`;
+        document.getElementById("votos-carlos").textContent = `${((candidatos.candidato3.votos / totalVotos) * 100).toFixed(2)}%`;
       }
     }
   </script>
