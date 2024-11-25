@@ -90,30 +90,90 @@
       display: block;
     }
 
-    /* Mensaje motivador */
-    #mensajeMotivador {
+    /* Estilos de la lluvia de emojis */
+    .emoji {
       position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2em;
-      font-weight: bold;
-      text-align: center;
-      animation: mover 2s ease-in-out;
+      top: 0;
+      font-size: 60px; /* Emojis más grandes */
+      pointer-events: auto; /* Hacer interactivo */
+      cursor: pointer; /* Cambiar cursor al interactuar */
+      animation: fall 6s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Botón de acceso a los votos */
+    #votosBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 15px;
+      background-color: #FF6347;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    #votosBtn:hover {
+      background-color: #FF4500;
+    }
+
+    /* Resultados de votos */
+    #resultados {
+      position: fixed;
+      top: 20%;
+      right: 5%;
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       display: none;
     }
 
-    @keyframes mover {
-      0% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-20px); }
-      100% { transform: translateX(-50%) translateY(0); }
+    #resultados ul {
+      list-style-type: none;
+      padding: 0;
     }
 
+    #resultados ul li {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+
+    #cerrarResultados {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #cerrarResultados:hover {
+      background-color: #FF4500;
+    }
+
+    /* Créditos */
+    #credits {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+    }
   </style>
 </head>
 <body>
-
-  <div id="mensajeMotivador">¡Gracias por votar! 🎉</div>
 
   <!-- Botón para acceder a los resultados de los votos -->
   <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
@@ -187,7 +247,7 @@
   </div>
 
   <!-- Créditos -->
-  <div id="credits">Proyecto creado por las empresas: Platanito Tentacion, Manzanita Tentacion y Acuproductions</div>
+  <div id="credits">Proyecto de elecciones escolares 2025 - La Voz del Estudiante</div>
 
   <script>
     let candidatos = {
@@ -222,33 +282,46 @@
       const data = candidatos[candidato];
       document.getElementById('perfil').style.display = 'block';
       document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('nombre-candidato').textContent = data.nombre;
+      document.getElementById('nombre-candidato').innerText = data.nombre;
       document.getElementById('profile-img').src = data.imagen;
-      document.getElementById('lista-propuestas').innerHTML = data.propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
+      const propuestasList = document.getElementById('lista-propuestas');
+      propuestasList.innerHTML = '';
+      data.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.innerText = propuesta;
+        propuestasList.appendChild(li);
+      });
+      document.getElementById('voteButton').disabled = false;
+    }
+
+    function volverALista() {
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
     function votar() {
-      const candidato = document.getElementById('nombre-candidato').textContent;
-      const candidatoClave = Object.keys(candidatos).find(c => candidatos[c].nombre === candidato);
-
-      candidatos[candidatoClave].votos += 1;
-
-      const dni = document.getElementById('dni').value;
-      localStorage.setItem(dni, 'votado');
-
-      document.getElementById('perfil').style.display = 'none';
-      mostrarMensajeMotivador();
-      setTimeout(function() {
-        window.location.reload();
-      }, 6000);
+      const candidato = document.getElementById('nombre-candidato').innerText;
+      alert('¡Votaste por ' + candidato + '!');
+      // Almacenar el voto
+      candidatos[candidato].votos++;
+      votos.push(candidato);
+      mostrarResultados();
     }
 
-    function mostrarMensajeMotivador() {
-      const mensaje = document.getElementById('mensajeMotivador');
-      mensaje.style.display = 'block';
-      setTimeout(function() {
-        mensaje.style.display = 'none';
-      }, 2000);
+    function mostrarResultados() {
+      document.getElementById('resultados').style.display = 'block';
+      const resultsList = document.getElementById('resultsList');
+      resultsList.innerHTML = ''; // Limpiar resultados previos
+      for (let candidato in candidatos) {
+        const li = document.createElement('li');
+        const data = candidatos[candidato];
+        li.innerHTML = <img src="${data.imagen}" alt="Foto de ${data.nombre}" style="width: 50px; height: 50px; border-radius: 50%;"> ${data.nombre}: ${data.votos} votos (${((data.votos / votos.length) * 100).toFixed(2)}%);
+        resultsList.appendChild(li);
+      }
+    }
+
+    function cerrarResultados() {
+      document.getElementById('resultados').style.display = 'none';
     }
 
     function verificarFormulario() {
@@ -256,45 +329,21 @@
       const nombre = document.getElementById('nombre').value;
       const fecha = document.getElementById('fecha').value;
       const grado = document.getElementById('grado').value;
-      const continuarBtn = document.getElementById('continuarBtn');
 
       if (dni && nombre && fecha && grado) {
-        continuarBtn.disabled = false;
+        document.getElementById('continuarBtn').disabled = false;
       } else {
-        continuarBtn.disabled = true;
-      }
-
-      if (localStorage.getItem(dni)) {
-        alert('Ya has votado previamente.');
-        continuarBtn.disabled = true;
+        document.getElementById('continuarBtn').disabled = true;
       }
     }
 
     function verificarContraseña() {
-      const password = prompt('Ingrese la contraseña para ver los resultados de los votos:');
-      if (password === 'dignidad2025') {
-        verResultados();
+      const password = prompt("Ingrese la contraseña para acceder a los resultados:");
+      if (password === "dignidad2025") {
+        mostrarResultados();
       } else {
-        alert('Contraseña incorrecta.');
+        alert("Contraseña incorrecta");
       }
-    }
-
-    function verResultados() {
-      const resultados = Object.keys(candidatos).map(c => {
-        const candidato = candidatos[c];
-        return `<li>${candidato.nombre}: ${candidato.votos} votos (${((candidato.votos / totalVotos()) * 100).toFixed(2)}%)</li>`;
-      }).join('');
-
-      document.getElementById('resultsList').innerHTML = resultados;
-      document.getElementById('resultados').style.display = 'block';
-    }
-
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
-    }
-
-    function totalVotos() {
-      return Object.values(candidatos).reduce((total, candidato) => total + candidato.votos, 0);
     }
   </script>
 
