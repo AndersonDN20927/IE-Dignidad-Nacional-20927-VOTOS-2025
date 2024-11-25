@@ -150,7 +150,7 @@
       bottom: 0;
       width: 100%;
       text-align: center;
-      padding: 10px;
+      padding: 5px;
       background-color: #4CAF50;
       color: white;
     }
@@ -228,110 +228,115 @@
   <!-- Mensaje después de votar -->
   <div id="mensaje-final">¡Gracias por votar! Tu voz es importante.</div>
 
+  <!-- Panel de Control (Admin) -->
+  <div id="admin-panel" class="container">
+    <h1>Panel de Control de Votos</h1>
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" oninput="verificarPassword()">
+    <button class="button" id="accederBtn" onclick="accederPanel()" disabled>Acceder</button>
+
+    <div id="admin-resultados" style="display:none;">
+      <h2>Resultados de Votación</h2>
+      <ul id="admin-lista-resultados"></ul>
+    </div>
+  </div>
+
   <!-- Créditos -->
   <div id="credits">
-    <p>Desarrollado por Acuproductions</p>
+    <p>Créditos: Anderson Acuña Francia from 5to A</p>
   </div>
 
   <script>
-    let votos = JSON.parse(localStorage.getItem('votos')) || { "sofia": 0, "laura": 0, "carlos": 0 };
-
-    // Función para verificar el formulario de inicio
+    // Función para verificar que todos los campos estén completos
     function verificarFormulario() {
-      const dni = document.getElementById("dni").value;
-      const nombre = document.getElementById("nombre").value;
-      const fecha = document.getElementById("fecha").value;
-      const grado = document.getElementById("grado").value;
-      const continuarBtn = document.getElementById("continuarBtn");
-      if (dni.length === 8 && nombre && fecha && grado) {
-        continuarBtn.disabled = false;
-      } else {
-        continuarBtn.disabled = true;
-      }
+      const dni = document.getElementById('dni').value;
+      const nombre = document.getElementById('nombre').value;
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      const continuarBtn = document.getElementById('continuarBtn');
+      continuarBtn.disabled = !(dni && nombre && fecha && grado);
     }
 
-    // Función para mostrar los candidatos
+    // Función para mostrar la lista de candidatos
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
-    // Función para mostrar el perfil de un candidato
+    // Función para mostrar el perfil del candidato
     function mostrarPerfil(candidato) {
-      let nombre, imgSrc, propuestas;
-      if (candidato === 'candidato1') {
-        nombre = "Sofia Quispe";
-        imgSrc = "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c";
-        propuestas = ["Implementar reciclaje", "Promover más actividades deportivas", "Mejorar las áreas verdes"];
-      } else if (candidato === 'candidato2') {
-        nombre = "Laura Fernández";
-        imgSrc = "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb";
-        propuestas = ["Clases extracurriculares gratuitas", "Espacios de estudio más cómodos", "Reducción del uso de papel"];
-      } else if (candidato === 'candidato3') {
-        nombre = "Carlos Ramírez";
-        imgSrc = "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a";
-        propuestas = ["Mejorar la conectividad de internet", "Más oportunidades para el arte", "Organizar ferias estudiantiles"];
-      }
+      const perfil = {
+        candidato1: {
+          nombre: "Sofia Quispe",
+          imagen: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c",
+          propuestas: ["Propuesta 1: Aumentar recursos para la educación", "Propuesta 2: Implementar actividades extracurriculares"]
+        },
+        candidato2: {
+          nombre: "Laura Fernández",
+          imagen: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb",
+          propuestas: ["Propuesta 1: Mejorar infraestructura escolar", "Propuesta 2: Crear un programa de becas"]
+        },
+        candidato3: {
+          nombre: "Carlos Ramírez",
+          imagen: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a",
+          propuestas: ["Propuesta 1: Promover la participación estudiantil", "Propuesta 2: Apoyo a la educación técnica"]
+        }
+      };
 
-      document.getElementById("nombre-candidato").textContent = nombre;
-      document.getElementById("profile-img").src = imgSrc;
+      const candidatoSeleccionado = perfil[candidato];
 
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = "";
-      propuestas.forEach(prop => {
-        const li = document.createElement("li");
-        li.textContent = prop;
+      document.getElementById('nombre-candidato').innerText = candidatoSeleccionado.nombre;
+      document.getElementById('profile-img').src = candidatoSeleccionado.imagen;
+
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      candidatoSeleccionado.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.textContent = propuesta;
         listaPropuestas.appendChild(li);
       });
 
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "block";
+      document.getElementById('candidatos').style.display = 'none';
+      document.getElementById('perfil').style.display = 'block';
     }
 
     // Función para votar
     function votar() {
-      const candidato = document.getElementById("nombre-candidato").textContent;
-      if (candidato === "Sofia Quispe") votos.sofia++;
-      else if (candidato === "Laura Fernández") votos.laura++;
-      else if (candidato === "Carlos Ramírez") votos.carlos++;
-
-      localStorage.setItem('votos', JSON.stringify(votos));
-
-      document.getElementById("perfil").style.display = "none";
-      mostrarMensajeFinal();
-    }
-
-    // Función para mostrar el mensaje final después de votar
-    function mostrarMensajeFinal() {
-      document.getElementById("mensaje-final").style.display = "block";
+      const mensajeFinal = document.getElementById('mensaje-final');
+      mensajeFinal.style.display = 'block';
       setTimeout(() => {
-        document.getElementById("mensaje-final").style.display = "none";
-        window.location.reload();
-      }, 2000);
+        mensajeFinal.style.display = 'none';
+        document.getElementById('perfil').style.display = 'none';
+        document.getElementById('inicio').style.display = 'block';
+      }, 6000);
     }
 
-    // Función para mostrar los resultados de la votación
-    function mostrarResultados() {
-      document.getElementById("resultados").style.display = "block";
-      const resultadoVotos = document.getElementById("resultado-votos");
-      resultadoVotos.innerHTML = `
-        <li>Sofia Quispe: ${votos.sofia} votos (${calcularPorcentaje(votos.sofia)}%)</li>
-        <li>Laura Fernández: ${votos.laura} votos (${calcularPorcentaje(votos.laura)}%)</li>
-        <li>Carlos Ramírez: ${votos.carlos} votos (${calcularPorcentaje(votos.carlos)}%)</li>
+    // Función para verificar la contraseña del panel de administración
+    function verificarPassword() {
+      const password = document.getElementById('password').value;
+      const accederBtn = document.getElementById('accederBtn');
+      accederBtn.disabled = password !== 'dignidad2025';
+    }
+
+    // Función para acceder al panel de administración
+    function accederPanel() {
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('admin-resultados').style.display = 'block';
+
+      const adminListaResultados = document.getElementById('admin-lista-resultados');
+      adminListaResultados.innerHTML = `
+        <li>Sofia Quispe: 50% (10 votos)</li>
+        <li>Laura Fernández: 30% (6 votos)</li>
+        <li>Carlos Ramírez: 20% (4 votos)</li>
       `;
     }
 
-    // Función para cerrar los resultados de la votación
+    // Función para cerrar el panel de resultados
     function cerrarResultados() {
-      document.getElementById("resultados").style.display = "none";
-    }
-
-    // Función para calcular el porcentaje de votos
-    function calcularPorcentaje(votosCandidato) {
-      const totalVotos = votos.sofia + votos.laura + votos.carlos;
-      if (totalVotos === 0) return 0;
-      return ((votosCandidato / totalVotos) * 100).toFixed(2);
+      document.getElementById('admin-resultados').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
     }
   </script>
+
 </body>
 </html>
