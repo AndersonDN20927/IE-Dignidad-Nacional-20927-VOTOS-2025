@@ -88,7 +88,7 @@
       font-size: 1.5em;
     }
     #admin-panel {
-      display: none;
+      display: block;
       position: absolute;
       top: 20px;
       right: 20px;
@@ -175,67 +175,63 @@
     const candidatos = {
       candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Becas para todos los estudiantes", "Crear un consejo estudiantil", "Mejorar la comida escolar", "Desarrollar proyectos de ciencia", "Fomentar el deporte", "Construir nuevas aulas", "Implementar más eventos escolares"] },
       candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura", "Crear comité estudiantil", "Mejorar almuerzos escolares", "Organizar viajes educativos", "Realizar más concursos", "Fomentar la lectura", "Crear una biblioteca digital", "Mejorar el acceso a recursos educativos"] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas", "Fomentar la biblioteca", "Instalar zonas de descanso", "Reparar las canchas", "Hacer intercambios culturales", "Iniciar un programa de reciclaje", "Implementar clases extracurriculares", "Iniciar una campaña de reciclaje"] }
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas", "Fomentar la biblioteca", "Instalar zonas de descanso", "Reparar las canchas", "Hacer intercambios culturales", "Iniciar un programa de reciclaje", "Implementar más deportes", "Crear un espacio para conciertos escolares"] }
     };
 
-    const votantes = new Set(localStorage.getItem("votantes") ? JSON.parse(localStorage.getItem("votantes")) : []);
+    let dniVotante = localStorage.getItem('dni');
     
     function verificarFormulario() {
-      const dni = document.getElementById("dni").value;
-      const nombre = document.getElementById("nombre").value;
-      const fecha = document.getElementById("fecha").value;
-      const grado = document.getElementById("grado").value;
-      const continuarBtn = document.getElementById("continuarBtn");
-      continuarBtn.disabled = !(dni && nombre && fecha && grado);
+      const dni = document.getElementById('dni').value;
+      const nombre = document.getElementById('nombre').value;
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      const continuarBtn = document.getElementById('continuarBtn');
+      continuarBtn.disabled = !dni || !nombre || !fecha || !grado;
     }
 
     function mostrarCandidatos() {
-      const dni = document.getElementById("dni").value;
-      if (votantes.has(dni)) {
-        alert("Este DNI ya ha votado.");
-        return;
-      }
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      const inicio = document.getElementById('inicio');
+      const candidatosDiv = document.getElementById('candidatos');
+      inicio.style.display = 'none';
+      candidatosDiv.style.display = 'block';
     }
 
     function mostrarPerfil(candidato) {
-      const perfil = candidatos[candidato];
-      document.getElementById("nombre-candidato").textContent = perfil.nombre;
-      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidato}.jpg`;
-      document.getElementById("lista-propuestas").innerHTML = perfil.propuestas.map(p => `<li>${p}</li>`).join('');
-      document.getElementById("candidatos").style.display = "none";
-      document.getElementById("perfil").style.display = "block";
+      const perfil = document.getElementById('perfil');
+      const candidatoObj = candidatos[candidato];
+      document.getElementById('nombre-candidato').textContent = candidatoObj.nombre;
+      document.getElementById('profile-img').src = `https://github.com/user-attachments/assets/${candidato}.png`;
+      document.getElementById('lista-propuestas').innerHTML = candidatoObj.propuestas.map(propuesta => `<li>${propuesta}</li>`).join('');
+      perfil.style.display = 'block';
+      document.getElementById('candidatos').style.display = 'none';
+    }
+
+    function volverALista() {
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
     function votar() {
-      const candidato = document.getElementById("nombre-candidato").textContent;
-      const dni = document.getElementById("dni").value;
-      candidatos[candidato].votos++;
-      votantes.add(dni);
-      localStorage.setItem("votantes", JSON.stringify([...votantes]));
-      alert(`¡Gracias por votar por ${candidato}!`);
-      document.getElementById("mensaje-voto").style.display = "block";
-      setTimeout(() => {
-        document.getElementById("mensaje-voto").style.display = "none";
+      const candidato = document.getElementById('nombre-candidato').textContent;
+      candidatos[candidato].votos += 1;
+      localStorage.setItem('votos', JSON.stringify(candidatos));
+
+      document.getElementById('mensaje-voto').style.display = 'block';
+      setTimeout(function() {
+        document.getElementById('mensaje-voto').style.display = 'none';
         volverALista();
       }, 2000);
     }
 
-    function volverALista() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
-    }
-
     function accesoAdmin() {
-      const password = prompt("Ingrese la contraseña para acceder al panel de administración");
-      if (password === "dignidad2025") {
-        alert("Acceso concedido al panel de administración");
-        // Aquí podrías mostrar la información del panel de administración
+      const pass = prompt('Ingrese la contraseña de administración');
+      if (pass === 'dignidad2025') {
+        alert('Bienvenido al panel de administración');
       } else {
-        alert("Contraseña incorrecta.");
+        alert('Contraseña incorrecta');
       }
     }
+
   </script>
 </body>
 </html>
