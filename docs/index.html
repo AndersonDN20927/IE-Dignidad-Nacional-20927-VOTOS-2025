@@ -253,93 +253,88 @@
   <script>
     let votos = { "sofia": 0, "laura": 0, "carlos": 0 };
     let candidatoSeleccionado = "";
-    
+    let dniUsados = [];
+
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      const continuarBtn = document.getElementById("continuarBtn");
 
-      // Verifica si todos los campos están completos
-      if (dni.length === 8 && nombre && fecha && grado) {
-        continuarBtn.disabled = false;
-      } else {
-        continuarBtn.disabled = true;
-      }
+      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
     }
 
     function mostrarCandidatos() {
+      const dni = document.getElementById("dni").value;
+      if (dniUsados.includes(dni)) {
+        alert("Este DNI ya ha votado.");
+        return;
+      }
+
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidato) {
+      candidatoSeleccionado = candidato;
+      const nombreCandidato = {
+        "candidato1": "Sofia Quispe",
+        "candidato2": "Laura Fernández",
+        "candidato3": "Carlos Ramírez"
+      }[candidato];
+
+      const fotoCandidato = {
+        "candidato1": "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c",
+        "candidato2": "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb",
+        "candidato3": "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
+      }[candidato];
+
+      document.getElementById("nombre-candidato").textContent = nombreCandidato;
+      document.getElementById("profile-img").src = fotoCandidato;
+
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
-      
-      if (candidato === "candidato1") {
-        document.getElementById("nombre-candidato").innerText = "Sofia Quispe";
-        document.getElementById("profile-img").src = "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c";
-        document.getElementById("lista-propuestas").innerHTML = "<li>Propuesta 1: Mejorar la infraestructura escolar</li><li>Propuesta 2: Crear programas de voluntariado</li>";
-        candidatoSeleccionado = "sofia";
-      } else if (candidato === "candidato2") {
-        document.getElementById("nombre-candidato").innerText = "Laura Fernández";
-        document.getElementById("profile-img").src = "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb";
-        document.getElementById("lista-propuestas").innerHTML = "<li>Propuesta 1: Más actividades recreativas</li><li>Propuesta 2: Fomentar el deporte en la escuela</li>";
-        candidatoSeleccionado = "laura";
-      } else if (candidato === "candidato3") {
-        document.getElementById("nombre-candidato").innerText = "Carlos Ramírez";
-        document.getElementById("profile-img").src = "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a";
-        document.getElementById("lista-propuestas").innerHTML = "<li>Propuesta 1: Creación de un club ambiental</li><li>Propuesta 2: Más proyectos de ciencias</li>";
-        candidatoSeleccionado = "carlos";
-      }
     }
 
     function votar() {
-      // Incrementamos el voto para el candidato seleccionado
-      votos[candidatoSeleccionado]++;
+      const dni = document.getElementById("dni").value;
+      dniUsados.push(dni);
 
-      // Guardamos los votos en el almacenamiento local
-      localStorage.setItem("votos", JSON.stringify(votos));
+      if (candidatoSeleccionado === "candidato1") {
+        votos.sofia++;
+      } else if (candidatoSeleccionado === "candidato2") {
+        votos.laura++;
+      } else if (candidatoSeleccionado === "candidato3") {
+        votos.carlos++;
+      }
 
-      // Mostrar resultados
       mostrarResultados();
-
-      // Volver a la pantalla de inicio después de 4 segundos
-      setTimeout(() => {
-        document.getElementById("perfil").style.display = "none";
-        document.getElementById("candidatos").style.display = "block";
-      }, 4000);
     }
 
     function mostrarResultados() {
-      // Mostrar la ventana de resultados
-      document.getElementById("resultados").style.display = "block";
-
-      // Obtener los votos guardados
-      const votosGuardados = JSON.parse(localStorage.getItem("votos")) || votos;
-
-      const resultadosHTML = `
-        <li>Sofia Quispe: ${votosGuardados.sofia} votos</li>
-        <li>Laura Fernández: ${votosGuardados.laura} votos</li>
-        <li>Carlos Ramírez: ${votosGuardados.carlos} votos</li>
+      const totalVotos = votos.sofia + votos.laura + votos.carlos;
+      const resultadoHTML = `
+        <li>Sofia Quispe: ${votos.sofia} votos (${((votos.sofia / totalVotos) * 100).toFixed(2)}%)</li>
+        <li>Laura Fernández: ${votos.laura} votos (${((votos.laura / totalVotos) * 100).toFixed(2)}%)</li>
+        <li>Carlos Ramírez: ${votos.carlos} votos (${((votos.carlos / totalVotos) * 100).toFixed(2)}%)</li>
       `;
-      
-      document.getElementById("resultado-votos").innerHTML = resultadosHTML;
+      document.getElementById("resultado-votos").innerHTML = resultadoHTML;
+      document.getElementById("perfil").style.display = "none";
+      document.getElementById("inicio").style.display = "block"; // Permitir reiniciar el proceso de votación
+    }
+
+    function verificarContraseña() {
+      const contraseña = prompt("Introduce la contraseña para acceder a los resultados:");
+      if (contraseña === "dignidad2025") {
+        mostrarResultados();
+        document.getElementById("resultados").style.display = "block";
+      } else {
+        alert("Contraseña incorrecta.");
+      }
     }
 
     function cerrarResultados() {
       document.getElementById("resultados").style.display = "none";
-    }
-
-    function verificarContraseña() {
-      const contraseña = prompt("Introduce la contraseña para ver los votos:");
-      if (contraseña === "dignidad2025") {
-        mostrarResultados();
-      } else {
-        alert("Contraseña incorrecta.");
-      }
     }
   </script>
 </body>
