@@ -179,7 +179,7 @@
     };
 
     let dniVotante = localStorage.getItem('dni');
-    
+
     function verificarFormulario() {
       const dni = document.getElementById('dni').value;
       const nombre = document.getElementById('nombre').value;
@@ -227,11 +227,16 @@
       const pass = prompt('Ingrese la contraseña de administración');
       if (pass === 'dignidad2025') {
         alert('Bienvenido al panel de administración');
+        // Mostrar panel de administración con los candidatos
+        let panelAdmin = '<h2>Panel de Administración</h2>';
+        for (const candidato in candidatos) {
+          panelAdmin += `<div><h3>${candidatos[candidato].nombre}</h3><img src="https://github.com/user-attachments/assets/${candidato}.png" alt="${candidatos[candidato].nombre}" style="width: 100px; height: 100px;"></div>`;
+        }
+        document.body.innerHTML = panelAdmin;
       } else {
         alert('Contraseña incorrecta');
       }
     }
-
   </script>
 </body>
 </html>
