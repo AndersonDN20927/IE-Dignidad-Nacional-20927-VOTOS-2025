@@ -139,6 +139,8 @@
       margin-top: 20px;
       display: block;
       width: 100%;
+      font-size: 1.2em;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     .back-button:hover {
       background-color: #45a049;
@@ -207,9 +209,9 @@
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar la infraestructura", "Becas para todos los estudiantes", "Crear un consejo estudiantil", "Mejorar la comida escolar", "Desarrollar proyectos de ciencia", "Fomentar el deporte", "Construir nuevas aulas", "Implementar más eventos escolares"] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover la educación ambiental", "Crear un espacio de arte y cultura", "Más actividades extracurriculares", "Fomentar la participación estudiantil", "Becas de transporte", "Construir un centro deportivo", "Ampliar la biblioteca", "Implementar clases de innovación"] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Crear una red de apoyo estudiantil", "Reforestar áreas cercanas al colegio", "Programas de voluntariado", "Mejorar el Wi-Fi en el colegio", "Más actividades recreativas", "Incentivar las competencias deportivas", "Crear espacios de descanso", "Fomentar el aprendizaje práctico"] }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Promover la educación ambiental", "Crear un espacio de arte y cultura", "Más actividades extracurriculares", "Fomentar la participación estudiantil"] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Reforestar áreas cercanas", "Fomentar clases prácticas", "Crear espacios de descanso", "Mejorar la infraestructura"] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Crear una red de apoyo estudiantil", "Reforestar áreas cercanas al colegio", "Programas de voluntariado"] }
     };
 
     let userVotes = JSON.parse(localStorage.getItem('votos')) || {};
@@ -246,6 +248,8 @@
 
     function votar() {
       const candidato = document.getElementById('nombre-candidato').textContent;
+      const dni = document.getElementById('dni').value;
+
       if (userVotes[dni]) {
         alert("Ya has votado.");
         return;
@@ -253,7 +257,7 @@
 
       candidatos[candidato].votos += 1;
       userVotes[dni] = candidato;
-      localStorage.setItem('votos', JSON.stringify(candidatos));
+      localStorage.setItem('votos', JSON.stringify(userVotes));
 
       document.getElementById('mensaje-voto').style.display = 'block';
       setTimeout(function() {
@@ -265,7 +269,6 @@
     function accesoAdmin() {
       const pass = prompt('Ingrese la contraseña de administración');
       if (pass === 'dignidad2025') {
-        alert('Bienvenido al panel de administración');
         let panelAdmin = '<h2>Panel de Administración</h2>';
         for (const candidato in candidatos) {
           const votos = candidatos[candidato].votos;
