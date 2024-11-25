@@ -90,38 +90,21 @@
       display: block;
     }
 
-    /* Estilos de la lluvia de emojis */
-    .emoji {
+    /* Estilos del mensaje después de votar */
+    #mensaje-final {
       position: absolute;
-      top: 0;
-      font-size: 60px; /* Emojis más grandes */
-      pointer-events: auto; /* Hacer interactivo */
-      cursor: pointer; /* Cambiar cursor al interactuar */
-      animation: fall 6s linear forwards;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-      }
-    }
-
-    /* Botón de acceso a los votos */
-    #votosBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 15px;
-      background-color: #FF6347;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-    }
-
-    #votosBtn:hover {
-      background-color: #FF4500;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffeb3b;
+      padding: 30px;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #333;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     /* Resultados de votos */
@@ -174,9 +157,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Botón para acceder a los resultados de los votos -->
-  <button id="votosBtn" onclick="verificarContraseña()">Votos</button>
 
   <!-- Formulario inicial -->
   <div id="inicio" class="container" style="display: block;">
@@ -245,15 +225,18 @@
     <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
   </div>
 
+  <!-- Mensaje después de votar -->
+  <div id="mensaje-final">¡Gracias por votar! Tu voz es importante.</div>
+
   <!-- Créditos -->
   <div id="credits">
-    <p>Desarrollado por TG (Top Globales)</p>
+    <p>Desarrollado por Acuproductions</p>
   </div>
 
   <script>
-    let votos = { "sofia": 0, "laura": 0, "carlos": 0 };
+    let votos = JSON.parse(localStorage.getItem('votos')) || { "sofia": 0, "laura": 0, "carlos": 0 };
     let candidatoSeleccionado = "";
-    let dniUsados = [];
+    let dniUsados = JSON.parse(localStorage.getItem('dniUsados')) || [];
 
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
@@ -261,13 +244,15 @@
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
 
-      document.getElementById("continuarBtn").disabled = !(dni.length === 8 && nombre && fecha && grado);
+      const continuarBtn = document.getElementById("continuarBtn");
+      continuarBtn.disabled = !(dni.length === 8 && nombre && fecha && grado);
     }
 
     function mostrarCandidatos() {
       const dni = document.getElementById("dni").value;
+
       if (dniUsados.includes(dni)) {
-        alert("Este DNI ya ha votado.");
+        alert("Este DNI ya ha sido usado para votar.");
         return;
       }
 
@@ -277,29 +262,51 @@
 
     function mostrarPerfil(candidato) {
       candidatoSeleccionado = candidato;
-      const nombreCandidato = {
-        "candidato1": "Sofia Quispe",
-        "candidato2": "Laura Fernández",
-        "candidato3": "Carlos Ramírez"
-      }[candidato];
 
-      const fotoCandidato = {
-        "candidato1": "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c",
-        "candidato2": "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb",
-        "candidato3": "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a"
-      }[candidato];
+      const nombreCandidato = document.getElementById("nombre-candidato");
+      const imgCandidato = document.getElementById("profile-img");
+      const listaPropuestas = document.getElementById("lista-propuestas");
 
-      document.getElementById("nombre-candidato").textContent = nombreCandidato;
-      document.getElementById("profile-img").src = fotoCandidato;
+      if (candidato === "candidato1") {
+        nombreCandidato.textContent = "Sofia Quispe";
+        imgCandidato.src = "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c";
+        listaPropuestas.innerHTML = `
+          <li>Mejorar la calidad de las actividades extracurriculares.</li>
+          <li>Incentivar la lectura mediante campañas.</li>
+          <li>Organizar ferias científicas más frecuentes.</li>
+          <li>Ampliar las opciones de almuerzos saludables.</li>
+          <li>Crear un club de tecnología para los estudiantes.</li>
+          <li>Gestionar más excursiones educativas.</li>
+        `;
+      } else if (candidato === "candidato2") {
+        nombreCandidato.textContent = "Laura Fernández";
+        imgCandidato.src = "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb";
+        listaPropuestas.innerHTML = `
+          <li>Impulsar talleres de arte y música.</li>
+          <li>Implementar programas de apoyo escolar.</li>
+          <li>Desarrollar jornadas deportivas mensuales.</li>
+          <li>Fomentar el reciclaje en la escuela.</li>
+          <li>Mejorar la conectividad en aulas.</li>
+          <li>Organizar charlas motivacionales.</li>
+        `;
+      } else if (candidato === "candidato3") {
+        nombreCandidato.textContent = "Carlos Ramírez";
+        imgCandidato.src = "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a";
+        listaPropuestas.innerHTML = `
+          <li>Crear espacios verdes en la escuela.</li>
+          <li>Fortalecer el programa de tutorías.</li>
+          <li>Impulsar concursos académicos.</li>
+          <li>Mejorar la infraestructura del gimnasio.</li>
+          <li>Incorporar nuevas tecnologías en clases.</li>
+          <li>Desarrollar competencias de oratoria.</li>
+        `;
+      }
 
       document.getElementById("candidatos").style.display = "none";
       document.getElementById("perfil").style.display = "block";
     }
 
     function votar() {
-      const dni = document.getElementById("dni").value;
-      dniUsados.push(dni);
-
       if (candidatoSeleccionado === "candidato1") {
         votos.sofia++;
       } else if (candidatoSeleccionado === "candidato2") {
@@ -308,29 +315,22 @@
         votos.carlos++;
       }
 
-      mostrarResultados();
+      const dni = document.getElementById("dni").value;
+      dniUsados.push(dni);
+      localStorage.setItem('dniUsados', JSON.stringify(dniUsados));
+      localStorage.setItem('votos', JSON.stringify(votos));
+
+      mostrarMensajeFinal();
     }
 
-    function mostrarResultados() {
-      const totalVotos = votos.sofia + votos.laura + votos.carlos;
-      const resultadoHTML = `
-        <li>Sofia Quispe: ${votos.sofia} votos (${((votos.sofia / totalVotos) * 100).toFixed(2)}%)</li>
-        <li>Laura Fernández: ${votos.laura} votos (${((votos.laura / totalVotos) * 100).toFixed(2)}%)</li>
-        <li>Carlos Ramírez: ${votos.carlos} votos (${((votos.carlos / totalVotos) * 100).toFixed(2)}%)</li>
-      `;
-      document.getElementById("resultado-votos").innerHTML = resultadoHTML;
+    function mostrarMensajeFinal() {
       document.getElementById("perfil").style.display = "none";
-      document.getElementById("inicio").style.display = "block"; // Permitir reiniciar el proceso de votación
-    }
-
-    function verificarContraseña() {
-      const contraseña = prompt("Introduce la contraseña para acceder a los resultados:");
-      if (contraseña === "dignidad2025") {
-        mostrarResultados();
-        document.getElementById("resultados").style.display = "block";
-      } else {
-        alert("Contraseña incorrecta.");
-      }
+      const mensaje = document.getElementById("mensaje-final");
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        mensaje.style.display = "none";
+        location.reload();
+      }, 5000);
     }
 
     function cerrarResultados() {
