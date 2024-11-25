@@ -234,112 +234,102 @@
     <label for="password">Contraseña:</label>
     <input type="password" id="password" oninput="verificarPassword()">
     <button class="button" id="accederBtn" onclick="accederPanel()" disabled>Acceder</button>
-
-    <div id="admin-resultados" style="display:none;">
-      <h2>Resultados de Votación</h2>
-      <ul id="admin-lista-resultados"></ul>
-    </div>
   </div>
 
   <!-- Créditos -->
-  <div id="credits">Creado por Anderson Acuña Francia desde 5° A</div>
+  <div id="credits">
+    <p>Desarrollado por <strong>Anderson Acuña Francia de 5° A</strong> con amor y dedicación</p>
+  </div>
 
   <script>
     const candidatos = {
       candidato1: {
-        nombre: 'Sofia Quispe',
-        foto: 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c',
-        propuestas: ['Mejorar la infraestructura escolar', 'Promover la inclusión en actividades extracurriculares']
+        nombre: "Sofia Quispe",
+        foto: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c",
+        propuestas: ["Mejorar las actividades extracurriculares", "Promover una educación inclusiva"]
       },
       candidato2: {
-        nombre: 'Laura Fernández',
-        foto: 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb',
-        propuestas: ['Crear nuevas actividades deportivas', 'Mejorar el servicio de comedor']
+        nombre: "Laura Fernández",
+        foto: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb",
+        propuestas: ["Mejorar la infraestructura", "Promover la participación estudiantil"]
       },
       candidato3: {
-        nombre: 'Carlos Ramírez',
-        foto: 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a',
-        propuestas: ['Ampliar los espacios de recreo', 'Fortalecer el programa de becas escolares']
+        nombre: "Carlos Ramírez",
+        foto: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a",
+        propuestas: ["Más actividades deportivas", "Fomentar la cultura del respeto"]
       }
     };
 
-    let voto = null;
-    let votosCandidatos = {
-      SofiaQuispe: 0,
-      LauraFernandez: 0,
-      CarlosRamirez: 0
-    };
+    let votos = JSON.parse(localStorage.getItem('votos')) || [];
+    let dniVotante = '';
 
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      const continuarBtn = document.getElementById("continuarBtn");
 
-      continuarBtn.disabled = !(dni && nombre && fecha && grado);
+      const continuarBtn = document.getElementById("continuarBtn");
+      if (dni.length === 8 && nombre && fecha && grado) {
+        continuarBtn.disabled = false;
+      } else {
+        continuarBtn.disabled = true;
+      }
     }
 
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = 'none';
-      document.getElementById("candidatos").style.display = 'block';
+      dniVotante = document.getElementById("dni").value;
+      if (votos.includes(dniVotante)) {
+        alert("Este DNI ya ha votado. No puedes votar nuevamente.");
+        return;
+      }
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
-      document.getElementById("nombre-candidato").textContent = candidato.nombre;
+      document.getElementById("perfil").style.display = "block";
+      document.getElementById("candidatos").style.display = "none";
+
+      document.getElementById("nombre-candidato").innerText = candidato.nombre;
       document.getElementById("profile-img").src = candidato.foto;
-      const listaPropuestas = document.getElementById("lista-propuestas");
-      listaPropuestas.innerHTML = '';
-      candidato.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-
-      document.getElementById("candidatos").style.display = 'none';
-      document.getElementById("perfil").style.display = 'block';
-
-      voto = candidatoId;
+      document.getElementById("lista-propuestas").innerHTML = candidato.propuestas.map(p => `<li>${p}</li>`).join('');
+      document.getElementById("btn-votar").onclick = () => votar(candidatoId);
     }
 
-    function votar() {
-      if (voto) {
-        votosCandidatos[voto]++;
+    function votar(candidatoId) {
+      votos.push(dniVotante);
+      localStorage.setItem('votos', JSON.stringify(votos));
+      document.getElementById("mensaje-final").style.display = "block";
 
-        document.getElementById("mensaje-final").style.display = 'block';
-        setTimeout(() => {
-          document.getElementById("mensaje-final").style.display = 'none';
-          document.getElementById("perfil").style.display = 'none';
-          document.getElementById("inicio").style.display = 'block';
-        }, 2000);
-
-        localStorage.setItem('votos', JSON.stringify(votosCandidatos));
-      }
-    }
-
-    function verificarPassword() {
-      const password = document.getElementById("password").value;
-      document.getElementById("accederBtn").disabled = password !== 'dignidad2025';
+      setTimeout(() => {
+        document.getElementById("mensaje-final").style.display = "none";
+        document.getElementById("perfil").style.display = "none";
+        document.getElementById("inicio").style.display = "block";
+      }, 6000);
     }
 
     function accederPanel() {
-      document.getElementById("admin-panel").style.display = 'none';
-      document.getElementById("admin-resultados").style.display = 'block';
-
-      const listaResultados = document.getElementById("admin-lista-resultados");
-      listaResultados.innerHTML = '';
-      for (let candidato in votosCandidatos) {
-        const li = document.createElement('li');
-        li.textContent = `${candidato.replace(/([A-Z])/g, ' $1').trim()}: ${votosCandidatos[candidato]} votos`;
-        listaResultados.appendChild(li);
+      const password = document.getElementById("password").value;
+      if (password === "dignidad2025") {
+        document.getElementById("admin-panel").style.display = "none";
+        document.getElementById("resultados").style.display = "block";
+        mostrarResultados();
+      } else {
+        alert("Contraseña incorrecta.");
       }
     }
 
+    function mostrarResultados() {
+      const result = candidatos; // Aquí agregarías la lógica para mostrar los resultados.
+    }
+
     function cerrarResultados() {
-      document.getElementById("admin-resultados").style.display = 'none';
-      document.getElementById("admin-panel").style.display = 'block';
+      document.getElementById("resultados").style.display = "none";
+      document.getElementById("admin-panel").style.display = "block";
     }
   </script>
+
 </body>
 </html>
