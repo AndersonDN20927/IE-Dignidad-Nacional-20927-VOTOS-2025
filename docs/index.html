@@ -144,6 +144,7 @@
       <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Carlos Ramírez">
       Carlos Ramírez - "Unidos en cada paso del camino"
     </div>
+    <!-- Añadir más candidatos aquí -->
   </div>
 
   <div id="perfil" class="container">
@@ -174,35 +175,41 @@
 
   <script>
     const candidatos = {
-      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar instalaciones deportivas.", "Aumentar actividades extracurriculares.", "Implementar reciclaje."] },
-      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura.", "Crear comité estudiantil.", "Mejorar almuerzos escolares."] },
-      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas.", "Fomentar la biblioteca.", "Instalar zonas de descanso."] }
+      candidato1: { nombre: "Sofia Quispe", votos: 0, propuestas: ["Mejorar instalaciones deportivas.", "Aumentar actividades extracurriculares.", "Implementar reciclaje.", "Crear espacios de estudio.", "Fortalecer el liderazgo estudiantil.", "Incluir más eventos culturales.", "Fomentar el deporte en las aulas.", "Mejorar las relaciones entre compañeros."] },
+      candidato2: { nombre: "Laura Fernández", votos: 0, propuestas: ["Promover arte y cultura.", "Crear comité estudiantil.", "Mejorar almuerzos escolares.", "Fomentar el respeto en la escuela.", "Aumentar el acceso a tecnología.", "Organizar talleres de desarrollo personal.", "Iniciar programas de voluntariado.", "Realizar eventos para unir a la comunidad."] },
+      candidato3: { nombre: "Carlos Ramírez", votos: 0, propuestas: ["Organizar salidas educativas.", "Fomentar la biblioteca.", "Instalar zonas de descanso.", "Establecer puntos verdes de reciclaje.", "Crear un espacio de innovación estudiantil.", "Impulsar la participación juvenil.", "Realizar más actividades sociales.", "Promover la concientización ambiental."] }
     };
 
-    const votantes = new Set();
+    const dniVotantes = new Set();
 
     function verificarFormulario() {
       const dni = document.getElementById("dni").value;
       const nombre = document.getElementById("nombre").value;
       const fecha = document.getElementById("fecha").value;
       const grado = document.getElementById("grado").value;
-      document.getElementById("continuarBtn").disabled = !(dni && nombre && fecha && grado);
+      const continuarBtn = document.getElementById("continuarBtn");
+      continuarBtn.disabled = !(dni && nombre && fecha && grado);
     }
 
     function mostrarCandidatos() {
+      const dni = document.getElementById("dni").value;
+      if (dniVotantes.has(dni)) {
+        alert("Este DNI ya ha votado.");
+        return;
+      }
       document.getElementById("inicio").style.display = "none";
       document.getElementById("candidatos").style.display = "block";
     }
 
     function mostrarPerfil(candidato) {
-      const datos = candidatos[candidato];
-      document.getElementById("nombre-candidato").innerText = datos.nombre;
-      document.getElementById("profile-img").src = document.querySelector(`[alt="${datos.nombre}"]`).src;
+      const perfil = candidatos[candidato];
+      document.getElementById("nombre-candidato").textContent = perfil.nombre;
+      document.getElementById("profile-img").src = `https://github.com/user-attachments/assets/${candidato}.png`;
       const listaPropuestas = document.getElementById("lista-propuestas");
       listaPropuestas.innerHTML = "";
-      datos.propuestas.forEach(p => {
+      perfil.propuestas.forEach(propuesta => {
         const li = document.createElement("li");
-        li.textContent = p;
+        li.textContent = propuesta;
         listaPropuestas.appendChild(li);
       });
       document.getElementById("perfil").style.display = "block";
@@ -210,14 +217,33 @@
     }
 
     function votar() {
-      const dni = document.getElementById("dni").value;
-      if (votantes.has(dni)) {
-        alert("Ya has votado con este DNI.");
-        return;
+      const candidato = candidatos[document.getElementById("nombre-candidato").textContent];
+      candidato.votos++;
+      dniVotantes.add(document.getElementById("dni").value);
+
+      // Actualización en el panel de administración
+      actualizarAdminPanel();
+
+      // Mostrar mensaje y volver
+      document.getElementById("mensaje-voto").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("mensaje-voto").style.display = "none";
+        document.getElementById("inicio").style.display = "block";
+        document.getElementById("dni").value = "";
+        document.getElementById("nombre").value = "";
+        document.getElementById("fecha").value = "";
+        document.getElementById("grado").value = "";
+        document.getElementById("perfil").style.display = "none";
+      }, 6000);
+    }
+
+    function actualizarAdminPanel() {
+      const totalVotos = Object.values(candidatos).reduce((sum, candidato) => sum + candidato.votos, 0);
+      for (let candidato in candidatos) {
+        const votos = candidatos[candidato].votos;
+        const porcentaje = totalVotos === 0 ? 0 : ((votos / totalVotos) * 100).toFixed(2);
+        document.getElementById(`votos-${candidato}`).textContent = `${votos} votos (${porcentaje}%)`;
       }
-      votantes.add(dni);
-      alert("¡Voto registrado correctamente!");
-      // Añade más lógica para los votos
     }
 
     function volverALista() {
