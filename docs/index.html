@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares 2025</title>
   <style>
-    /* Estilos generales */
+    /* Estilos generales de la página */
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -15,9 +15,11 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      position: relative;
       overflow: hidden;
     }
 
+    /* Contenedores principales */
     .container {
       width: 90%;
       max-width: 500px;
@@ -33,7 +35,8 @@
       text-align: center;
     }
 
-    .button, .vote-button, .back-button {
+    /* Botones y formularios */
+    .button, .vote-button {
       display: block;
       width: 100%;
       padding: 10px;
@@ -46,10 +49,19 @@
       margin-top: 10px;
     }
 
-    .button:hover, .vote-button:hover, .back-button:hover {
+    .button:hover, .vote-button:hover {
       background-color: #45a049;
     }
 
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* Estilos para los candidatos */
     .candidate {
       border: 2px solid #4CAF50;
       padding: 15px;
@@ -59,7 +71,7 @@
       display: flex;
       align-items: center;
       cursor: pointer;
-      font-size: 1.2em;
+      font-size: 1.5em;
     }
 
     .candidate img {
@@ -69,6 +81,7 @@
       margin-right: 15px;
     }
 
+    /* Estilos para las imágenes de perfil */
     .profile-img {
       width: 100px;
       height: 100px;
@@ -77,6 +90,7 @@
       display: block;
     }
 
+    /* Estilos del mensaje después de votar */
     #mensaje-final {
       position: absolute;
       top: 50%;
@@ -93,6 +107,44 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+    /* Resultados de votos */
+    #resultados {
+      position: fixed;
+      top: 20%;
+      right: 5%;
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    #resultados ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #resultados ul li {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+
+    #cerrarResultados {
+      background-color: #FF6347;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #cerrarResultados:hover {
+      background-color: #FF4500;
+    }
+
+    /* Créditos */
     #credits {
       position: fixed;
       bottom: 0;
@@ -106,11 +158,36 @@
 </head>
 <body>
 
-  <!-- Pantalla inicial -->
+  <!-- Formulario inicial -->
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
-    <button class="button" onclick="mostrarCandidatos()">Iniciar Votación</button>
-    <button class="button" onclick="mostrarAdminPanel()">Panel de Admin</button>
+    <p>Introduce tus datos para participar en las elecciones</p>
+
+    <label for="dni">DNI (8 dígitos):</label>
+    <input type="text" id="dni" maxlength="8" required oninput="verificarFormulario()">
+
+    <label for="nombre">Nombre completo:</label>
+    <input type="text" id="nombre" required oninput="verificarFormulario()">
+
+    <label for="fecha">Fecha de nacimiento:</label>
+    <input type="date" id="fecha" required oninput="verificarFormulario()">
+
+    <label for="grado">Grado y sección:</label>
+    <select id="grado" required onchange="verificarFormulario()">
+      <option value="" disabled selected>Seleccione</option>
+      <option value="1A">1°A</option>
+      <option value="1B">1°B</option>
+      <option value="2A">2°A</option>
+      <option value="2B">2°B</option>
+      <option value="3A">3°A</option>
+      <option value="3B">3°B</option>
+      <option value="4A">4°A</option>
+      <option value="4B">4°B</option>
+      <option value="5A">5°A</option>
+      <option value="5B">5°B</option>
+    </select>
+
+    <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
   </div>
 
   <!-- Lista de candidatos -->
@@ -133,73 +210,125 @@
     </div>
   </div>
 
-  <!-- Perfil de candidato -->
+  <!-- Perfil de candidato seleccionado -->
   <div id="perfil" class="container">
     <h2 id="nombre-candidato"></h2>
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
     <ul id="lista-propuestas"></ul>
-    <button class="vote-button" onclick="votar()">Votar</button>
-    <button class="back-button" onclick="volver()">Volver</button>
+    <button class="vote-button" id="btn-votar" onclick="votar()">Votar</button>
   </div>
+
+  <!-- Resultados de los votos -->
+  <div id="resultados">
+    <h2>Resultados de Votación</h2>
+    <ul id="resultado-votos"></ul>
+    <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
+  </div>
+
+  <!-- Mensaje después de votar -->
+  <div id="mensaje-final">¡Gracias por votar! Tu voz es importante.</div>
+
+  <!-- Panel de Control (Admin) -->
+  <div id="admin-panel" class="container">
+    <h1>Panel de Control de Votos</h1>
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" oninput="verificarPassword()">
+    <button class="button" id="accederBtn" onclick="accederPanel()" disabled>Acceder</button>
+
+    <div id="admin-resultados" style="display:none;">
+      <h2>Resultados de Votación</h2>
+      <ul id="admin-lista-resultados"></ul>
+    </div>
+  </div>
+
+  <!-- Créditos -->
+  <div id="credits">Creado por Anderson Acuña Francia desde 5° A</div>
 
   <script>
     const candidatos = {
       candidato1: {
-        nombre: "Sofia Quispe",
-        foto: "https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c",
+        nombre: 'Sofia Quispe',
+        foto: 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c',
         propuestas: [
-          "Mejorar actividades extracurriculares",
-          "Promover la educación inclusiva",
-          "Organizar más talleres",
-          "Reducir el desperdicio escolar",
-          "Mejorar las áreas comunes",
-          "Implementar sistemas ecológicos"
+          'Mejorar las instalaciones deportivas.',
+          'Aumentar las actividades extracurriculares.',
+          'Promover el reciclaje y el cuidado del medio ambiente.'
         ]
       },
       candidato2: {
-        nombre: "Laura Fernández",
-        foto: "https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb",
+        nombre: 'Laura Fernández',
+        foto: 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb',
         propuestas: [
-          "Ampliar la biblioteca",
-          "Organizar ferias estudiantiles",
-          "Fomentar la participación en concursos",
-          "Mejorar instalaciones deportivas",
-          "Revisar el menú del comedor",
-          "Fomentar prácticas saludables"
+          'Implementar talleres de robótica y tecnología.',
+          'Fomentar la igualdad y respeto entre los estudiantes.',
+          'Organizar ferias culturales y artísticas.'
         ]
       },
       candidato3: {
-        nombre: "Carlos Ramírez",
-        foto: "https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a",
+        nombre: 'Carlos Ramírez',
+        foto: 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a',
         propuestas: [
-          "Más actividades deportivas",
-          "Fomentar el respeto",
-          "Organizar eventos culturales",
-          "Crear un club de cine",
-          "Desarrollar una radio escolar",
-          "Integrar herramientas digitales"
+          'Crear espacios de estudio y trabajo grupal.',
+          'Impulsar la participación de los estudiantes en decisiones escolares.',
+          'Organizar torneos deportivos entre secciones.'
         ]
       }
     };
 
+    function verificarFormulario() {
+      const dni = document.getElementById('dni').value.trim();
+      const nombre = document.getElementById('nombre').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const grado = document.getElementById('grado').value;
+      
+      const continuarBtn = document.getElementById('continuarBtn');
+      continuarBtn.disabled = !(dni.length === 8 && nombre && fecha && grado);
+    }
+
     function mostrarCandidatos() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('candidatos').style.display = 'block';
     }
 
     function mostrarPerfil(candidatoId) {
       const candidato = candidatos[candidatoId];
-      document.getElementById("perfil").style.display = "block";
-      document.getElementById("candidatos").style.display = "none";
+      document.getElementById('nombre-candidato').innerText = candidato.nombre;
+      document.getElementById('profile-img').src = candidato.foto;
 
-      document.getElementById("nombre-candidato").innerText = candidato.nombre;
-      document.getElementById("profile-img").src = candidato.foto;
-      document.getElementById("lista-propuestas").innerHTML = candidato.propuestas.map(p => `<li>${p}</li>`).join('');
+      const listaPropuestas = document.getElementById('lista-propuestas');
+      listaPropuestas.innerHTML = '';
+      candidato.propuestas.forEach(propuesta => {
+        const li = document.createElement('li');
+        li.textContent = propuesta;
+        listaPropuestas.appendChild(li);
+      });
+
+      document.getElementById('candidatos').style.display = 'none';
+      document.getElementById('perfil').style.display = 'block';
     }
 
-    function volver() {
-      document.getElementById("perfil").style.display = "none";
-      document.getElementById("candidatos").style.display = "block";
+    function votar() {
+      // Simulación de votar, muestra el mensaje final
+      document.getElementById('perfil').style.display = 'none';
+      document.getElementById('mensaje-final').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('mensaje-final').style.display = 'none';
+        document.getElementById('inicio').style.display = 'block';
+      }, 2000);
+    }
+
+    function verificarPassword() {
+      const password = document.getElementById('password').value;
+      const accederBtn = document.getElementById('accederBtn');
+      accederBtn.disabled = password !== 'dignidad2025';
+    }
+
+    function accederPanel() {
+      document.getElementById('admin-resultados').style.display = 'block';
+    }
+
+    function cerrarResultados() {
+      document.getElementById('resultados').style.display = 'none';
     }
   </script>
 </body>
