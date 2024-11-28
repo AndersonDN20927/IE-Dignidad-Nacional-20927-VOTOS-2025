@@ -4,160 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elecciones Escolares 2025</title>
-  <style>
-    /* Estilos generales de la página */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Contenedores principales */
-    .container {
-      width: 90%;
-      max-width: 500px;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      background-color: #fff;
-      display: none;
-    }
-
-    h1, h2 {
-      color: #4CAF50;
-      text-align: center;
-    }
-
-    /* Botones y formularios */
-    .button, .vote-button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-      margin-top: 10px;
-    }
-
-    .button:hover, .vote-button:hover {
-      background-color: #45a049;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    /* Estilos para los candidatos */
-    .candidate {
-      border: 2px solid #4CAF50;
-      padding: 15px;
-      border-radius: 8px;
-      background-color: #fff;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      font-size: 1.5em;
-    }
-
-    .candidate img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 15px;
-    }
-
-    /* Estilos para las imágenes de perfil */
-    .profile-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 20px auto;
-      display: block;
-    }
-
-    /* Estilos del mensaje después de votar */
-    #mensaje-final {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #ffeb3b;
-      padding: 30px;
-      border-radius: 10px;
-      display: none;
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #333;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Resultados de votos */
-    #resultados {
-      position: fixed;
-      top: 20%;
-      right: 5%;
-      width: 300px;
-      padding: 20px;
-      background-color: #fff;
-      border: 2px solid #4CAF50;
-      border-radius: 8px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      display: none;
-    }
-
-    #resultados ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    #resultados ul li {
-      margin: 10px 0;
-      font-size: 1.2em;
-    }
-
-    #cerrarResultados {
-      background-color: #FF6347;
-      color: white;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #cerrarResultados:hover {
-      background-color: #FF4500;
-    }
-
-    /* Créditos */
-    #credits {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
-      padding: 5px;
-      background-color: #4CAF50;
-      color: white;
-    }
-  </style>
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-
   <!-- Formulario inicial -->
   <div id="inicio" class="container" style="display: block;">
     <h1>Elecciones Escolares 2025</h1>
@@ -188,6 +37,7 @@
     </select>
 
     <button class="button" id="continuarBtn" onclick="mostrarCandidatos()" disabled>Continuar</button>
+    <button class="admin-button" onclick="mostrarAdminLogin()">Panel de Control</button>
   </div>
 
   <!-- Lista de candidatos -->
@@ -196,18 +46,29 @@
 
     <div class="candidate" onclick="mostrarPerfil('candidato1')">
       <img src="https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c" alt="Foto de Sofia Quispe">
-      Sofia Quispe - "Juntos podemos lograr grandes cambios"
+      <div class="candidate-info">
+        <h3>Sofia Quispe</h3>
+        <p>"Juntos podemos lograr grandes cambios"</p>
+      </div>
     </div>
 
     <div class="candidate" onclick="mostrarPerfil('candidato2')">
       <img src="https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb" alt="Foto de Laura Fernández">
-      Laura Fernández - "Creciendo juntos hacia un futuro mejor"
+      <div class="candidate-info">
+        <h3>Laura Fernández</h3>
+        <p>"Creciendo juntos hacia un futuro mejor"</p>
+      </div>
     </div>
 
     <div class="candidate" onclick="mostrarPerfil('candidato3')">
       <img src="https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a" alt="Foto de Carlos Ramírez">
-      Carlos Ramírez - "Unidos en cada paso del camino"
+      <div class="candidate-info">
+        <h3>Carlos Ramírez</h3>
+        <p>"Unidos en cada paso del camino"</p>
+      </div>
     </div>
+
+    <button class="back-button" onclick="volverAInicio()">Volver</button>
   </div>
 
   <!-- Perfil de candidato seleccionado -->
@@ -216,120 +77,37 @@
     <img id="profile-img" class="profile-img" src="" alt="Foto del Candidato">
     <ul id="lista-propuestas"></ul>
     <button class="vote-button" id="btn-votar" onclick="votar()">Votar</button>
+    <button class="back-button" onclick="volverACandidatos()">Volver</button>
   </div>
 
-  <!-- Resultados de los votos -->
-  <div id="resultados">
-    <h2>Resultados de Votación</h2>
-    <ul id="resultado-votos"></ul>
-    <button id="cerrarResultados" onclick="cerrarResultados()">Cerrar</button>
+  <!-- Panel de Control (Admin) -->
+  <div id="admin-login" class="container">
+    <h2>Acceso al Panel de Control</h2>
+    <div class="admin-form">
+      <label for="admin-password">Contraseña:</label>
+      <input type="password" id="admin-password" oninput="verificarPassword()">
+      <button class="button" id="accederBtn" onclick="accederPanel()" disabled>Acceder</button>
+      <button class="back-button" onclick="volverAInicio()">Volver</button>
+    </div>
+  </div>
+
+  <div id="admin-panel" class="container">
+    <h2>Panel de Control - Resultados de Votación</h2>
+    <div id="admin-resultados">
+      <ul id="admin-lista-resultados"></ul>
+    </div>
+    <button class="back-button" onclick="volverAInicio()">Cerrar Sesión</button>
   </div>
 
   <!-- Mensaje después de votar -->
   <div id="mensaje-final">¡Gracias por votar! Tu voz es importante.</div>
 
-  <!-- Panel de Control (Admin) -->
-  <div id="admin-panel" class="container">
-    <h1>Panel de Control de Votos</h1>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" oninput="verificarPassword()">
-    <button class="button" id="accederBtn" onclick="accederPanel()" disabled>Acceder</button>
-
-    <div id="admin-resultados" style="display:none;">
-      <h2>Resultados de Votación</h2>
-      <ul id="admin-lista-resultados"></ul>
-    </div>
-  </div>
-
   <!-- Créditos -->
   <div id="credits">Creado por Anderson Acuña Francia desde 5° A</div>
 
-  <script>
-    const candidatos = {
-      candidato1: {
-        nombre: 'Sofia Quispe',
-        foto: 'https://github.com/user-attachments/assets/cde274e5-6b93-4b89-a94d-f097ae888a6c',
-        propuestas: [
-          'Mejorar las instalaciones deportivas.',
-          'Aumentar las actividades extracurriculares.',
-          'Promover el reciclaje y el cuidado del medio ambiente.'
-        ]
-      },
-      candidato2: {
-        nombre: 'Laura Fernández',
-        foto: 'https://github.com/user-attachments/assets/1dbc76dc-927a-4b33-b684-bced232ef2eb',
-        propuestas: [
-          'Implementar talleres de robótica y tecnología.',
-          'Fomentar la igualdad y respeto entre los estudiantes.',
-          'Organizar ferias culturales y artísticas.'
-        ]
-      },
-      candidato3: {
-        nombre: 'Carlos Ramírez',
-        foto: 'https://github.com/user-attachments/assets/f9d88fb6-b1d6-46bd-a048-ce9d4a295f1a',
-        propuestas: [
-          'Crear espacios de estudio y trabajo grupal.',
-          'Impulsar la participación de los estudiantes en decisiones escolares.',
-          'Organizar torneos deportivos entre secciones.'
-        ]
-      }
-    };
-
-    function verificarFormulario() {
-      const dni = document.getElementById('dni').value.trim();
-      const nombre = document.getElementById('nombre').value.trim();
-      const fecha = document.getElementById('fecha').value;
-      const grado = document.getElementById('grado').value;
-      
-      const continuarBtn = document.getElementById('continuarBtn');
-      continuarBtn.disabled = !(dni.length === 8 && nombre && fecha && grado);
-    }
-
-    function mostrarCandidatos() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('candidatos').style.display = 'block';
-    }
-
-    function mostrarPerfil(candidatoId) {
-      const candidato = candidatos[candidatoId];
-      document.getElementById('nombre-candidato').innerText = candidato.nombre;
-      document.getElementById('profile-img').src = candidato.foto;
-
-      const listaPropuestas = document.getElementById('lista-propuestas');
-      listaPropuestas.innerHTML = '';
-      candidato.propuestas.forEach(propuesta => {
-        const li = document.createElement('li');
-        li.textContent = propuesta;
-        listaPropuestas.appendChild(li);
-      });
-
-      document.getElementById('candidatos').style.display = 'none';
-      document.getElementById('perfil').style.display = 'block';
-    }
-
-    function votar() {
-      // Simulación de votar, muestra el mensaje final
-      document.getElementById('perfil').style.display = 'none';
-      document.getElementById('mensaje-final').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('mensaje-final').style.display = 'none';
-        document.getElementById('inicio').style.display = 'block';
-      }, 2000);
-    }
-
-    function verificarPassword() {
-      const password = document.getElementById('password').value;
-      const accederBtn = document.getElementById('accederBtn');
-      accederBtn.disabled = password !== 'dignidad2025';
-    }
-
-    function accederPanel() {
-      document.getElementById('admin-resultados').style.display = 'block';
-    }
-
-    function cerrarResultados() {
-      document.getElementById('resultados').style.display = 'none';
-    }
-  </script>
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
